@@ -7,6 +7,7 @@ namespace TestSeqDLLib
 	[TestFixture()]
 	public class TestComicParser
 	{
+		#region FindUrls
 		[Test()]
 		public void FindUrls ()
 		{
@@ -14,16 +15,16 @@ namespace TestSeqDLLib
 			var xkcdParser = new ComicParser (xkcdUrl);
 			var xkcdUrls = xkcdParser.FindUrls ().ToArray ();
 			var xkcdImg = "http://imgs.xkcd.com/comics/woodpecker.png";
-			Assert.AreEqual (xkcdUrls [613], xkcdImg);
-			
-			
+			Assert.AreEqual (xkcdUrls [613], xkcdImg);						
 		}
+		#endregion
 		
+		#region ParameterizeUrls
 		[Test()]
-		public void SplitUrlXkcd ()
+		public void ParameterizeUrlXkcd ()
 		{			
 			var xkcdUrl = "http://xkcd.com/614";
-			var xkcdSplit = (new ComicParser (xkcdUrl)).SplitUrl ();
+			var xkcdSplit = new ComicUri (xkcdUrl);
 			var xkcdUrlBase = xkcdSplit.Base;
 			string[] xkcdUrlIndices = xkcdSplit.Indices;			
 			Assert.AreEqual ("http://xkcd.com/{0}", xkcdUrlBase);			
@@ -32,22 +33,30 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void SplitUrlSmbc ()
+		public void ParameterizeUrlSmbc ()
 		{
 			var smbcUrl = "http://www.smbc-comics.com/index.php?db=comics&id=614";
-			var smbcSplit = (new ComicParser (smbcUrl)).SplitUrl ();
+			var smbcSplit = new ComicUri (smbcUrl);
 			var smbcUrlBase = smbcSplit.Base;
 			var smbcUrlIndices = smbcSplit.Indices;
 			Assert.AreEqual ("http://www.smbc-comics.com/index.php?db=comics&id={0}", smbcUrlBase);			
 			Assert.AreEqual (1, smbcUrlIndices.Length);
-			Assert.AreEqual ("614", smbcUrlIndices [0]);	
+			Assert.AreEqual ("614", smbcUrlIndices [0]);				
+			
+			smbcUrl = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcSplit = (new ComicParser (smbcUrl)).ParameterizeUrl ();
+			smbcUrlBase = smbcSplit.Base;
+			smbcUrlIndices = smbcSplit.Indices;
+			Assert.AreEqual ("http://www.smbc-comics.com/comics/{0}.gif", smbcUrlBase);			
+			Assert.AreEqual (1, smbcUrlIndices.Length);
+			Assert.AreEqual ("20061011", smbcUrlIndices [0]);				
 		}
 		
 		[Test()]
-		public void SplitUrlPennyArcade ()
+		public void ParameterizeUrlPennyArcade ()
 		{
 			var paUrl = "http://penny-arcade.com/comic/2012/01/04";			
-			var paSplit = (new ComicParser (paUrl)).SplitUrl ();
+			var paSplit = new ComicUri (paUrl);
 			var paUrlBase = paSplit.Base;
 			var paUrlIndices = paSplit.Indices;
 			Assert.AreEqual ("http://penny-arcade.com/comic/{0}/{1}/{2}", paUrlBase);
@@ -56,7 +65,9 @@ namespace TestSeqDLLib
 			Assert.AreEqual ("01", paUrlIndices [1]);
 			Assert.AreEqual ("04", paUrlIndices [2]);
 		}
+		#endregion
 		
+		#region FindImgs
 		[Test()]
 		public void FindImgsXkcd ()
 		{
@@ -93,8 +104,8 @@ namespace TestSeqDLLib
 			var smbc615ComicB = "http://zs1.smbc-comics.com/comics/20061012.gif";
 			Assert.IsTrue (smbc615Imgs.Contains (smbc615ComicA) || smbc615Imgs.Contains (smbc615ComicB));
 		}
-		
-		
+		#endregion
+			
 	}
 }
 

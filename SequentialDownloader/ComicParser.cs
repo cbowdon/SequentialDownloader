@@ -9,6 +9,7 @@ namespace SequentialDownloader
 {
 	public class ComicParser
 	{
+		#region Properties
 		string inputUrl;
 		string htmlSource;
 
@@ -20,12 +21,16 @@ namespace SequentialDownloader
 				return htmlSource;
 			}
 		}
+		#endregion
 		
+		#region Constructors
 		public ComicParser (string inputUrl)
 		{
 			this.inputUrl = inputUrl;
 		}
+		#endregion
 		
+		#region Methods
 		public List<string> FindImgs ()
 		{	
 			var quoteChar = "(\"|')";
@@ -76,16 +81,11 @@ namespace SequentialDownloader
 			throw new TimeoutException (errorString);
 		}
 		
-		public List<ComicUri> FindUrls ()
+		public List<string> FindUrls ()
 		{
 			throw new NotImplementedException ();
 		}
-		
-		public ComicUri SplitUrl ()
-		{
-			throw new NotImplementedException ();
-		}
-		
+		#endregion
 	}
 }
 
