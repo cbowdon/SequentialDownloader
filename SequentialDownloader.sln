@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SequentialDownloader", "SequentialDownloader\SequentialDownloader.csproj", "{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSeqDLLib", "TestSeqDLLib\TestSeqDLLib.csproj", "{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClientExpt", "WebClientExpt\WebClientExpt.csproj", "{8BF1562D-4A10-4D7A-A3D2-3C6796E54605}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BF1562D-4A10-4D7A-A3D2-3C6796E54605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BF1562D-4A10-4D7A-A3D2-3C6796E54605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BF1562D-4A10-4D7A-A3D2-3C6796E54605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BF1562D-4A10-4D7A-A3D2-3C6796E54605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SequentialDownloader\SequentialDownloader.csproj
+	EndGlobalSection
+EndGlobal
