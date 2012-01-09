@@ -17,6 +17,8 @@ namespace TestSeqDLLib
 			var xkcdImg = "http://imgs.xkcd.com/comics/woodpecker.png";
 			Assert.AreEqual (xkcdUrls [613], xkcdImg);						
 		}
+		
+		
 		#endregion
 		
 		#region ParameterizeUrls

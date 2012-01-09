@@ -62,6 +62,40 @@ http://www.smbc-comics.com/comics/{0}.gif
                 </UnitTestResult>
               </Results>
             </TestRecord>
+            <TestRecord Name="FindImgsXkcd">
+              <Results>
+                <UnitTestResult>
+                  <TestDate>2012-01-09T09:55:11</TestDate>
+                  <Status>Success</Status>
+                  <TotalFailures>0</TotalFailures>
+                  <TotalSuccess>1</TotalSuccess>
+                  <TotalIgnored>0</TotalIgnored>
+                  <Time />
+                  <Message>Test successful
+
+Execution time: 7.39ms</Message>
+                  <ConsoleOutput />
+                  <ConsoleError />
+                </UnitTestResult>
+              </Results>
+            </TestRecord>
+            <TestRecord Name="FindImgsSmbc">
+              <Results>
+                <UnitTestResult>
+                  <TestDate>2012-01-09T09:56:51</TestDate>
+                  <Status>Success</Status>
+                  <TotalFailures>0</TotalFailures>
+                  <TotalSuccess>1</TotalSuccess>
+                  <TotalIgnored>0</TotalIgnored>
+                  <Time />
+                  <Message>Test successful
+
+Execution time: 4.28ms</Message>
+                  <ConsoleOutput />
+                  <ConsoleError />
+                </UnitTestResult>
+              </Results>
+            </TestRecord>
           </Tests>
         </TestRecord>
       </Tests>

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -61,11 +62,16 @@ namespace SequentialDownloader
 			Func <string, string> getSource = x => {
 				using (var client = new WebClient()) {
 					client.Headers.Add ("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-					var data = client.OpenRead (x);
-					using (var reader = new StreamReader (data)) {
-						return reader.ReadToEnd ();							
-					}
+					return client.DownloadString (x);	
 				}
+				// or
+//				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (url);					
+//				request.Method = "GET";
+//				using (WebResponse response = request.GetResponse()) {
+//					using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
+//						string result = reader.ReadToEnd ();
+//					}
+//				}
 			};
 			
 			var errorString = String.Format ("GetSourceCode({0}): time-out exception", url);
@@ -83,9 +89,30 @@ namespace SequentialDownloader
 		
 		public List<string> FindUrls ()
 		{
+			// take ComicUri(url)
+			
+			// categorize: date / normal
+			
+			// decrement highest index accordingly
+			
+			// test for real url
 			throw new NotImplementedException ();
 		}
-		#endregion
+		
+		public static bool UrlExists (string url)
+		{
+			try {
+				HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
+				request.Method = "HEAD";
+				HttpWebResponse response = request.GetResponse () as HttpWebResponse;
+				bool ans = response.StatusCode == HttpStatusCode.OK;
+				response.Close ();
+				return ans;
+			} catch {
+				return false;
+			}
+		}
+#endregion
 	}
 }
 
