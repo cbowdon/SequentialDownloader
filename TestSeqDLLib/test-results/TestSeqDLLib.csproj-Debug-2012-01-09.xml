@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tests>
+    <TestRecord Name="TestSeqDLLib">
+      <Tests>
+        <TestRecord Name="TestComicParser">
+          <Tests>
+            <TestRecord Name="ParameterizeUrlPennyArcade">
+              <Results>
+                <UnitTestResult>
+                  <TestDate>2012-01-09T09:33:04</TestDate>
+                  <Status>Success</Status>
+                  <TotalFailures>0</TotalFailures>
+                  <TotalSuccess>1</TotalSuccess>
+                  <TotalIgnored>0</TotalIgnored>
+                  <Time />
+                  <Message>Test successful
+
+Execution time: 0.03ms</Message>
+                  <ConsoleOutput>http://penny-arcade.com/comic/{0}/01/04
+http://penny-arcade.com/comic/{0}/{1}/04
+http://penny-arcade.com/comic/{0}/{1}/{2}
+</ConsoleOutput>
+                  <ConsoleError />
+                </UnitTestResult>
+              </Results>
+            </TestRecord>
+            <TestRecord Name="ParameterizeUrlXkcd">
+              <Results>
+                <UnitTestResult>
+                  <TestDate>2012-01-09T09:33:06</TestDate>
+                  <Status>Success</Status>
+                  <TotalFailures>0</TotalFailures>
+                  <TotalSuccess>1</TotalSuccess>
+                  <TotalIgnored>0</TotalIgnored>
+                  <Time />
+                  <Message>Test successful
+
+Execution time: 0.03ms</Message>
+                  <ConsoleOutput>http://xkcd.com/{0}
+</ConsoleOutput>
+                  <ConsoleError />
+                </UnitTestResult>
+              </Results>
+            </TestRecord>
+            <TestRecord Name="ParameterizeUrlSmbc">
+              <Results>
+                <UnitTestResult>
+                  <TestDate>2012-01-09T09:33:08</TestDate>
+                  <Status>Success</Status>
+                  <TotalFailures>0</TotalFailures>
+                  <TotalSuccess>1</TotalSuccess>
+                  <TotalIgnored>0</TotalIgnored>
+                  <Time />
+                  <Message>Test successful
+
+Execution time: 0.03ms</Message>
+                  <ConsoleOutput>http://www.smbc-comics.com/index.php?db=comics&amp;id={0}
+http://www.smbc-comics.com/comics/{0}.gif
+</ConsoleOutput>
+                  <ConsoleError />
+                </UnitTestResult>
+              </Results>
+            </TestRecord>
+          </Tests>
+        </TestRecord>
+      </Tests>
+    </TestRecord>
+  </Tests>
+</TestRecord>

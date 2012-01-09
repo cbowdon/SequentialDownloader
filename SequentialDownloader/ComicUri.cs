@@ -8,46 +8,53 @@ namespace SequentialDownloader
 {
 	public class ComicUri : Uri
 	{
-		public string[] Indices { get; private set; }
 		
-		public string Base { get; private set; }
-		
-		public ComicUri (string url) : base (url)
-		{
-			Parameterize ();
-		}
-		
-		bool Parameterize ()
-		{
-			// remove the authority ; work on the right part
-			string leftPart = GetLeftPart (UriPartial.Authority);
-			string rightPart = AbsoluteUri.Substring (leftPart.Length);
+		#region Indices
+		string[] indices;
+
+		public string[] Indices {
+			get {
+				if (indices == null) {
+					string leftPart = GetLeftPart (UriPartial.Authority);
+					string rightPart = AbsoluteUri.Substring (leftPart.Length);
 			
-			// match all numbers (or months or days) -> string[]
-			var numRx = new Regex ("[0-9]+");
-			var nums = numRx.Matches (rightPart);
+					// match all numbers (or months or days) -> string[]
+					var numRx = new Regex ("[0-9]+");
+					var nums = numRx.Matches (rightPart);
 			
-			var inds = from Match n in nums
+					var inds = from Match n in nums
 					where n.Success
 					let c = n.Captures [0].Value
 					select c;
 			
-			Indices = inds.ToArray ();
-			if (Indices.Length == 0) {
-				return false;
+					indices = inds.ToArray ();
+				}
+				return indices;
 			}
-			
-			// replace each item in array with {i}, assign to base string
-			var bBase = new StringBuilder (AbsoluteUri);
-			for (int i = 0; i < Indices.Length; i++) {
-				bBase.Replace (Indices [i], "{" + i + "}");
-				Console.WriteLine (bBase);
-			}
-			Base = bBase.ToString ();
-			
-			return true;
 		}
+		#endregion
 		
+		#region Base
+		string uriBase;
+
+		public string Base {
+			get {
+				if (uriBase == null) {
+					var bBase = new StringBuilder (AbsoluteUri);
+					for (int i = 0; i < Indices.Length; i++) {
+						bBase.Replace (Indices [i], "{" + i + "}");
+						Console.WriteLine (bBase);
+					}
+					uriBase = bBase.ToString ();
+				}
+				return uriBase;
+			}
+		}
+		#endregion
+		
+		public ComicUri (string url) : base (url)
+		{
+		}
 	}
 }
 

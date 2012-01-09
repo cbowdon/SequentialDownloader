@@ -44,7 +44,7 @@ namespace TestSeqDLLib
 			Assert.AreEqual ("614", smbcUrlIndices [0]);				
 			
 			smbcUrl = "http://www.smbc-comics.com/comics/20061011.gif";
-			smbcSplit = (new ComicParser (smbcUrl)).ParameterizeUrl ();
+			smbcSplit = new ComicUri (smbcUrl);
 			smbcUrlBase = smbcSplit.Base;
 			smbcUrlIndices = smbcSplit.Indices;
 			Assert.AreEqual ("http://www.smbc-comics.com/comics/{0}.gif", smbcUrlBase);			
