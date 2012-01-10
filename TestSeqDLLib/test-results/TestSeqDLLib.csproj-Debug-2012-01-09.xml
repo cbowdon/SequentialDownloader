@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TestRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results />
   <Tests>
     <TestRecord Name="TestSeqDLLib">
+      <Results />
       <Tests>
         <TestRecord Name="TestComicParser">
+          <Results />
           <Tests>
             <TestRecord Name="ParameterizeUrlPennyArcade">
               <Results>
@@ -24,6 +27,7 @@ http://penny-arcade.com/comic/{0}/{1}/{2}
                   <ConsoleError />
                 </UnitTestResult>
               </Results>
+              <Tests />
             </TestRecord>
             <TestRecord Name="ParameterizeUrlXkcd">
               <Results>
@@ -42,6 +46,7 @@ Execution time: 0.03ms</Message>
                   <ConsoleError />
                 </UnitTestResult>
               </Results>
+              <Tests />
             </TestRecord>
             <TestRecord Name="ParameterizeUrlSmbc">
               <Results>
@@ -61,6 +66,7 @@ http://www.smbc-comics.com/comics/{0}.gif
                   <ConsoleError />
                 </UnitTestResult>
               </Results>
+              <Tests />
             </TestRecord>
             <TestRecord Name="FindImgsXkcd">
               <Results>
@@ -78,6 +84,7 @@ Execution time: 7.39ms</Message>
                   <ConsoleError />
                 </UnitTestResult>
               </Results>
+              <Tests />
             </TestRecord>
             <TestRecord Name="FindImgsSmbc">
               <Results>
@@ -91,6 +98,25 @@ Execution time: 7.39ms</Message>
                   <Message>Test successful
 
 Execution time: 4.28ms</Message>
+                  <ConsoleOutput />
+                  <ConsoleError />
+                </UnitTestResult>
+              </Results>
+              <Tests />
+            </TestRecord>
+            <TestRecord Name="FindUrls">
+              <Results>
+                <UnitTestResult>
+                  <TestDate>2012-01-09T22:36:30</TestDate>
+                  <Status>Failure</Status>
+                  <TotalFailures>1</TotalFailures>
+                  <TotalSuccess>0</TotalSuccess>
+                  <TotalIgnored>0</TotalIgnored>
+                  <Time />
+                  <Message>System.NotImplementedException : The requested feature is not implemented.</Message>
+                  <StackTrace>  at TestSeqDLLib.TestComicParser.FindUrls () [0x00006] in /Users/chris/Projects/SequentialDownloader/TestSeqDLLib/TestComicParser.cs:15 
+  at (wrapper managed-to-native) System.Reflection.MonoMethod:InternalInvoke (System.Reflection.MonoMethod,object,object[],System.Exception&amp;)
+  at System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00000] in &lt;filename unknown&gt;:0 </StackTrace>
                   <ConsoleOutput />
                   <ConsoleError />
                 </UnitTestResult>

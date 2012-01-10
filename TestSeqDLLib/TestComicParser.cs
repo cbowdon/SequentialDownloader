@@ -18,7 +18,14 @@ namespace TestSeqDLLib
 			Assert.AreEqual (xkcdUrls [613], xkcdImg);						
 		}
 		
-		
+		[Test()]
+		public void UrlExists ()
+		{
+			Assert.IsTrue (ComicParser.UrlExists ("http://xkcd.com"));
+			Assert.IsFalse (ComicParser.UrlExists ("http://xkcd.com/91235252624363"));
+			Assert.IsTrue (ComicParser.UrlExists ("http://imgs.xkcd.com/comics/woodpecker.png"));
+			Assert.IsTrue (ComicParser.UrlExists ("http://www.smbc-comics.com/index.php?db=comics&id=614"));
+		}
 		#endregion
 		
 		#region ParameterizeUrls
