@@ -77,7 +77,7 @@ namespace TestSeqDLLib
 			var comic = new ComicUri (smbcUrls [0]);
 			string startDate = "20061011";
 			int num = 5;
-			ICountingRule smbcRules = new ISODateCount (comic, startDate, num);
+			ICountingRule smbcRules = new BlockDateCount (comic, startDate, num);
 			Assert.AreEqual (smbcUrls, smbcRules.Generate ());
 			
 			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
@@ -86,7 +86,7 @@ namespace TestSeqDLLib
 			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061018.gif";
 			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061019.gif";			
 			var days = new DayOfWeek[]{DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday};
-			smbcRules = new ISODateCount (comic, startDate, num, days);
+			smbcRules = new BlockDateCount (comic, startDate, num, days);
 			Assert.AreEqual (smbcUrls, smbcRules.Generate ());			
 		}
 		#endregion

@@ -42,7 +42,8 @@
     <Compile Include="ICountingRule.cs" />
     <Compile Include="SequentialCount.cs" />
     <Compile Include="Range.cs" />
-    <Compile Include="ISODateCount.cs" />
+    <Compile Include="BlockDateCount.cs" />
+    <Compile Include="BlockDateFormat.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
