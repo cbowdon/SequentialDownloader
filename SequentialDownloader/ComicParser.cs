@@ -32,7 +32,13 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Methods
-		public List<string> FindImgs ()
+		/// <summary>
+		/// Finds the src of all imgs in the page.
+		/// </summary>
+		/// <returns>
+		/// Source of the imgs.
+		/// </returns>
+		public List<string> FindImgs (string source)
 		{	
 			var quoteChar = "(\"|')";
 			var attrKey = "([A-Za-z0-9\\-]+)\\s*=\\s*";
@@ -46,7 +52,7 @@ namespace SequentialDownloader
 			var img = new Regex (imgPattern, RegexOptions.IgnoreCase);
 			var src = new Regex (srcPattern, RegexOptions.IgnoreCase);
 			
-			var matches = img.Matches (HtmlSource);	
+			var matches = img.Matches (source);	
 			
 			var ans = from Match m in matches
 				let c = m.Captures [0].Value
@@ -57,21 +63,39 @@ namespace SequentialDownloader
 			return ans.ToList ();
 		}
 		
+		public List<string> FindImgs ()
+		{
+			return FindImgs (HtmlSource);
+		}
+		
+		/// <summary>
+		/// Gets the source code.
+		/// </summary>
+		/// <returns>
+		/// The source code.
+		/// </returns>
+		/// <param name='url'>
+		/// URL.
+		/// </param>
+		/// <exception cref='TimeoutException'>
+		/// Is thrown if site can't be reached.
+		/// </exception>
 		public static string GetSourceCode (string url)
 		{
 			Func <string, string> getSource = x => {
-				using (var client = new WebClient()) {
-					client.Headers.Add ("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-					return client.DownloadString (x);	
-				}
-				// or
-//				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (url);					
-//				request.Method = "GET";
-//				using (WebResponse response = request.GetResponse()) {
-//					using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
-//						string result = reader.ReadToEnd ();
-//					}
+//				using (var client = new WebClient()) {
+//					client.Headers.Add ("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+//					return client.DownloadString (x);	
 //				}
+				// or
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (url);					
+				request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; rv:9.0.1) Gecko/20100101 Firefox/9.0.1";
+				request.Method = "GET";
+				using (WebResponse response = request.GetResponse()) {
+					using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
+						return reader.ReadToEnd ();
+					}
+				}
 			};
 			
 			var errorString = String.Format ("GetSourceCode({0}): time-out exception", url);
@@ -87,16 +111,34 @@ namespace SequentialDownloader
 			throw new TimeoutException (errorString);
 		}
 		
+		/// <summary>
+		/// Finds the urls of other comics.
+		/// </summary>
+		/// <returns>
+		/// The urls.
+		/// </returns>
 		public List<string> FindUrls ()
 		{
 			// take ComicUri(url)
+			var comic = new ComicUri (inputUrl);
 			
-			// categorize: date / normal
+			var urls = new List<string> ();
+			/// possible formats:
+			/// straight number sequence : 1 number, length unknown, possibly padded, increment is 1
+			/// iso/uk/us dates: 1 number, length 6, padded, increment unknown
+			/// separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
+			/// numbered volumes: 2 or 3 numbers, length unknown, possibly padded
 			
-			// decrement highest index accordingly
+			/// Functions to write:
+			/// object FigureOutRules (ComicUri comic);
+			/// DONE string[] GenerateUrls (string bBase, object rules) 
+			/// DONE string IdentifyImg (string[] ImgUrls);			
+			/// 
+			/// figure out the naming rules
+			/// identify which number img tag src is the comic
+			/// for each page, get the src of the nth img tag  
 			
-			// test for real url
-			throw new NotImplementedException ();
+			return urls;
 		}
 		
 		public static bool UrlExists (string url)
@@ -112,7 +154,100 @@ namespace SequentialDownloader
 				return false;
 			}
 		}
-#endregion
+	
+		/// <summary>
+		/// Identifies the image.
+		/// </summary>
+		/// <returns>
+		/// The image index (from first page).
+		/// </returns>
+		/// <param name='pageUrls'>
+		/// Page urls.
+		/// </param>
+		/// <param name='imgUrl'>
+		/// Image URL (from first page).
+		/// </param>
+		/// <exception cref='NotImplementedException'>
+		/// Is thrown when a requested operation is not implemented for a given type.
+		/// </exception>
+		public int IdentifyImg (string[] pageUrls, out string imgUrl)
+		{			
+			// fill array of source code
+			var pageSources = pageUrls.Select<string,string> (x => GetSourceCode (x)).ToList ();			
+			// get jagged list
+			var pageImgs = pageSources.Select<string,List<string>> (x => FindImgs (x)).ToList ();
+			
+			// get jagged array
+			var imgUrls = new string[pageUrls.Length][];
+			for (int i = 0; i < pageUrls.Length; i++) {				
+				var source = pageSources [i];
+				var fullImgUrls = FindImgs (source).Select<string, ComicUri> (x => new ComicUri (x));				
+				var rightImgUrls = fullImgUrls.Select<ComicUri, string> (x => x.GetRightPart (UriPartial.Authority));
+				imgUrls [i] = rightImgUrls.ToArray ();
+			}
+			
+			// setup the list of possible indices
+			var possibleIndices = Enumerable.Range (0, imgUrls [0].Length).ToList ();			
+			
+			// remove the index of any item that appears in more than one page
+			for (int i = 0; i < imgUrls[0].GetLength(0); i++) {
+				for (int j = 1; j < imgUrls.GetLength(0); j++) {
+					if (imgUrls [j].Contains (imgUrls [0] [i])) {
+						possibleIndices.Remove (i);
+					}
+				}
+			}
+			
+			// if only one item left, remove it
+			if (possibleIndices.Count == 1) {
+				int index = possibleIndices.Single ();
+				imgUrl = pageImgs [0] [index];
+				return index;
+			}
+			
+			// else choose the remaining item that shows MOST similarity to same item on next list			
+			var scores = possibleIndices.Select<int, double> (p => CompareUrls (imgUrls [0] [p], imgUrls [1] [p])).ToList ();
+			var topIndex = scores.IndexOf (scores.Max ());
+			
+			imgUrl = pageImgs[0][topIndex];
+			return topIndex;
+		}
+		
+		/// <summary>
+		/// Compares two URLs
+		/// </summary>
+		/// <returns>
+		/// Score representing similarity (higher is closer)
+		/// </returns>
+		/// <param name='u1'>
+		/// U1.
+		/// </param>
+		/// <param name='u2'>
+		/// U2.
+		/// </param>
+		double CompareUrls (string u1, string u2)
+		{
+			var u1ext = u1.Substring (0, u1.Length - 4);
+			var u2ext = u2.Substring (0, u2.Length - 4);
+						
+			var u1c = u1ext.ToCharArray ();
+			var u2c = u2ext.ToCharArray ();
+					
+			double score = 0;
+			for (int i = 0; i < Math.Min (u1c.Length, u2c.Length); i++) {
+				if (u1c [i] == u2c [i]) {
+					score += 100;
+				} else {
+					score += 100 - Math.Abs ((int)u1c [i] - (int)u2c [i]);
+				}
+			}
+			
+			score /= (100 * Math.Min (u1c.Length, u2c.Length));
+			
+			return score;
+		}
+		
+		#endregion
 	}
 }
 

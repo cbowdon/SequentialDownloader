@@ -9,13 +9,33 @@ namespace TestSeqDLLib
 	{
 		#region FindUrls
 		[Test()]
-		public void FindUrls ()
+		public void FindUrlsXkcd ()
 		{
 			var xkcdUrl = "http://xkcd.com/614";
 			var xkcdParser = new ComicParser (xkcdUrl);
 			var xkcdUrls = xkcdParser.FindUrls ().ToArray ();
 			var xkcdImg = "http://imgs.xkcd.com/comics/woodpecker.png";
-			Assert.AreEqual (xkcdUrls [613], xkcdImg);						
+			Assert.AreEqual (xkcdImg, xkcdUrls [613]);						
+		}
+
+		[Test()]
+		public void FindUrlsSmbc ()
+		{
+			var smbcUrl = "http://www.smbc-comics.com/index.php?db=comics&id=614";
+			var smbcUrl2 = "http://www.smbc-comics.com/comics/20061010.gif";
+			var smbcParser = new ComicParser (smbcUrl);
+			var smbcUrls = smbcParser.FindUrls ().ToArray ();
+			Assert.AreEqual (smbcUrl2, smbcUrls [613]);
+		}
+		
+		[Test()]
+		public void FindUrlsSmbcImg ()
+		{
+			var smbcUrl = "http://www.smbc-comics.com/comics/20061011.gif";
+			var smbcUrl2 = "http://www.smbc-comics.com/comics/20061010.gif";
+			var smbcParser = new ComicParser (smbcUrl);
+			var smbcUrls = smbcParser.FindUrls ().ToArray ();
+			Assert.AreEqual (smbcUrl2, smbcUrls [613]);
 		}
 		
 		[Test()]
@@ -25,6 +45,49 @@ namespace TestSeqDLLib
 			Assert.IsFalse (ComicParser.UrlExists ("http://xkcd.com/91235252624363"));
 			Assert.IsTrue (ComicParser.UrlExists ("http://imgs.xkcd.com/comics/woodpecker.png"));
 			Assert.IsTrue (ComicParser.UrlExists ("http://www.smbc-comics.com/index.php?db=comics&id=614"));
+		}
+		#endregion
+		
+		#region GenerateUrls
+		[Test()]
+		public void GenerateUrlsXkcd ()
+		{
+			// rules object should say range and increment for single number
+			// rules object should say range, increment and nesting order for multiple numbers
+			var xkcdPages = new string[5];
+			xkcdPages [0] = "http://xkcd.com/610";
+			xkcdPages [1] = "http://xkcd.com/611";
+			xkcdPages [2] = "http://xkcd.com/612";
+			xkcdPages [3] = "http://xkcd.com/613";
+			xkcdPages [4] = "http://xkcd.com/614";
+			var comic = new ComicUri ("http://xkcd.com/614");
+			ICountingRule xkcdRules = new SequentialCount (comic, new Range (610, 615, 1));
+			Assert.AreEqual (xkcdPages, xkcdRules.Generate ());			
+		}
+		
+		[Test()]
+		public void GenerateUrlsSmbc ()
+		{
+			var smbcUrls = new string[5];
+			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
+			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
+			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061014.gif";
+			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061015.gif";
+			var comic = new ComicUri (smbcUrls [0]);
+			string startDate = "20061011";
+			int num = 5;
+			ICountingRule smbcRules = new ISODateCount (comic, startDate, num);
+			Assert.AreEqual (smbcUrls, smbcRules.Generate ());
+			
+			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
+			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
+			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061018.gif";
+			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061019.gif";			
+			var days = new DayOfWeek[]{DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday};
+			smbcRules = new ISODateCount (comic, startDate, num, days);
+			Assert.AreEqual (smbcUrls, smbcRules.Generate ());			
 		}
 		#endregion
 		
@@ -112,6 +175,31 @@ namespace TestSeqDLLib
 			var smbc615ComicA = "http://www.smbc-comics.com/comics/20061012.gif";
 			var smbc615ComicB = "http://zs1.smbc-comics.com/comics/20061012.gif";
 			Assert.IsTrue (smbc615Imgs.Contains (smbc615ComicA) || smbc615Imgs.Contains (smbc615ComicB));
+		}
+		
+		[Test()]
+		public void IdentifyImgXkcd ()
+		{			
+			var url = "http://xkcd.com/614";
+			ICountingRule xkcdRules = new SequentialCount (new ComicUri (url), new Range (614, 617, 1));
+			var comic = new ComicParser (url);
+			var actualUrl = "http://imgs.xkcd.com/comics/woodpecker.png";
+			string result = null;
+			Assert.AreEqual (1, comic.IdentifyImg (xkcdRules.Generate (), out result));
+			Assert.AreEqual (actualUrl, result);
+		}
+		
+		[Test()]
+		public void IdentifyImgSmbc ()
+		{			
+			string url = "http://www.smbc-comics.com/index.php?db=comics&id=614";
+			ICountingRule smbcRules = new SequentialCount (new ComicUri (url), new Range (614, 616, 1));
+			var comic = new ComicParser (url);
+			var actualUrl = "http://www.smbc-comics.com/comics/20061011.gif";
+			var actualUrl2 = "http://zs1.smbc-comics.com/comics/20061011.gif";
+			string result = null;
+			Assert.AreEqual (2, comic.IdentifyImg (smbcRules.Generate (), out result));
+			Assert.IsTrue (result.Equals (actualUrl) || result.Equals (actualUrl2));
 		}
 		#endregion
 			

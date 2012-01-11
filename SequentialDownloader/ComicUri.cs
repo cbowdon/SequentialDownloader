@@ -15,8 +15,7 @@ namespace SequentialDownloader
 		public string[] Indices {
 			get {
 				if (indices == null) {
-					string leftPart = GetLeftPart (UriPartial.Authority);
-					string rightPart = AbsoluteUri.Substring (leftPart.Length);
+					string rightPart = GetRightPart(UriPartial.Authority);
 			
 					// match all numbers (or months or days) -> string[]
 					var numRx = new Regex ("[0-9]+");
@@ -43,7 +42,6 @@ namespace SequentialDownloader
 					var bBase = new StringBuilder (AbsoluteUri);
 					for (int i = 0; i < Indices.Length; i++) {
 						bBase.Replace (Indices [i], "{" + i + "}");
-						Console.WriteLine (bBase);
 					}
 					uriBase = bBase.ToString ();
 				}
@@ -55,6 +53,14 @@ namespace SequentialDownloader
 		public ComicUri (string url) : base (url)
 		{
 		}
+		
+		public string GetRightPart (UriPartial uriPartial)
+		{
+			string leftPart = GetLeftPart (uriPartial);
+			string rightPart = AbsoluteUri.Substring (leftPart.Length);
+			return rightPart;
+		}
+		
 	}
 }
 
