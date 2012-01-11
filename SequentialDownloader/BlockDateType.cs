@@ -2,8 +2,9 @@ using System;
 
 namespace SequentialDownloader
 {
-	public enum BlockDateFormat
+	public enum BlockDateType
 	{
+		NotAssigned,
 		NotRecognised,
 		ISO,
 		UK,

@@ -14,11 +14,36 @@ namespace SequentialDownloader
 	public class BlockDateCount : ICountingRule
 	{
 		ComicUri comic;
+		string _format;
+		BlockDateType _type;
+		DateTime _date;
+				
+		public string Format { 
+			get {
+				if (_format == null) {
+					_date = FindFormat (comic.Indices, out _format, out _type);
+				}
+				return _format;
+			}			
+		}
+
+		public BlockDateType Type { 
+			get {
+				if (_type == BlockDateType.NotAssigned) {
+					_date = FindFormat (comic.Indices, out _format, out _type);
+				}
+				return _type;
+			}
+		}
+		
 		string startDate;
 		int num;
 		DayOfWeek[] days;
-				
-		public BlockDateFormat Type { get; private set; }
+		
+		public BlockDateCount (ComicUri comic)
+		{
+			this.comic = comic;			
+		}
 		
 		public BlockDateCount (ComicUri comic, string startDate, int number)
 		{
@@ -62,11 +87,11 @@ namespace SequentialDownloader
 		public static DateTime GetDateTime (string date)
 		{		
 			DateTime result;
-			var x = FindFormat (date, out result);
-			if (x == BlockDateFormat.NotRecognised) {
+			string form;
+			var x = FindFormat (date, out result, out form);
+			if (x == BlockDateType.NotRecognised) {
 				throw new ArgumentException ("ISODateCount.GetDateTime: Not a valid date string: {0} -> format is yyyyMMdd", date);
 			}
-			var y = result.GetDateTimeFormats ();
 			return result;			
 		}
 		
@@ -80,30 +105,66 @@ namespace SequentialDownloader
 			}
 		}
 		
-		public static BlockDateFormat FindFormat (string date, out DateTime result)
+		public static BlockDateType FindFormat (string date, out DateTime result, out string format)
 		{
 			// TryParseExact each date format string
 			// if true, return
 			DateTime res;
 			Func <string, bool> TryParseFormat = x => DateTime.TryParseExact (date, x, null, System.Globalization.DateTimeStyles.None, out res);	
 						
-			BlockDateFormat format = BlockDateFormat.NotRecognised;
+			string form = "";
+			BlockDateType bdFormat = BlockDateType.NotRecognised;
 			
 			if (TryParseFormat ("yyyyMMdd")) {
-				format = BlockDateFormat.ISO;
+				form = "yyyyMMdd";
+				bdFormat = BlockDateType.ISO;
 			} else if (TryParseFormat ("ddMMyyyy")) {
-				format = BlockDateFormat.UK;
+				form = "ddMMyyyy";
+				bdFormat = BlockDateType.UK;
 			} else if (TryParseFormat ("MMddyyyy")) {
-				format = BlockDateFormat.US;
+				form = "MMddyyyy";
+				bdFormat = BlockDateType.US;
 			} else if (TryParseFormat ("yyMMdd")) {
-				format = BlockDateFormat.ShortISO;
+				form = "yyMMdd";
+				bdFormat = BlockDateType.ShortISO;
 			} else if (TryParseFormat ("ddMMyy")) {
-				format = BlockDateFormat.ShortUK;
+				form = "ddMMyy";
+				bdFormat = BlockDateType.ShortUK;
 			} else if (TryParseFormat ("MMddyy")) {
-				format = BlockDateFormat.ShortUS;
+				form = "MMddyy";
+				bdFormat = BlockDateType.ShortUS;
 			} 
+			format = form;
 			result = res;
-			return format;
+			return bdFormat;
+		}
+		
+		DateTime FindFormat (string[] indices, out string format, out BlockDateType type)
+		{
+			string date = indices [0];
+			DateTime res;
+			Func <string, bool> TryParseFormat = x => DateTime.TryParseExact (date, x, null, System.Globalization.DateTimeStyles.None, out res);	
+						
+			string form = "";
+			BlockDateType bdFormat = BlockDateType.NotRecognised;
+			
+			string[] formats = new string[6];
+			formats [0] = "yyyyMMdd";
+			formats [1] = "ddMMyyyy";
+			formats [2] = "MMddyyyy";
+			formats [3] = "yyMMdd";
+			formats [4] = "ddMMyy";
+			formats [5] = "MMddyy";
+			
+			foreach (int i in BlockDateType) {
+				if (TryParseFormat (formats[(int)i])) {
+					form = formats[(int)i];
+					bdFormat = i;
+				}	
+			}
+			
+			format = form;
+			return res;
 		}
 	}	
 }

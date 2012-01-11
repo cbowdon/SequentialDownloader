@@ -43,7 +43,7 @@
     <Compile Include="SequentialCount.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="BlockDateCount.cs" />
-    <Compile Include="BlockDateFormat.cs" />
+    <Compile Include="BlockDateType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
