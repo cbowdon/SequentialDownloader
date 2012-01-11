@@ -64,6 +64,16 @@ namespace SequentialDownloader
 			}						
 			return DateTime.ParseExact (date, "yyyyMMdd", null);			
 		}
+		
+		public static bool IsDateTime (string date)
+		{
+			try {
+				GetDateTime (date);
+				return true;
+			} catch {
+				return false;
+			}
+		}
 	}	
 }
 

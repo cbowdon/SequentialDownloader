@@ -123,20 +123,44 @@ namespace SequentialDownloader
 			var comic = new ComicUri (inputUrl);
 			
 			var urls = new List<string> ();
-			/// possible formats:
-			/// straight number sequence : 1 number, length unknown, possibly padded, increment is 1
-			/// iso/uk/us dates: 1 number, length 6, padded, increment unknown
-			/// separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
-			/// numbered volumes: 2 or 3 numbers, length unknown, possibly padded
 			
-			/// Functions to write:
-			/// object FigureOutRules (ComicUri comic);
-			/// DONE string[] GenerateUrls (string bBase, object rules) 
-			/// DONE string IdentifyImg (string[] ImgUrls);			
+			/// Procedure
 			/// 
-			/// figure out the naming rules
-			/// identify which number img tag src is the comic
-			/// for each page, get the src of the nth img tag  
+			/// figure out the naming rules --> create an appropriate ICountingRule
+			/// 
+			/// identify which number img tag src is the comic --> use the ICountingRule to generate a few test pages
+			/// 
+			/// for each page, try get the src of the nth img tag -- use the ICountingRule->FindImgs to get urls 
+			/// 
+			
+			// figure out the naming rules
+			
+			/// possible formats:
+			/// A straight number sequence : 1 number, length unknown, possibly padded, increment is 1
+			/// B iso/uk/us dates: 1 number, length 6, padded, increment unknown
+			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
+			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded
+			
+			if (comic.Indices.Length == 1) {
+				// option A or B
+				var index = comic.Indices[0];
+				
+				// identify if it's a valid date
+				if (ISODateCount.IsDateTime(index)) {
+					
+				}
+				
+				// identify if it is a fixed-length number
+				
+								
+			} else {
+				// option C or D
+			}
+			
+			// identify img tag index
+			
+			// generate whole list and get nth tag for each			
+			
 			
 			return urls;
 		}
@@ -209,7 +233,7 @@ namespace SequentialDownloader
 			var scores = possibleIndices.Select<int, double> (p => CompareUrls (imgUrls [0] [p], imgUrls [1] [p])).ToList ();
 			var topIndex = scores.IndexOf (scores.Max ());
 			
-			imgUrl = pageImgs[0][topIndex];
+			imgUrl = pageImgs [0] [topIndex];
 			return topIndex;
 		}
 		
