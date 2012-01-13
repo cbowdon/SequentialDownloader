@@ -39,11 +39,10 @@
     <Compile Include="ComicParser.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="ComicUri.cs" />
-    <Compile Include="ICountingRule.cs" />
     <Compile Include="SequentialCount.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="BlockDateCount.cs" />
-    <Compile Include="BlockDateType.cs" />
+    <Compile Include="DateType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

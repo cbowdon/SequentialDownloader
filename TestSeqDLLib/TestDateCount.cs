@@ -6,36 +6,7 @@ namespace TestSeqDLLib
 {
 	[TestFixture()]
 	public class TestDateCount
-	{
-		[Test()]		
-		public void TryParseDates ()
-		{
-			var isoDate = "19871024";
-			var ukDate = "24101987";
-			var usDate = "10241987";
-			var isoDateShort = "871024";
-			var ukDateShort = "241087";
-			var usDateShort = "102487";
-			var fakeDate = "99999999";
-									
-			DateTime result;
-			string format;
-			Assert.AreEqual (BlockDateType.ISO, BlockDateCount.FindFormat (isoDate, out result, out format));
-			Assert.AreEqual (BlockDateType.UK, BlockDateCount.FindFormat (ukDate, out result, out format));
-			Assert.AreEqual (BlockDateType.US, BlockDateCount.FindFormat (usDate, out result, out format));			
-			Assert.AreEqual (BlockDateType.ShortISO, BlockDateCount.FindFormat (isoDateShort, out result, out format));
-			Assert.AreEqual (BlockDateType.ShortUK, BlockDateCount.FindFormat (ukDateShort, out result, out format));
-			Assert.AreEqual (BlockDateType.ShortUS, BlockDateCount.FindFormat (usDateShort, out result, out format));
-			Assert.AreEqual (BlockDateType.NotRecognised, BlockDateCount.FindFormat (fakeDate, out result, out format));
-			
-			Assert.IsTrue (BlockDateCount.IsDateTime (isoDate));						
-			Assert.IsTrue (BlockDateCount.IsDateTime (ukDate));			
-			Assert.IsTrue (BlockDateCount.IsDateTime (usDate));
-			Assert.IsTrue (BlockDateCount.IsDateTime (isoDateShort));			
-			Assert.IsTrue (BlockDateCount.IsDateTime (ukDateShort));
-			Assert.IsTrue (BlockDateCount.IsDateTime (usDateShort));
-		}
-		
+	{	
 		[Test()]
 		public void Constructor ()
 		{
@@ -48,25 +19,25 @@ namespace TestSeqDLLib
 			var fakeDate = "http://comic.com/99999999";
 			
 			var dateCount = new BlockDateCount (new ComicUri (isoDate));			
-			Assert.AreEqual (BlockDateType.ISO, dateCount.Type);
+			Assert.AreEqual (DateType.Iso, dateCount.Format);
 			
 			dateCount = new BlockDateCount (new ComicUri (ukDate));			
-			Assert.AreEqual (BlockDateType.UK, dateCount.Type);
+			Assert.AreEqual (DateType.Uk, dateCount.Format);
 			
 			dateCount = new BlockDateCount (new ComicUri (usDate));			
-			Assert.AreEqual (BlockDateType.US, dateCount.Type);
+			Assert.AreEqual (DateType.Us, dateCount.Format);
 			
 			dateCount = new BlockDateCount (new ComicUri (isoDateShort));			
-			Assert.AreEqual (BlockDateType.ShortISO, dateCount.Type);
+			Assert.AreEqual (DateType.IsoShort, dateCount.Format);
 
 			dateCount = new BlockDateCount (new ComicUri (ukDateShort));			
-			Assert.AreEqual (BlockDateType.ShortUK, dateCount.Type);
+			Assert.AreEqual (DateType.UkShort, dateCount.Format);
 			
 			dateCount = new BlockDateCount (new ComicUri (usDateShort));			
-			Assert.AreEqual (BlockDateType.ShortUS, dateCount.Type);
+			Assert.AreEqual (DateType.UsShort, dateCount.Format);
 			
 			dateCount = new BlockDateCount (new ComicUri (fakeDate));
-			Assert.AreEqual (BlockDateType.NotRecognised, dateCount.Type);
+			Assert.AreEqual (DateType.NotRecognized, dateCount.Format);
 			
 		}
 	}

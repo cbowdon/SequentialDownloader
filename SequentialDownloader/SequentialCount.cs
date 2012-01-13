@@ -7,7 +7,7 @@ namespace SequentialDownloader
 	/// <summary>
 	/// Sequential count : for basic basic counting.
 	/// </summary>
-	public class SequentialCount : ICountingRule
+	public class SequentialCount
 	{
 		ComicUri comic;
 		Range range;

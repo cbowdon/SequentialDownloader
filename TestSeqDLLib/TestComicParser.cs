@@ -61,7 +61,7 @@ namespace TestSeqDLLib
 			xkcdPages [3] = "http://xkcd.com/613";
 			xkcdPages [4] = "http://xkcd.com/614";
 			var comic = new ComicUri ("http://xkcd.com/614");
-			ICountingRule xkcdRules = new SequentialCount (comic, new Range (610, 615, 1));
+			var xkcdRules = new SequentialCount (comic, new Range (610, 615, 1));
 			Assert.AreEqual (xkcdPages, xkcdRules.Generate ());			
 		}
 		
@@ -75,19 +75,18 @@ namespace TestSeqDLLib
 			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061014.gif";
 			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061015.gif";
 			var comic = new ComicUri (smbcUrls [0]);
-			string startDate = "20061011";
 			int num = 5;
-			ICountingRule smbcRules = new BlockDateCount (comic, startDate, num);
-			Assert.AreEqual (smbcUrls, smbcRules.Generate ());
+			var smbcRules = new BlockDateCount (comic);
+			Assert.AreEqual (smbcUrls, smbcRules.Generate (num));
 			
 			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
 			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
 			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
 			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061018.gif";
 			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061019.gif";			
-			var days = new DayOfWeek[]{DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday};
-			smbcRules = new BlockDateCount (comic, startDate, num, days);
-			Assert.AreEqual (smbcUrls, smbcRules.Generate ());			
+			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
+			smbcRules = new BlockDateCount (comic);
+			Assert.AreEqual (smbcUrls, smbcRules.Generate (num, days));			
 		}
 		#endregion
 		
@@ -181,7 +180,7 @@ namespace TestSeqDLLib
 		public void IdentifyImgXkcd ()
 		{			
 			var url = "http://xkcd.com/614";
-			ICountingRule xkcdRules = new SequentialCount (new ComicUri (url), new Range (614, 617, 1));
+			var xkcdRules = new SequentialCount (new ComicUri (url), new Range (614, 617, 1));
 			var comic = new ComicParser (url);
 			var actualUrl = "http://imgs.xkcd.com/comics/woodpecker.png";
 			string result = null;
@@ -193,7 +192,7 @@ namespace TestSeqDLLib
 		public void IdentifyImgSmbc ()
 		{			
 			string url = "http://www.smbc-comics.com/index.php?db=comics&id=614";
-			ICountingRule smbcRules = new SequentialCount (new ComicUri (url), new Range (614, 616, 1));
+			var smbcRules = new SequentialCount (new ComicUri (url), new Range (614, 616, 1));
 			var comic = new ComicParser (url);
 			var actualUrl = "http://www.smbc-comics.com/comics/20061011.gif";
 			var actualUrl2 = "http://zs1.smbc-comics.com/comics/20061011.gif";
