@@ -144,13 +144,17 @@ namespace SequentialDownloader
 			
 			if (comic.Indices.Length == 1) {
 				// option A or B
-				var index = comic.Indices [0];
+				
 				
 				// identify if it's a valid date
 				if (true) {					
 					// B of some kind
 					
-
+					
+				} else {
+					// A of some kind
+					var index = comic.Indices [0];					
+					
 					// identify if it is a fixed-length number	
 					if (UrlExists (string.Format (comic.Base, "1"))) {
 						// A, unpadded
