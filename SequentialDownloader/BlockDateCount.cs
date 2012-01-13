@@ -100,6 +100,17 @@ namespace SequentialDownloader
 			format = form;
 			return res;
 		}
+		
+		public override List<string> GenerateAll ()
+		{
+			throw new NotImplementedException ();
+		}
+		
+		public override List<string> GenerateSome ()
+		{
+			throw new NotImplementedException ();
+		}
+		
 		#endregion
 	}	
 }

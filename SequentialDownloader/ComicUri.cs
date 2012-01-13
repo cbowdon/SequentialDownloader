@@ -15,7 +15,7 @@ namespace SequentialDownloader
 		public string[] Indices {
 			get {
 				if (indices == null) {
-					string rightPart = GetRightPart(UriPartial.Authority);
+					string rightPart = GetRightPart (UriPartial.Authority);
 			
 					// match all numbers (or months or days) -> string[]
 					var numRx = new Regex ("[0-9]+");
@@ -46,6 +46,16 @@ namespace SequentialDownloader
 					uriBase = bBase.ToString ();
 				}
 				return uriBase;
+			}
+		}
+		#endregion
+		
+		#region IsImageFile
+		public bool IsImageFile {
+			get {
+				var pattern = @"(.png)|(.jpg)|(.gif)|(.jpeg)|(.bmp)|(.tif)|(.tiff)";
+				var regex = new Regex (pattern, RegexOptions.IgnoreCase);
+				return regex.IsMatch (GetRightPart (UriPartial.Authority));
 			}
 		}
 		#endregion

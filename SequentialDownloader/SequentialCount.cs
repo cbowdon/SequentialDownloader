@@ -65,6 +65,16 @@ namespace SequentialDownloader
 			} 			
 		}
 		
+		public override List<string> GenerateAll ()
+		{
+			throw new NotImplementedException ();
+		}
+		
+		public override List<string> GenerateSome ()
+		{
+			throw new NotImplementedException ();
+		}
+		
 		
 	}
 }

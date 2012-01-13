@@ -38,7 +38,18 @@ namespace TestSeqDLLib
 			Assert.AreEqual (DateType.UsShort, dateCount.Format);
 			
 			dateCount = new BlockDateCount (new ComicUri (fakeDate));
-			Assert.AreEqual (DateType.NotRecognized, dateCount.Format);
+			Assert.AreEqual (DateType.NotRecognized, dateCount.Format);			
+		}
+		
+		[Test()]
+		public void GenerateSome ()
+		{
+			
+		}
+		
+		[Test()]
+		public void GenerateAll ()
+		{
 			
 		}
 	}

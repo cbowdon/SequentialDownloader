@@ -13,6 +13,10 @@ namespace SequentialDownloader
 		protected UrlGenerator (ComicUri comic)
 		{
 		}
+		
+		public abstract List<string> GenerateAll ();
+		
+		public abstract List<string> GenerateSome ();
 	}
 }
 

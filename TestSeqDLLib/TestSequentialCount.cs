@@ -16,6 +16,18 @@ namespace TestSeqDLLib
 			seqCo.Padded = true;
 			Assert.IsTrue (seqCo.Padded);
 		}
+		
+		[Test()]
+		public void GenerateSome ()
+		{
+			
+		}
+		
+		[Test()]
+		public void GenerateAll ()
+		{
+			
+		}
 	}
 }
 

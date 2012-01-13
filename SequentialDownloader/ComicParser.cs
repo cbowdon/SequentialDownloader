@@ -121,9 +121,7 @@ namespace SequentialDownloader
 		{
 			// take ComicUri(url)
 			var comic = new ComicUri (inputUrl);
-			
-			var urls = new List<string> ();
-			
+						
 			/// Procedure
 			/// 
 			/// figure out the naming rules --> create an appropriate ICountingRule
@@ -140,35 +138,45 @@ namespace SequentialDownloader
 			/// B iso/uk/us dates: 1 number, length 6, padded, increment unknown
 			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
 			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded				
-									
+						
+			UrlGenerator gen;
+			
 			if (comic.Indices.Length == 1) {
 				// option A or B
 				
-				var dateCount = new BlockDateCount(comic);
+				var dateCount = new BlockDateCount (comic);
 					
 				// identify if it's a valid date
 				if (dateCount.Format != DateType.NotRecognized) {					
 					// B of some kind
-					
-					
+					gen = dateCount;					
 				} else {
 					// A of some kind
-													
+					var seqCount = new SequentialCount (comic);
+					gen = seqCount;
 				}
-				
-				
-				
-								
 			} else {
 				// option C or D
+				throw new NotImplementedException ();
 			}
 			
 			// identify img tag index
 			
-			// generate whole list and get nth tag for each			
+			// generate whole list of pages
+			var allPages = gen.GenerateAll ();
+			
+			// and get nth tag for each						
+			// (map second (map FindImg, allPages))
+			IEnumerable<string> urls;			
+			if (!comic.IsImageFile) {
+				int imgIndex = IdentifyImg (gen.GenerateSome ());			
+				urls = allPages.Select<string,string> (x => FindImgs (x) [imgIndex]);	
+			} else {
+				urls = allPages;
+			}
 			
 			
-			return urls;
+			return urls.ToList ();
 		}
 		
 		public static bool UrlExists (string url)
@@ -200,7 +208,7 @@ namespace SequentialDownloader
 		/// <exception cref='NotImplementedException'>
 		/// Is thrown when a requested operation is not implemented for a given type.
 		/// </exception>
-		public int IdentifyImg (string[] pageUrls, out string imgUrl)
+		public int IdentifyImg (IEnumerable<string> pageUrls, out string imgUrl)
 		{			
 			// fill array of source code
 			var pageSources = pageUrls.Select<string,string> (x => GetSourceCode (x)).ToList ();			
@@ -208,8 +216,8 @@ namespace SequentialDownloader
 			var pageImgs = pageSources.Select<string,List<string>> (x => FindImgs (x)).ToList ();
 			
 			// get jagged array
-			var imgUrls = new string[pageUrls.Length][];
-			for (int i = 0; i < pageUrls.Length; i++) {				
+			var imgUrls = new string[pageUrls.Count ()][];
+			for (int i = 0; i < pageUrls.Count(); i++) {				
 				var source = pageSources [i];
 				var fullImgUrls = FindImgs (source).Select<string, ComicUri> (x => new ComicUri (x));				
 				var rightImgUrls = fullImgUrls.Select<ComicUri, string> (x => x.GetRightPart (UriPartial.Authority));
@@ -241,6 +249,12 @@ namespace SequentialDownloader
 			
 			imgUrl = pageImgs [0] [topIndex];
 			return topIndex;
+		}
+		
+		public int IdentifyImg (IEnumerable<string> pageUrls)
+		{
+			string wasted;
+			return IdentifyImg (pageUrls, out wasted);
 		}
 		
 		/// <summary>

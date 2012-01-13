@@ -39,6 +39,7 @@
     <Compile Include="TestComicParser.cs" />
     <Compile Include="TestDateCount.cs" />
     <Compile Include="TestSequentialCount.cs" />
+    <Compile Include="TestComicUri.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
