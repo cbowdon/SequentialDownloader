@@ -7,16 +7,33 @@ namespace SequentialDownloader
 	/// <summary>
 	/// Sequential count : for basic basic counting.
 	/// </summary>
-	public class SequentialCount
+	public class SequentialCount : UrlGenerator
 	{
 		ComicUri comic;
+		bool _paddingSet = false;
+		bool padded;
+
+		public bool Padded { 
+			get {
+				if (_paddingSet == false) {
+					_paddingSet = true;
+					padded = IsPadded ();					
+				} 
+				return padded;
+			}
+			
+			set {
+				_paddingSet = true;
+				padded = value;
+			}
+		}
 		
-		public bool Padded { get; set; }
-		
-		public SequentialCount (ComicUri comic)
+		public SequentialCount (ComicUri comic) : base (comic)
 		{
 			this.comic = comic;
-			this.Padded = false;
+			if (comic.Indices.Length != 1) {
+				throw new ArgumentException ("Sequential Count cannot accept a comic with > 1 index");
+			}
 		}
 		
 		public string[] Generate (Range range)
@@ -31,6 +48,21 @@ namespace SequentialDownloader
 				urls.Add (string.Format (comic.Base, num));
 			}
 			return urls.ToArray ();
+		}
+		
+		bool IsPadded ()
+		{
+			// identify if it is a fixed-length number	
+			if (ComicParser.UrlExists (string.Format (comic.Base, "1"))) {
+				// unpadded
+				return false;		
+			} else if (ComicParser.UrlExists (string.Format (comic.Base, "1".PadLeft (comic.Indices [0].Length, '0')))) {
+				// padded
+				return true;
+			} else {
+				// throw error
+				throw new ArgumentException ("SequentialCount.IsPadded: Cannot figure out if {0} is padded.", comic.AbsoluteUri);
+			} 			
 		}
 		
 		

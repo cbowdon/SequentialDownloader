@@ -11,7 +11,7 @@ namespace SequentialDownloader
 	/// <exception cref='NotImplementedException'>
 	/// Is thrown when a requested operation is not implemented for a given type.
 	/// </exception>
-	public class BlockDateCount
+	public class BlockDateCount : UrlGenerator
 	{
 		#region Properties
 		ComicUri comic;
@@ -38,7 +38,7 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Constructors		
-		public BlockDateCount (ComicUri comic)
+		public BlockDateCount (ComicUri comic) : base (comic)
 		{
 			this.comic = comic;			
 		}

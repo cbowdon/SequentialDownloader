@@ -139,33 +139,21 @@ namespace SequentialDownloader
 			/// A straight number sequence : 1 number, length unknown, possibly padded, increment is 1
 			/// B iso/uk/us dates: 1 number, length 6, padded, increment unknown
 			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
-			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded
-			
-			
+			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded				
+									
 			if (comic.Indices.Length == 1) {
 				// option A or B
 				
-				
+				var dateCount = new BlockDateCount(comic);
+					
 				// identify if it's a valid date
-				if (true) {					
+				if (dateCount.Format != DateType.NotRecognized) {					
 					// B of some kind
 					
 					
 				} else {
 					// A of some kind
-					var index = comic.Indices [0];					
-					
-					// identify if it is a fixed-length number	
-					if (UrlExists (string.Format (comic.Base, "1"))) {
-						// A, unpadded
-						
-					} else if (UrlExists (string.Format (comic.Base, "1".PadLeft (index.Length, '0')))) {
-						// A, padded
-						
-					} else {
-						// throw error
-						throw new ArgumentException ("ComicParser.FindUrls: Cannot figure out index rule for {0}.", comic.AbsoluteUri);
-					} 											
+													
 				}
 				
 				

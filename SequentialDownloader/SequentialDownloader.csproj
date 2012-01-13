@@ -43,6 +43,7 @@
     <Compile Include="Range.cs" />
     <Compile Include="BlockDateCount.cs" />
     <Compile Include="DateType.cs" />
+    <Compile Include="UrlGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
