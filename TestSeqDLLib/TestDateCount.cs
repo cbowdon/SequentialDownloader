@@ -44,7 +44,19 @@ namespace TestSeqDLLib
 		[Test()]
 		public void GenerateSome ()
 		{
+			var smbc = "http://www.smbc-comics.com/index.php?db=comics&id=620#comic";
 			
+			var smbcUrls = new string[7];
+			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
+			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
+			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061014.gif";
+			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061015.gif";
+			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061016.gif";
+			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061017.gif";
+			
+			var dateCount = new BlockDateCount (new ComicUri (smbc));
+			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ());
 		}
 		
 		[Test()]
