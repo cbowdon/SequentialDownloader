@@ -7,8 +7,8 @@ namespace TestSeqDLLib
 	[TestFixture()]
 	public class TestDateCount
 	{	
-		[Test()]
-		public void Constructor ()
+		[Test()]		
+		public void FindFormat ()
 		{
 			var isoDate = "http://comic.com/19871024";
 			var ukDate = "http://comic.com/24101987";
@@ -18,6 +18,7 @@ namespace TestSeqDLLib
 			var usDateShort = "http://comic.com/102487";
 			var fakeDate = "http://comic.com/99999999";
 			
+			// implicitly tests FindFormat by calling the property BlockDateCount.Format
 			var dateCount = new BlockDateCount (new ComicUri (isoDate));			
 			Assert.AreEqual (DateType.Iso, dateCount.Format);
 			
