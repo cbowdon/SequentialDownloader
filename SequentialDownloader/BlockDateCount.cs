@@ -15,7 +15,6 @@ namespace SequentialDownloader
 	{
 		#region Properties
 		ComicUri comic;
-		string _format;
 		DateTime _date = new DateTime (0);
 		
 		public DateTime Date {
@@ -27,6 +26,8 @@ namespace SequentialDownloader
 			}
 		}
 
+		string _format;
+		
 		public string Format { 
 			get {
 				if (_format == null) {
@@ -35,6 +36,8 @@ namespace SequentialDownloader
 				return _format;
 			}
 		}
+		
+		public string[] Days { get; set; }
 		#endregion
 		
 		#region Constructors		
@@ -45,20 +48,21 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Methods
-		public string[] Generate (int number)
+		public List<string> Generate (int number)
 		{
-			string[] days = new string[7];
-			days [0] = DayOfWeek.Monday.ToString ();
-			days [1] = DayOfWeek.Tuesday.ToString ();
-			days [2] = DayOfWeek.Wednesday.ToString ();
-			days [3] = DayOfWeek.Thursday.ToString ();
-			days [4] = DayOfWeek.Friday.ToString ();
-			days [5] = DayOfWeek.Saturday.ToString ();
-			days [6] = DayOfWeek.Sunday.ToString ();
+			List<string> days = new List<string> ();
+			days.Add (DayOfWeek.Monday.ToString ());
+			days.Add (DayOfWeek.Tuesday.ToString ());
+			days.Add (DayOfWeek.Wednesday.ToString ());
+			days.Add (DayOfWeek.Thursday.ToString ());
+			days.Add (DayOfWeek.Friday.ToString ());
+			days.Add (DayOfWeek.Saturday.ToString ());
+			days.Add (DayOfWeek.Sunday.ToString ());
+			
 			return Generate (number, days);
 		}
 		
-		public string[] Generate (int number, string[] days)
+		public List<string> Generate (int number, IEnumerable<string> days)
 		{
 			var urls = new List<string> ();
 			
@@ -68,9 +72,10 @@ namespace SequentialDownloader
 				if (days.Contains (d.DayOfWeek.ToString ())) {			
 					urls.Add (String.Format (comic.Base, d.ToString (Format)));
 				}
-				i++;
+				i--;
 			}
-			return urls.ToArray ();			
+			urls.Reverse ();
+			return urls;			
 		}
 			
 		public static DateTime FindFormat (string[] indices, out string format)
@@ -101,16 +106,25 @@ namespace SequentialDownloader
 			return res;
 		}
 		
+		/// <summary>
+		/// Generates URLs for previous 7 dates.
+		/// </summary>
+		/// <returns>
+		/// URLs of previous 7 dates.
+		/// </returns>
+		public override List<string> GenerateSome ()
+		{
+			if (Days == null || Days.Length == 7) {
+				return Generate (7);
+			} else {
+				return Generate (7, Days);
+			}
+		}
+		
 		public override List<string> GenerateAll ()
 		{
 			throw new NotImplementedException ();
-		}
-		
-		public override List<string> GenerateSome ()
-		{
-			throw new NotImplementedException ();
-		}
-		
+		}		
 		#endregion
 	}	
 }

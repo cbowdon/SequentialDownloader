@@ -48,67 +48,6 @@ namespace TestSeqDLLib
 		}
 		#endregion
 		
-		#region GenerateUrls
-		[Test()]
-		public void GenerateUrlsXkcd ()
-		{
-			var xkcdPages = new string[5];
-			xkcdPages [0] = "http://xkcd.com/610";
-			xkcdPages [1] = "http://xkcd.com/611";
-			xkcdPages [2] = "http://xkcd.com/612";
-			xkcdPages [3] = "http://xkcd.com/613";
-			xkcdPages [4] = "http://xkcd.com/614";
-			var comic = new ComicUri ("http://xkcd.com/614");
-			var xkcdRules = new SequentialCount (comic);
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (new Range (610, 615, 1)));			
-			
-			xkcdPages = new string[5];
-			xkcdPages [0] = "http://xkcd.com/1";
-			xkcdPages [1] = "http://xkcd.com/2";
-			xkcdPages [2] = "http://xkcd.com/3";
-			xkcdPages [3] = "http://xkcd.com/4";
-			xkcdPages [4] = "http://xkcd.com/5";
-			comic = new ComicUri ("http://xkcd.com/614");
-			xkcdRules = new SequentialCount (comic);
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (new Range (1, 6, 1)));			
-			
-			xkcdPages = new string[5];
-			xkcdPages [0] = "http://xkcd.com/001";
-			xkcdPages [1] = "http://xkcd.com/002";
-			xkcdPages [2] = "http://xkcd.com/003";
-			xkcdPages [3] = "http://xkcd.com/004";
-			xkcdPages [4] = "http://xkcd.com/005";
-			comic = new ComicUri ("http://xkcd.com/614");
-			xkcdRules = new SequentialCount (comic);
-			xkcdRules.Padded = true;
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (new Range (1, 6, 1)));			
-		}
-		
-		[Test()]
-		public void GenerateUrlsSmbc ()
-		{
-			var smbcUrls = new string[5];
-			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
-			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
-			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
-			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061014.gif";
-			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061015.gif";
-			var comic = new ComicUri (smbcUrls [0]);
-			int num = 5;
-			var smbcRules = new BlockDateCount (comic);
-			Assert.AreEqual (smbcUrls, smbcRules.Generate (num));
-			
-			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
-			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
-			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
-			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061018.gif";
-			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061019.gif";			
-			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
-			smbcRules = new BlockDateCount (comic);
-			Assert.AreEqual (smbcUrls, smbcRules.Generate (num, days));			
-		}
-		#endregion
-		
 		#region ParameterizeUrls
 		[Test()]
 		public void ParameterizeUrlXkcd ()

@@ -99,11 +99,6 @@ namespace SequentialDownloader
 			return urls;
 		}
 
-		public override List<string> GenerateAll ()
-		{
-			throw new NotImplementedException ();
-		}
-		
 		/// <summary>
 		/// Generates 7 (predicted) previous comic URLs.
 		/// </summary>
@@ -143,7 +138,12 @@ namespace SequentialDownloader
 			return urls;
 		}
 		
+		public override List<string> GenerateAll ()
+		{
+			throw new NotImplementedException ();
+		}
 		
+
 	}
 }
 
