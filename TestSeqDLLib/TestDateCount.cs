@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SequentialDownloader;
 using NUnit.Framework;
 
@@ -7,6 +8,16 @@ namespace TestSeqDLLib
 	[TestFixture()]
 	public class TestDateCount
 	{	
+		[Test()]
+		public void Days ()
+		{
+			var comic = new ComicUri ("http://www.smbc-comics.com/comics/20061011.gif");
+			var dateCount = new BlockDateCount (comic);
+			// by chance, two consecutive Thursdays were missed
+			Assert.AreEqual (6, dateCount.Days.Count);
+			Assert.IsFalse (dateCount.Days.Contains ("Thursday"));
+		}
+		
 		[Test()]		
 		public void FindFormat ()
 		{
@@ -91,7 +102,7 @@ namespace TestSeqDLLib
 			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061025.gif";			
 			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
 			dateCount = new BlockDateCount (new ComicUri (smbcUrls [6]));
-			dateCount.Days = days;
+			dateCount.Days = new List<string> (days);
 			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ());			
 		}
 		

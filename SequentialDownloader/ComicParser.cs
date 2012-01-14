@@ -181,16 +181,20 @@ namespace SequentialDownloader
 		
 		public static bool UrlExists (string url)
 		{
-			try {
-				HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
-				request.Method = "HEAD";
-				HttpWebResponse response = request.GetResponse () as HttpWebResponse;
-				bool ans = response.StatusCode == HttpStatusCode.OK;
-				response.Close ();
-				return ans;
-			} catch {
-				return false;
+			int i = 0;
+			while (i < 3) {
+				try {
+					HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
+					request.Method = "HEAD";
+					HttpWebResponse response = request.GetResponse () as HttpWebResponse;
+					bool ans = response.StatusCode == HttpStatusCode.OK;
+					response.Close ();
+					return ans;
+				} catch {
+					i++;
+				}
 			}
+			return false;
 		}
 	
 		/// <summary>

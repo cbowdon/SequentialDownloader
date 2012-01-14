@@ -37,7 +37,29 @@ namespace SequentialDownloader
 			}
 		}
 		
-		public string[] Days { get; set; }
+		List<string> _days = null;
+
+		public List<string> Days { 
+			get {
+				if (_days == null) {
+					_days = new List<string> ();
+					var urls = Generate (14);
+					var hits = urls.Select<string,bool> (x => ComicParser.UrlExists (x)).ToList ();
+					for (int i = 0; i < urls.Count(); i++) {
+						if (hits [i]) {
+							var d = Date.AddDays (1 - i).DayOfWeek.ToString ();							
+							if (!_days.Contains (d)) {
+								_days.Add (d);
+							}								
+						} 
+					}
+				}
+				return _days;
+			} 
+			set {
+				_days = value;
+			} 
+		}
 		#endregion
 		
 		#region Constructors		
@@ -114,7 +136,7 @@ namespace SequentialDownloader
 		/// </returns>
 		public override List<string> GenerateSome ()
 		{
-			if (Days == null || Days.Length == 7) {
+			if (Days == null || Days.Count () == 7) {
 				return Generate (7);
 			} else {
 				return Generate (7, Days);
