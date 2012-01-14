@@ -62,7 +62,7 @@ namespace SequentialDownloader
 			
 			set {
 				_zeroSet = true;
-				_zeroSet = value;				
+				zeroBased = value;				
 			}
 		}
 		
@@ -98,7 +98,25 @@ namespace SequentialDownloader
 			}
 			return urls;
 		}
+		
+		public List<string> Generate (IEnumerable<int> range)
+		{				
+			List<string> urls = new List<string> ();			
+			IEnumerable<string> numbers;				
+			
+			if (Padded) {								
+				var len = comic.Indices [0].Length;							
+				numbers = range.Select<int,string> (x => x.ToString ().PadLeft (len, '0'));				
+			} else {				
+				numbers = range.Select<int,string> (x => x.ToString ());
+			}
+			
+			urls = numbers.Select<string,string> (x => String.Format (comic.Base, x)).ToList ();
 
+			return urls;
+
+		}
+		
 		/// <summary>
 		/// Generates 7 (predicted) previous comic URLs.
 		/// </summary>
@@ -107,13 +125,7 @@ namespace SequentialDownloader
 		/// </returns>
 		public override List<string> GenerateSome ()
 		{
-			
-			var len = comic.Indices [0].Length;
-			
-			var index = int.Parse (comic.Indices [0]);
-			
-			List<string> urls = new List<string> ();
-			
+			var index = int.Parse (comic.Indices [0]);			
 			IEnumerable<int> range;
 			
 			if (index < 7) {				
@@ -126,24 +138,20 @@ namespace SequentialDownloader
 				range = Enumerable.Range (index - 6, 7);
 			}
 			
-			IEnumerable<string> numbers;
-				
-			if (Padded) {
-				numbers = range.Select<int,string> (x => x.ToString ().PadLeft (len, '0'));
-			} else {
-				numbers = range.Select<int,string> (x => x.ToString ());
-			}
-			urls = numbers.Select<string,string> (x => String.Format (comic.Base, x)).ToList ();
-
-			return urls;
+			return Generate (range);
 		}
 		
 		public override List<string> GenerateAll ()
-		{
-			throw new NotImplementedException ();
+		{			
+			IEnumerable<int> range;
+			var index = int.Parse (comic.Indices [0]);
+			if (ZeroBased) {
+				range = Enumerable.Range (0, index+1);	
+			} else {
+				range = Enumerable.Range (1, index);	
+			}	
+			return Generate (range);
 		}
-		
-
 	}
 }
 

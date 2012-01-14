@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using SequentialDownloader;
 using NUnit.Framework;
 
@@ -8,13 +10,27 @@ namespace TestSeqDLLib
 	public class TestSequentialCount
 	{
 		[Test()]
-		public void IsPadded ()
+		public void Padded ()
 		{
 			var url = "http://xkcd.com/614";
 			var seqCo = new SequentialCount (new ComicUri (url));
 			Assert.IsFalse (seqCo.Padded);
 			seqCo.Padded = true;
 			Assert.IsTrue (seqCo.Padded);
+			seqCo.Padded = false;
+			Assert.IsFalse (seqCo.Padded);
+		}
+		
+		[Test()]
+		public void ZeroBased ()
+		{
+			var url = "http://xkcd.com/614";
+			var seqCo = new SequentialCount (new ComicUri (url));
+			Assert.IsFalse (seqCo.ZeroBased);
+			seqCo.ZeroBased = true;
+			Assert.IsTrue (seqCo.ZeroBased);
+			seqCo.ZeroBased = false;
+			Assert.IsFalse (seqCo.ZeroBased);
 		}
 		
 		[Test()]
@@ -28,7 +44,7 @@ namespace TestSeqDLLib
 			xkcdPages [4] = "http://xkcd.com/614";
 			var comic = new ComicUri ("http://xkcd.com/614");
 			var xkcdRules = new SequentialCount (comic);
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (new Range (610, 615, 1)));			
+			Assert.AreEqual (xkcdPages, xkcdRules.Generate (Enumerable.Range (610,5)));			
 			
 			xkcdPages = new string[5];
 			xkcdPages [0] = "http://xkcd.com/1";
@@ -38,7 +54,7 @@ namespace TestSeqDLLib
 			xkcdPages [4] = "http://xkcd.com/5";
 			comic = new ComicUri ("http://xkcd.com/614");
 			xkcdRules = new SequentialCount (comic);
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (new Range (1, 6, 1)));			
+			Assert.AreEqual (xkcdPages, xkcdRules.Generate (Enumerable.Range (1, 5)));			
 			
 			xkcdPages = new string[5];
 			xkcdPages [0] = "http://xkcd.com/001";
@@ -49,7 +65,7 @@ namespace TestSeqDLLib
 			comic = new ComicUri ("http://xkcd.com/614");
 			xkcdRules = new SequentialCount (comic);
 			xkcdRules.Padded = true;
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (new Range (1, 6, 1)));			
+			Assert.AreEqual (xkcdPages, xkcdRules.Generate (Enumerable.Range (1, 5)));			
 		}
 		
 		[Test()]
@@ -83,7 +99,18 @@ namespace TestSeqDLLib
 		[Test()]
 		public void GenerateAll ()
 		{
-			throw new NotImplementedException ();
+			var comic = new ComicUri ("http://xkcd.com/614");
+			var seqCount = new SequentialCount (comic);
+			seqCount.ZeroBased = false;
+			seqCount.Padded = false;
+			var all = seqCount.GenerateAll ();
+			Assert.AreEqual (614, all.Count);
+			Assert.AreEqual ("http://xkcd.com/235", all [234]);
+			
+			seqCount.ZeroBased = true;
+			var all2 = seqCount.GenerateAll ();			
+			Assert.AreEqual (615, all2.Count);
+			Assert.AreEqual ("http://xkcd.com/234", all2 [234]);
 		}
 	}
 }
