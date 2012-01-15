@@ -17,7 +17,7 @@ namespace SequentialDownloader
 		public string HtmlSource {
 			get { 
 				if (htmlSource == null) {
-					htmlSource = GetSourceCode (inputUrl);
+					htmlSource = WebUtils.GetSourceCode (inputUrl);
 				}
 				return htmlSource;
 			}
@@ -90,7 +90,7 @@ namespace SequentialDownloader
 		public int IdentifyImg (IEnumerable<string> pageUrls, out string imgUrl)
 		{			
 			// fill array of source code
-			var pageSources = pageUrls.Select<string,string> (x => GetSourceCode (x)).ToList ();			
+			var pageSources = pageUrls.Select<string,string> (x => WebUtils.GetSourceCode (x)).ToList ();			
 			// get jagged list
 			var pageImgs = pageSources.Select<string,List<string>> (x => FindImgs (x)).ToList ();
 			
@@ -123,7 +123,7 @@ namespace SequentialDownloader
 			}
 			
 			// else choose the remaining item that shows MOST similarity to same item on next list			
-			var scores = possibleIndices.Select<int, double> (p => CompareUrls (imgUrls [0] [p], imgUrls [1] [p])).ToList ();
+			var scores = possibleIndices.Select<int, double> (p => WebUtils.CompareUrls (imgUrls [0] [p], imgUrls [1] [p])).ToList ();
 			var topIndex = scores.IndexOf (scores.Max ());
 			
 			imgUrl = pageImgs [0] [topIndex];
@@ -134,102 +134,6 @@ namespace SequentialDownloader
 		{
 			string wasted;
 			return IdentifyImg (pageUrls, out wasted);
-		}
-		#endregion
-		
-		#region Web utilities
-		/// <summary>
-		/// Gets the source code.
-		/// </summary>
-		/// <returns>
-		/// The source code.
-		/// </returns>
-		/// <param name='url'>
-		/// URL.
-		/// </param>
-		/// <exception cref='TimeoutException'>
-		/// Is thrown if site can't be reached.
-		/// </exception>
-		public static string GetSourceCode (string url)
-		{
-			Func <string, string> getSource = x => {
-//				using (var client = new WebClient()) {
-//					client.Headers.Add ("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-//					return client.DownloadString (x);	
-//				}
-				// or
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (url);					
-				request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; rv:9.0.1) Gecko/20100101 Firefox/9.0.1";
-				request.Method = "GET";
-				using (WebResponse response = request.GetResponse()) {
-					using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
-						return reader.ReadToEnd ();
-					}
-				}
-			};
-			
-			var errorString = String.Format ("GetSourceCode({0}): time-out exception", url);
-			
-			for (int i = 0; i < 5; i++) {
-				try {
-					return getSource (url);
-				} catch {
-					continue;
-				}
-			}
-			
-			throw new TimeoutException (errorString);
-		}
-
-		public static bool UrlExists (string url)
-		{
-			int i = 0;
-			while (i < 3) {
-				try {
-					HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
-					request.Method = "HEAD";
-					HttpWebResponse response = request.GetResponse () as HttpWebResponse;
-					bool ans = response.StatusCode == HttpStatusCode.OK;
-					response.Close ();
-					return ans;
-				} catch {
-					i++;
-				}
-			}
-			return false;
-		}
-		/// <summary>
-		/// Compares two URLs
-		/// </summary>
-		/// <returns>
-		/// Score representing similarity (higher is closer)
-		/// </returns>
-		/// <param name='u1'>
-		/// U1.
-		/// </param>
-		/// <param name='u2'>
-		/// U2.
-		/// </param>
-		double CompareUrls (string u1, string u2)
-		{
-			var u1ext = u1.Substring (0, u1.Length - 4);
-			var u2ext = u2.Substring (0, u2.Length - 4);
-						
-			var u1c = u1ext.ToCharArray ();
-			var u2c = u2ext.ToCharArray ();
-					
-			double score = 0;
-			for (int i = 0; i < Math.Min (u1c.Length, u2c.Length); i++) {
-				if (u1c [i] == u2c [i]) {
-					score += 100;
-				} else {
-					score += 100 - Math.Abs ((int)u1c [i] - (int)u2c [i]);
-				}
-			}
-			
-			score /= (100 * Math.Min (u1c.Length, u2c.Length));
-			
-			return score;
 		}
 		#endregion
 			
@@ -299,7 +203,7 @@ namespace SequentialDownloader
 				foreach (var x in allPages) {					
 					try {
 						
-						var imgs = FindImgs (GetSourceCode (x));	
+						var imgs = FindImgs (WebUtils.GetSourceCode (x));	
 						urls.Add (imgs [imgIndex]);
 						
 					} catch {

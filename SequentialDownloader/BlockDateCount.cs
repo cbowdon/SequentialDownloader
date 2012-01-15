@@ -47,7 +47,7 @@ namespace SequentialDownloader
 				if (_days == null) {
 					_days = new List<string> ();
 					var urls = Generate (14, 0, -1);
-					var hits = urls.Select<string,bool> (x => ComicParser.UrlExists (x)).ToList ();
+					var hits = urls.Select<string,bool> (x => WebUtils.UrlExists (x)).ToList ();
 					for (int i = 0; i < urls.Count(); i++) {
 						if (hits [i]) {
 							var d = Date.AddDays (1 - i).DayOfWeek.ToString ();							

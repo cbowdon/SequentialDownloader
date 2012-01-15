@@ -48,10 +48,10 @@ namespace TestSeqDLLib
 		[Test()]
 		public void UrlExists ()
 		{
-			Assert.IsTrue (ComicParser.UrlExists ("http://xkcd.com"));
-			Assert.IsFalse (ComicParser.UrlExists ("http://xkcd.com/91235252624363"));
-			Assert.IsTrue (ComicParser.UrlExists ("http://imgs.xkcd.com/comics/woodpecker.png"));
-			Assert.IsTrue (ComicParser.UrlExists ("http://www.smbc-comics.com/index.php?db=comics&id=614"));
+			Assert.IsTrue (WebUtils.UrlExists ("http://xkcd.com"));
+			Assert.IsFalse (WebUtils.UrlExists ("http://xkcd.com/91235252624363"));
+			Assert.IsTrue (WebUtils.UrlExists ("http://imgs.xkcd.com/comics/woodpecker.png"));
+			Assert.IsTrue (WebUtils.UrlExists ("http://www.smbc-comics.com/index.php?db=comics&id=614"));
 		}
 		#endregion
 			

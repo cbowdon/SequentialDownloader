@@ -33,10 +33,10 @@ namespace SequentialDownloader
 		bool IsPadded ()
 		{
 			// identify if it is a fixed-length number	
-			if (ComicParser.UrlExists (string.Format (comic.Base, "1"))) {
+			if (WebUtils.UrlExists (string.Format (comic.Base, "1"))) {
 				// unpadded
 				return false;		
-			} else if (ComicParser.UrlExists (string.Format (comic.Base, "1".PadLeft (comic.Indices [0].Length, '0')))) {
+			} else if (WebUtils.UrlExists (string.Format (comic.Base, "1".PadLeft (comic.Indices [0].Length, '0')))) {
 				// padded
 				return true;
 			} else {
@@ -73,7 +73,7 @@ namespace SequentialDownloader
 				var len = comic.Indices [0].Length;
 				zeroNum = "0".PadLeft (len, '0');
 			} 
-			return ComicParser.UrlExists (String.Format (comic.Base, zeroNum));
+			return WebUtils.UrlExists (String.Format (comic.Base, zeroNum));
 		}		
 		#endregion
 		
