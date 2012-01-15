@@ -32,6 +32,8 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Methods
+		
+		#region FindImgs
 		/// <summary>
 		/// Finds the src of all imgs in the page.
 		/// </summary>
@@ -67,136 +69,9 @@ namespace SequentialDownloader
 		{
 			return FindImgs (HtmlSource);
 		}
-		
-		/// <summary>
-		/// Gets the source code.
-		/// </summary>
-		/// <returns>
-		/// The source code.
-		/// </returns>
-		/// <param name='url'>
-		/// URL.
-		/// </param>
-		/// <exception cref='TimeoutException'>
-		/// Is thrown if site can't be reached.
-		/// </exception>
-		public static string GetSourceCode (string url)
-		{
-			Func <string, string> getSource = x => {
-//				using (var client = new WebClient()) {
-//					client.Headers.Add ("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-//					return client.DownloadString (x);	
-//				}
-				// or
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (url);					
-				request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; rv:9.0.1) Gecko/20100101 Firefox/9.0.1";
-				request.Method = "GET";
-				using (WebResponse response = request.GetResponse()) {
-					using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
-						return reader.ReadToEnd ();
-					}
-				}
-			};
-			
-			var errorString = String.Format ("GetSourceCode({0}): time-out exception", url);
-			
-			for (int i = 0; i < 5; i++) {
-				try {
-					return getSource (url);
-				} catch {
-					continue;
-				}
-			}
-			
-			throw new TimeoutException (errorString);
-		}
-		
-		/// <summary>
-		/// Finds the urls of other comics.
-		/// </summary>
-		/// <returns>
-		/// The urls.
-		/// </returns>
-		public List<string> FindUrls ()
-		{
-			// take ComicUri(url)
-			var comic = new ComicUri (inputUrl);
-						
-			/// Procedure
-			/// 
-			/// figure out the naming rules --> create an appropriate ICountingRule
-			/// 
-			/// identify which number img tag src is the comic --> use the ICountingRule to generate a few test pages
-			/// 
-			/// for each page, try get the src of the nth img tag -- use the ICountingRule->FindImgs to get urls 
-			/// 
-			
-			// figure out the naming rules
-			
-			/// possible formats:
-			/// A straight number sequence : 1 number, length unknown, possibly padded, increment is 1
-			/// B iso/uk/us dates: 1 number, length 6, padded, increment unknown
-			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
-			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded				
-						
-			UrlGenerator gen;
-			
-			if (comic.Indices.Length == 1) {
-				// option A or B
-				
-				var dateCount = new BlockDateCount (comic);
-					
-				// identify if it's a valid date
-				if (dateCount.Format != DateType.NotRecognized) {					
-					// B of some kind
-					gen = dateCount;					
-				} else {
-					// A of some kind
-					var seqCount = new SequentialCount (comic);
-					gen = seqCount;
-				}
-			} else {
-				// option C or D
-				throw new NotImplementedException ();
-			}
-			
-			// identify img tag index
-			
-			// generate whole list of pages
-			var allPages = gen.GenerateLast1000 ();
-			
-			// and get nth tag for each						
-			// (map second (map FindImg, allPages))
-			IEnumerable<string> urls;			
-			if (!comic.IsImageFile) {
-				int imgIndex = IdentifyImg (gen.GenerateSome ());			
-				urls = allPages.Select<string,string> (x => FindImgs (x) [imgIndex]);	
-			} else {
-				urls = allPages;
-			}
-			
-			
-			return urls.ToList ();
-		}
-		
-		public static bool UrlExists (string url)
-		{
-			int i = 0;
-			while (i < 3) {
-				try {
-					HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
-					request.Method = "HEAD";
-					HttpWebResponse response = request.GetResponse () as HttpWebResponse;
-					bool ans = response.StatusCode == HttpStatusCode.OK;
-					response.Close ();
-					return ans;
-				} catch {
-					i++;
-				}
-			}
-			return false;
-		}
+		#endregion
 	
+		#region IdentifyImg
 		/// <summary>
 		/// Identifies the image.
 		/// </summary>
@@ -260,7 +135,69 @@ namespace SequentialDownloader
 			string wasted;
 			return IdentifyImg (pageUrls, out wasted);
 		}
+		#endregion
 		
+		#region Web utilities
+		/// <summary>
+		/// Gets the source code.
+		/// </summary>
+		/// <returns>
+		/// The source code.
+		/// </returns>
+		/// <param name='url'>
+		/// URL.
+		/// </param>
+		/// <exception cref='TimeoutException'>
+		/// Is thrown if site can't be reached.
+		/// </exception>
+		public static string GetSourceCode (string url)
+		{
+			Func <string, string> getSource = x => {
+//				using (var client = new WebClient()) {
+//					client.Headers.Add ("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+//					return client.DownloadString (x);	
+//				}
+				// or
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create (url);					
+				request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; rv:9.0.1) Gecko/20100101 Firefox/9.0.1";
+				request.Method = "GET";
+				using (WebResponse response = request.GetResponse()) {
+					using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
+						return reader.ReadToEnd ();
+					}
+				}
+			};
+			
+			var errorString = String.Format ("GetSourceCode({0}): time-out exception", url);
+			
+			for (int i = 0; i < 5; i++) {
+				try {
+					return getSource (url);
+				} catch {
+					continue;
+				}
+			}
+			
+			throw new TimeoutException (errorString);
+		}
+
+		public static bool UrlExists (string url)
+		{
+			int i = 0;
+			while (i < 3) {
+				try {
+					HttpWebRequest request = WebRequest.Create (url) as HttpWebRequest;
+					request.Method = "HEAD";
+					HttpWebResponse response = request.GetResponse () as HttpWebResponse;
+					bool ans = response.StatusCode == HttpStatusCode.OK;
+					response.Close ();
+					return ans;
+				} catch {
+					i++;
+				}
+			}
+			return false;
+		}
 		/// <summary>
 		/// Compares two URLs
 		/// </summary>
@@ -294,8 +231,94 @@ namespace SequentialDownloader
 			
 			return score;
 		}
-		
 		#endregion
+			
+		/// <summary>
+		/// Finds the urls of other comics.
+		/// </summary>
+		/// <returns>
+		/// The urls.
+		/// </returns>
+		public List<string> FindUrls ()
+		{
+			// take ComicUri(url)
+			var comic = new ComicUri (inputUrl);
+						
+			/// Procedure
+			/// 
+			/// figure out the naming rules --> create an appropriate ICountingRule
+			/// 
+			/// identify which number img tag src is the comic --> use the ICountingRule to generate a few test pages
+			/// 
+			/// for each page, try get the src of the nth img tag -- use the ICountingRule->FindImgs to get urls 
+			/// 
+			
+			// figure out the naming rules
+			
+			/// possible formats:
+			/// A straight number sequence : 1 number, length unknown, possibly padded, increment is 1
+			/// B iso/uk/us dates: 1 number, length 6, padded, increment unknown
+			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
+			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded				
+						
+			UrlGenerator gen;
+			
+			if (comic.Indices.Length == 1) {
+				// option A or B
+				
+				var dateCount = new BlockDateCount (comic);
+					
+				// identify if it's a valid date
+				if (dateCount.Format != DateType.NotRecognized) {					
+					// B of some kind
+					gen = dateCount;					
+				} else {
+					// A of some kind
+					var seqCount = new SequentialCount (comic);
+					gen = seqCount;
+				}
+			} else {
+				// option C or D
+				throw new NotImplementedException ();
+			}
+			
+			// identify img tag index
+			
+			// generate whole list of pages
+			var allPages = gen.GenerateLast100 ();
+			
+			// and get nth tag for each						
+			// (map second (map FindImg, allPages))
+			List<string> urls;			
+			if (!comic.IsImageFile) {
+				
+				int imgIndex = IdentifyImg (gen.GenerateSome ());			
+								
+				urls = new List<string> ();
+				
+				foreach (var x in allPages) {					
+					try {
+						
+						var imgs = FindImgs (GetSourceCode (x));	
+						urls.Add (imgs [imgIndex]);
+						
+					} catch {
+						
+						urls.Add (String.Empty);
+					}
+				}
+				
+			} else {
+				
+				urls = allPages;				
+			}
+			
+			
+			return urls.ToList ();
+		}
+		
+		
+#endregion
 	}
 }
 

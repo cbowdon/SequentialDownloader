@@ -14,9 +14,9 @@ namespace SequentialDownloader
 		{
 		}
 		
-		public abstract List<string> GenerateLast1000 ();
+		public abstract List<string> GenerateLast100 ();
 		
-		public abstract List<string> GenerateNext1000 ();
+		public abstract List<string> GenerateNext100 ();
 		
 		public abstract List<string> GenerateSome ();
 	}

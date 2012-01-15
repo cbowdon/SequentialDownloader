@@ -127,11 +127,11 @@ namespace SequentialDownloader
 			return Generate (range);
 		}
 		
-		public override List<string> GenerateLast1000 ()
+		public override List<string> GenerateLast100 ()
 		{			
 			IEnumerable<int> range;
 			var hiNum = int.Parse (comic.Indices [0]);
-			var loNum = hiNum - 999;
+			var loNum = hiNum - 99;
 			if (loNum < 1) {
 				if (ZeroBased) {				
 					range = Enumerable.Range (0, hiNum + 1);	
@@ -139,16 +139,16 @@ namespace SequentialDownloader
 					range = Enumerable.Range (1, hiNum);	
 				}		
 			} else {
-				range = Enumerable.Range (loNum, 1000);
+				range = Enumerable.Range (loNum, 100);
 			}
 			
 			return Generate (range);
 		}
 		
-		public override List<string> GenerateNext1000 ()
+		public override List<string> GenerateNext100 ()
 		{
 			var index = int.Parse (comic.Indices [0]);
-			return Generate (Enumerable.Range (index + 1, 1000));
+			return Generate (Enumerable.Range (index + 1, 100));
 		}
 	}
 }

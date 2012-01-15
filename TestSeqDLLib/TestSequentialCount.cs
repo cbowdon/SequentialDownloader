@@ -97,41 +97,43 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void GenerateLast1000 ()
+		public void GenerateLast100 ()
 		{
-			var comic = new ComicUri ("http://xkcd.com/614");
+			var comic = new ComicUri ("http://xkcd.com/60");
 			var seqCount = new SequentialCount (comic);
 			seqCount.ZeroBased = false;
 			seqCount.Padded = false;
-			var all = seqCount.GenerateLast1000 ();
-			Assert.AreEqual (614, all.Count);
-			Assert.AreEqual ("http://xkcd.com/235", all [234]);
+			var all = seqCount.GenerateLast100 ();
+			Assert.AreEqual (60, all.Count);
+			Assert.AreEqual ("http://xkcd.com/1", all [0]);
+			Assert.AreEqual ("http://xkcd.com/60", all [59]);
 			
 			seqCount.ZeroBased = true;
-			var all2 = seqCount.GenerateLast1000 ();			
-			Assert.AreEqual (615, all2.Count);
-			Assert.AreEqual ("http://xkcd.com/234", all2 [234]);
+			var all2 = seqCount.GenerateLast100 ();			
+			Assert.AreEqual (61, all2.Count);
+			Assert.AreEqual ("http://xkcd.com/0", all2 [0]);
+			Assert.AreEqual ("http://xkcd.com/60", all2 [60]);
 			
 			comic = new ComicUri ("http://xkcd.com/1002");
 			seqCount = new SequentialCount (comic);
 			seqCount.ZeroBased = false;
 			seqCount.Padded = false;
-			var all3 = seqCount.GenerateLast1000 ();
-			Assert.AreEqual (1000, all3.Count);
-			Assert.AreEqual ("http://xkcd.com/237", all3 [234]);			
+			var all3 = seqCount.GenerateLast100 ();
+			Assert.AreEqual (100, all3.Count);
+			Assert.AreEqual ("http://xkcd.com/1002", all3 [99]);			
 		}
 		
 		[Test()]
-		public void GenerateNext1000 ()
+		public void GenerateNext100 ()
 		{
 			var comic = new ComicUri ("http://xkcd.com/614");
 			var seqCount = new SequentialCount (comic);
 			seqCount.ZeroBased = false;
 			seqCount.Padded = false;
-			var all = seqCount.GenerateNext1000 ();
-			Assert.AreEqual (1000, all.Count);
+			var all = seqCount.GenerateNext100 ();
+			Assert.AreEqual (100, all.Count);
 			Assert.AreEqual ("http://xkcd.com/615", all [0]);
-			Assert.AreEqual ("http://xkcd.com/1614", all [999]);
+			Assert.AreEqual ("http://xkcd.com/714", all [99]);
 		}
 	}
 }

@@ -83,35 +83,35 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void GenerateLast1000 ()
+		public void GenerateLast100 ()
 		{
 			var url = "http://www.smbc-comics.com/comics/20061011.gif";
 			var dateCount = new BlockDateCount (new ComicUri (url));
-			var urls = dateCount.GenerateLast1000 ();
-			Assert.AreEqual (1000, urls.Count);
-			Assert.AreEqual(url, urls[999]);
+			var urls = dateCount.GenerateLast100 ();
+			Assert.AreEqual (100, urls.Count);
+			Assert.AreEqual(url, urls[99]);
 			
 			dateCount.Days = new List<string> ();
 			// 11th Oct 2006 was a Wednesday
 			dateCount.Days.Add ("Wednesday");
-			urls = dateCount.GenerateLast1000 ();
-			Assert.AreEqual (1000, urls.Count);
-			Assert.AreEqual(url, urls[999]);
+			urls = dateCount.GenerateLast100 ();
+			Assert.AreEqual (100, urls.Count);
+			Assert.AreEqual(url, urls[99]);
 		}
 		
 		[Test()]
-		public void GenerateNext1000 ()
+		public void GenerateNext100 ()
 		{
 			var url = "http://www.smbc-comics.com/comics/20061011.gif";
 			var dateCount = new BlockDateCount (new ComicUri (url));
-			var urls = dateCount.GenerateNext1000 ();
-			Assert.AreEqual (1000, urls.Count);
+			var urls = dateCount.GenerateNext100 ();
+			Assert.AreEqual (100, urls.Count);
 			Assert.IsFalse (urls.Contains(url));
 			
 			dateCount.Days = new List<string> ();
 			dateCount.Days.Add ("Monday");
-			urls = dateCount.GenerateNext1000 ();
-			Assert.AreEqual (1000, urls.Count);
+			urls = dateCount.GenerateNext100 ();
+			Assert.AreEqual (100, urls.Count);
 			Assert.IsFalse (urls.Contains(url));
 		}
 	}

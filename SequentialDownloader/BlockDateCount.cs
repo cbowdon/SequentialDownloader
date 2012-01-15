@@ -146,14 +146,14 @@ namespace SequentialDownloader
 			}
 		}
 		
-		public override List<string> GenerateLast1000 ()
+		public override List<string> GenerateLast100 ()
 		{
-			return Generate (1000, Days, 0, -1);
+			return Generate (100, Days, 0, -1);
 		}
 		
-		public override List<string> GenerateNext1000 ()
+		public override List<string> GenerateNext100 ()
 		{
-			return Generate (1000, Days, 1, 1);
+			return Generate (100, Days, 1, 1);
 		}
 		#endregion
 	}	
