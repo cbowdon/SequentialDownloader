@@ -27,7 +27,7 @@ namespace TestSeqDLLib
 			var smbcUrl1 = "http://www.smbc-comics.com/comics/20061011.gif";
 			var smbcUrl2 = "http://www.smbc-comics.com/comics/20061010.gif";
 			var smbcParser = new ComicParser (smbcUrl);
-			var smbcUrls = smbcParser.FindUrls ().ToArray ();
+			var smbcUrls = smbcParser.FindUrls ();
 			Assert.AreEqual (100, smbcUrls.Count ());
 			Assert.AreEqual (smbcUrl1.Substring(10), smbcUrls [99].Substring (10));
 			Assert.AreEqual (smbcUrl2.Substring(10), smbcUrls [98].Substring (10));
@@ -39,7 +39,7 @@ namespace TestSeqDLLib
 			var smbcUrl = "http://www.smbc-comics.com/comics/20061011.gif";
 			var smbcUrl2 = "http://www.smbc-comics.com/comics/20061010.gif";
 			var smbcParser = new ComicParser (smbcUrl);
-			var smbcUrls = smbcParser.FindUrls ().ToArray ();
+			var smbcUrls = smbcParser.FindUrls ();
 			
 			Assert.AreEqual (smbcUrl.Substring (10), smbcUrls [99].Substring (10));
 			Assert.AreEqual (smbcUrl2.Substring (10), smbcUrls [98].Substring (10));

@@ -18,15 +18,25 @@ namespace SequentialDownloader
 			this.Location = Path.GetFullPath (loc);
 		}
 		
-		public bool DownloadSingle (string url)
+		public bool Download (string url)
 		{
 			throw new NotImplementedException ();
 		}
 		
-		public Dictionary<ComicUri, string> Files {
+		public bool Download (IEnumerable<string> url)
+		{
+			throw new NotImplementedException ();
+		}
+		
+		public Dictionary<string, string> Files {
 			get {
 				throw new NotImplementedException ();
 			}
+		}
+		
+		public void Clear ()
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

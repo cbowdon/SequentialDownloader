@@ -25,7 +25,7 @@ namespace SequentialDownloader
 		public static string GetSourceCode (string url)
 		{
 			string userAgent = "Mozilla/5.0 (Windows NT 6.2; rv:9.0.1) Gecko/20100101 Firefox/9.0.1";
-			string userAgentHonest = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
+//			string userAgentHonest = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
 			Func <string, string> getSource = x => {
 //				using (var client = new WebClient()) {
 //					client.Headers.Add ("user-agent", userAgent);
@@ -106,6 +106,15 @@ namespace SequentialDownloader
 			return score;
 		}
 		
+		/// <summary>
+		/// Gets the size of remote file - just for reference.
+		/// </summary>
+		/// <returns>
+		/// The size.
+		/// </returns>
+		/// <param name='fileUrl'>
+		/// File URL.
+		/// </param>
 		public static long GetSize (string fileUrl)
 		{
 			Uri url = new Uri (fileUrl);
@@ -118,6 +127,15 @@ namespace SequentialDownloader
 			}
 		}
 		
+		/// <summary>
+		/// Downloads the file - just for reference
+		/// </summary>
+		/// <returns>
+		/// The file.
+		/// </returns>
+		/// <param name='url'>
+		/// URL.
+		/// </param>
 		public static byte[] DownloadFile (string url)
 		{
 			// http://odetocode.com/blogs/scott/archive/2004/10/04/webrequest-and-binary-data.aspx
