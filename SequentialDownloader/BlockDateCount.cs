@@ -6,8 +6,11 @@ using System.Linq;
 namespace SequentialDownloader
 {
 	/// <summary>
-	/// ISO date count: for counting operations involving dates like 19871024.
+	/// Counter for dates expressed as single block number, e.g. "241087" or "19871024".
 	/// </summary>
+	/// <exception cref='ArgumentException'>
+	/// Is thrown when an argument passed to a method is invalid.
+	/// </exception>
 	/// <exception cref='NotImplementedException'>
 	/// Is thrown when a requested operation is not implemented for a given type.
 	/// </exception>
@@ -43,7 +46,7 @@ namespace SequentialDownloader
 			get {
 				if (_days == null) {
 					_days = new List<string> ();
-					var urls = Generate (14);
+					var urls = Generate (14, 0, -1);
 					var hits = urls.Select<string,bool> (x => ComicParser.UrlExists (x)).ToList ();
 					for (int i = 0; i < urls.Count(); i++) {
 						if (hits [i]) {
@@ -70,7 +73,7 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Methods
-		public List<string> Generate (int number)
+		public List<string> Generate (int number, int offset, int increment)
 		{
 			List<string> days = new List<string> ();
 			days.Add (DayOfWeek.Monday.ToString ());
@@ -81,20 +84,20 @@ namespace SequentialDownloader
 			days.Add (DayOfWeek.Saturday.ToString ());
 			days.Add (DayOfWeek.Sunday.ToString ());
 			
-			return Generate (number, days);
+			return Generate (number, days, offset, increment);
 		}
 		
-		public List<string> Generate (int number, IEnumerable<string> days)
+		public List<string> Generate (int number, IEnumerable<string> days, int offset, int increment)
 		{
 			var urls = new List<string> ();
 			
-			int i = 0;
+			int i = offset;
 			while (urls.Count < number) {
 				var d = Date.AddDays (i);
 				if (days.Contains (d.DayOfWeek.ToString ())) {			
 					urls.Add (String.Format (comic.Base, d.ToString (Format)));
 				}
-				i--;
+				i += increment;
 			}
 			urls.Reverse ();
 			return urls;			
@@ -137,16 +140,21 @@ namespace SequentialDownloader
 		public override List<string> GenerateSome ()
 		{
 			if (Days == null || Days.Count () == 7) {
-				return Generate (7);
+				return Generate (7, 0, -1);
 			} else {
-				return Generate (7, Days);
+				return Generate (7, Days, 0, -1);
 			}
 		}
 		
-		public override List<string> GenerateAll ()
+		public override List<string> GenerateLast1000 ()
+		{
+			return Generate (1000, Days, 0, -1);
+		}
+		
+		public override List<string> GenerateNext1000 ()
 		{
 			throw new NotImplementedException ();
-		}		
+		}
 		#endregion
 	}	
 }

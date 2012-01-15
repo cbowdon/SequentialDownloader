@@ -44,7 +44,7 @@ namespace TestSeqDLLib
 			xkcdPages [4] = "http://xkcd.com/614";
 			var comic = new ComicUri ("http://xkcd.com/614");
 			var xkcdRules = new SequentialCount (comic);
-			Assert.AreEqual (xkcdPages, xkcdRules.Generate (Enumerable.Range (610,5)));			
+			Assert.AreEqual (xkcdPages, xkcdRules.Generate (Enumerable.Range (610, 5)));			
 			
 			xkcdPages = new string[5];
 			xkcdPages [0] = "http://xkcd.com/1";
@@ -97,20 +97,41 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void GenerateAll ()
+		public void GenerateLast1000 ()
 		{
 			var comic = new ComicUri ("http://xkcd.com/614");
 			var seqCount = new SequentialCount (comic);
 			seqCount.ZeroBased = false;
 			seqCount.Padded = false;
-			var all = seqCount.GenerateAll ();
+			var all = seqCount.GenerateLast1000 ();
 			Assert.AreEqual (614, all.Count);
 			Assert.AreEqual ("http://xkcd.com/235", all [234]);
 			
 			seqCount.ZeroBased = true;
-			var all2 = seqCount.GenerateAll ();			
+			var all2 = seqCount.GenerateLast1000 ();			
 			Assert.AreEqual (615, all2.Count);
 			Assert.AreEqual ("http://xkcd.com/234", all2 [234]);
+			
+			comic = new ComicUri ("http://xkcd.com/1002");
+			seqCount = new SequentialCount (comic);
+			seqCount.ZeroBased = false;
+			seqCount.Padded = false;
+			var all3 = seqCount.GenerateLast1000 ();
+			Assert.AreEqual (1000, all3.Count);
+			Assert.AreEqual ("http://xkcd.com/237", all3 [234]);			
+		}
+		
+		[Test()]
+		public void GenerateNext1000 ()
+		{
+			var comic = new ComicUri ("http://xkcd.com/614");
+			var seqCount = new SequentialCount (comic);
+			seqCount.ZeroBased = false;
+			seqCount.Padded = false;
+			var all = seqCount.GenerateNext1000 ();
+			Assert.AreEqual (1000, all.Count);
+			Assert.AreEqual ("http://xkcd.com/615", all [0]);
+			Assert.AreEqual ("http://xkcd.com/1614", all [999]);
 		}
 	}
 }

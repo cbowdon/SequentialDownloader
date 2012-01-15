@@ -84,20 +84,6 @@ namespace SequentialDownloader
 				throw new ArgumentException ("Sequential Count cannot accept a comic with > 1 index");
 			}
 		}
-
-		public List<string> Generate (Range range)
-		{
-			var urls = new List<string> ();
-			for (int i = range.Start; i < range.End; i+= range.Increment) {
-				string num = i.ToString ();
-				if (Padded) {
-					var index = comic.Indices [0];
-					num = num.PadLeft (index.Length, '0');
-				}
-				urls.Add (string.Format (comic.Base, num));
-			}
-			return urls;
-		}
 		
 		public List<string> Generate (IEnumerable<int> range)
 		{				
@@ -141,16 +127,28 @@ namespace SequentialDownloader
 			return Generate (range);
 		}
 		
-		public override List<string> GenerateAll ()
+		public override List<string> GenerateLast1000 ()
 		{			
 			IEnumerable<int> range;
-			var index = int.Parse (comic.Indices [0]);
-			if (ZeroBased) {
-				range = Enumerable.Range (0, index+1);	
+			var hiNum = int.Parse (comic.Indices [0]);
+			var loNum = hiNum - 999;
+			if (loNum < 1) {
+				if (ZeroBased) {				
+					range = Enumerable.Range (0, hiNum + 1);	
+				} else {
+					range = Enumerable.Range (1, hiNum);	
+				}		
 			} else {
-				range = Enumerable.Range (1, index);	
-			}	
+				range = Enumerable.Range (loNum, 1000);
+			}
+			
 			return Generate (range);
+		}
+		
+		public override List<string> GenerateNext1000 ()
+		{
+			var index = int.Parse (comic.Indices [0]);
+			return Generate (Enumerable.Range (index + 1, 1000));
 		}
 	}
 }

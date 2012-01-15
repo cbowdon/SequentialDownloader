@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using SequentialDownloader;
 using NUnit.Framework;
 
@@ -142,7 +144,7 @@ namespace TestSeqDLLib
 			var comic = new ComicParser (url);
 			var actualUrl = "http://imgs.xkcd.com/comics/woodpecker.png";
 			string result = null;
-			Assert.AreEqual (1, comic.IdentifyImg (xkcdRules.Generate (new Range (614, 617, 1)), out result));
+			Assert.AreEqual (1, comic.IdentifyImg (xkcdRules.Generate (Enumerable.Range (614, 3)), out result));
 			Assert.AreEqual (actualUrl, result);
 		}
 		
@@ -155,7 +157,7 @@ namespace TestSeqDLLib
 			var actualUrl = "http://www.smbc-comics.com/comics/20061011.gif";
 			var actualUrl2 = "http://zs1.smbc-comics.com/comics/20061011.gif";
 			string result = null;
-			Assert.AreEqual (2, comic.IdentifyImg (smbcRules.Generate (new Range (614, 616, 1)), out result));
+			Assert.AreEqual (2, comic.IdentifyImg (smbcRules.Generate (Enumerable.Range (614, 2)), out result));
 			Assert.IsTrue (result.Equals (actualUrl) || result.Equals (actualUrl2));
 		}
 		#endregion

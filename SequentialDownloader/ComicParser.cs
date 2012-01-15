@@ -163,7 +163,7 @@ namespace SequentialDownloader
 			// identify img tag index
 			
 			// generate whole list of pages
-			var allPages = gen.GenerateAll ();
+			var allPages = gen.GenerateLast1000 ();
 			
 			// and get nth tag for each						
 			// (map second (map FindImg, allPages))
