@@ -153,7 +153,7 @@ namespace SequentialDownloader
 		
 		public override List<string> GenerateNext1000 ()
 		{
-			throw new NotImplementedException ();
+			return Generate (1000, Days, 1, 1);
 		}
 		#endregion
 	}	
