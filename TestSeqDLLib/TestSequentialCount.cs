@@ -34,7 +34,7 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void GenerateUrlsXkcd ()
+		public void GenerateRange ()
 		{
 			var xkcdPages = new string[5];
 			xkcdPages [0] = "http://xkcd.com/610";
