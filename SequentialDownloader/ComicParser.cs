@@ -137,6 +137,7 @@ namespace SequentialDownloader
 		}
 		#endregion
 			
+#warning Reimplement as Generator/IEnumerable<string> ?
 		/// <summary>
 		/// Finds the urls of other comics.
 		/// </summary>
@@ -144,7 +145,7 @@ namespace SequentialDownloader
 		/// The urls.
 		/// </returns>
 		public List<string> FindUrls ()
-		{
+		{			
 			// take ComicUri(url)
 			var comic = new ComicUri (inputUrl);
 						
@@ -219,8 +220,7 @@ namespace SequentialDownloader
 			
 			
 			return urls.ToList ();
-		}
-		
+		}		
 		
 #endregion
 	}
