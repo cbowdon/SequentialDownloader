@@ -32,8 +32,8 @@
     <Reference Include="System" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Core" />
-    <Reference Include="Ionic.Zip.Reduced">
-      <HintPath>..\DotNetZip\Ionic.Zip.Reduced.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\SharpZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

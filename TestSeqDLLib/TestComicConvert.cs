@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using ICSharpCode.SharpZipLib.Zip;
 using SequentialDownloader;
 
 using NUnit.Framework;
@@ -16,37 +18,43 @@ namespace TestSeqDLLib
 			var dir = Path.GetFullPath ("TestFilesSMBC");			
 			var myCbz = "MyTestFile_2.cbz";
 			
-			ComicConvert.ImgsToCbz (dir, myCbz);
-			
+			// check it worked
+			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));			
 			Assert.IsTrue (File.Exists (myCbz));
 			
+			// check sizes indicate compression
 			var combinedSizeOfFiles = Directory.GetFiles (dir).Select<string,long> (x => (new FileInfo (x)).Length).Sum ();
-			var sizeOfMyCbz = (new FileInfo (myCbz)).Length;
-			
+			var sizeOfMyCbz = (new FileInfo (myCbz)).Length;			
 			Assert.Greater (combinedSizeOfFiles, sizeOfMyCbz);
 			Assert.Greater (sizeOfMyCbz, combinedSizeOfFiles / 2);
 			
+			// clean up
 			File.Delete (myCbz);
 		}
 		
 		[Test()]
 		public void CbzToImgs ()
-		{
-			var dir = Path.GetFullPath ("TestFilesSMBC_2");			
+		{			
 			var myCbz = "MyTestFile.cbz";
+			var exeDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
+			var outputDir = Path.GetFullPath ("MyTestFile");			
 			
-			ComicConvert.CbzToImgs (myCbz, dir);
+			// check it worked
+			Assert.IsTrue (ComicConvert.CbzToImgs (myCbz, exeDir));			
+			Assert.IsTrue (Directory.Exists (outputDir));
+			Assert.AreEqual (100, Directory.GetFiles (outputDir).Where<string> (x => x.Contains (".gif")).Count ());
 			
-			Assert.IsTrue (Directory.Exists (dir));
-			Assert.AreEqual (100, Directory.GetFiles (dir).Count ());
-			
-			var combinedSizeOfFiles = Directory.GetFiles (dir).Select<string,long> (x => (new FileInfo (x)).Length).Sum ();
-			var sizeOfMyCbz = (new FileInfo (myCbz)).Length;
-			
+			// check sizes indicate compression
+			var combinedSizeOfFiles = Directory.GetFiles (outputDir).Select<string,long> (x => (new FileInfo (x)).Length).Sum ();
+			var sizeOfMyCbz = (new FileInfo (myCbz)).Length;			
 			Assert.Greater (combinedSizeOfFiles, sizeOfMyCbz);
 			Assert.Greater (sizeOfMyCbz, combinedSizeOfFiles / 2);
 			
-			Directory.Delete (dir);
+			// clean up
+			foreach (var x in Directory.GetFiles(outputDir)) {
+				File.Delete (x);
+			}
+			Directory.Delete (outputDir);
 		}
 		
 		[Test()]
