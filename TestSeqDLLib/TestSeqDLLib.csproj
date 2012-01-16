@@ -41,6 +41,7 @@
     <Compile Include="TestDateCount.cs" />
     <Compile Include="TestSequentialCount.cs" />
     <Compile Include="TestComicUri.cs" />
+    <Compile Include="ComicConvert.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
