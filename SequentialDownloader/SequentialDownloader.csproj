@@ -44,6 +44,7 @@
     <Compile Include="DateType.cs" />
     <Compile Include="UrlGenerator.cs" />
     <Compile Include="WebUtils.cs" />
+    <Compile Include="ComicConvert.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -63,7 +63,7 @@ namespace TestSeqDLLib
 			// choose target files to download
 			var smbcUrl = "http://www.smbc-comics.com/comics/20061011.gif";
 			var smbcParser = new ComicParser (smbcUrl);
-			var smbcUrls = smbcParser.FindUrls ().Take (16);			
+			var smbcUrls = smbcParser.FindUrls ().Take (100);			
 			var numComics = smbcUrls.Where<string> (x => x != String.Empty).Count ();
 			
 			using (var repo = new Repository ()) {
