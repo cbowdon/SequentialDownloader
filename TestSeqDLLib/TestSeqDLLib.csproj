@@ -45,6 +45,8 @@
     <Compile Include="TestComicConvert.cs" />
     <Compile Include="TestDateGenerator.cs" />
     <Compile Include="TestSequentialGenerator.cs" />
+    <Compile Include="TestUrlGenerator.cs" />
+    <Compile Include="TestWebUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -17,35 +17,24 @@ namespace SequentialDownloader
 	public class DateGenerator : UrlGenerator
 	{
 		#region Start
-		private bool _startSet = false;
-		private DateTime _start;
+		private string _start = "20000101";
 			
 		public override string Start {
 			get {
-				if (!_startSet) {
-					// arbitrarily selected starting date
-					_start = DateTime.ParseExact ("20000101", Format, null);
-					_startSet = true;
-				}
-				return _start.ToString (Format);
+				return _start;//.ToString (Format);
 			}
 			set {				
 				string throwaway = "";				
-				_start = FindFormat (value, out throwaway);
-				_startSet = true;
+				var tempDate = FindFormat (value, out throwaway);
+				_start = tempDate.ToString (Format);
 			}
 		}
 		#endregion
 				
-		#region Date
-		private DateTime _date = new DateTime (0);
-		
+		#region Date		
 		public DateTime Date {
 			get {
-				if (_date == new DateTime (0)) {
-					_date = FindFormat (comic.Indices, out _format);
-				}
-				return _date;
+				return DateTime.ParseExact (Start, Format, null);
 			}
 		}
 		#endregion
@@ -56,7 +45,7 @@ namespace SequentialDownloader
 		public string Format { 
 			get {
 				if (_format == null) {
-					_date = FindFormat (comic.Indices, out _format);
+					FindFormat (Comic.Indices, out _format);
 				}
 				return _format;
 			}
@@ -87,12 +76,25 @@ namespace SequentialDownloader
 				_days = value;
 			} 
 		}
+		
+		static List<string> _everyDay = new List<string> ();
+
+		public static List<string> EveryDay {
+			get {
+				if (_everyDay.Count == 0) {
+					foreach (var x in Enum.GetValues(typeof(DayOfWeek))) {
+						_everyDay.Add (x.ToString ());
+					}
+				}
+				return _everyDay;
+			}
+		}
 		#endregion
 				
 		#region Constructors		
 		public DateGenerator (ComicUri comic) : base (comic)
 		{
-			this.comic = comic;			
+			this.Comic = comic;			
 		}
 		
 		public DateGenerator (string url) : this (new ComicUri(url))
@@ -101,36 +103,6 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Methods
-		public List<string> Generate (int number, int offset, int increment)
-		{
-			List<string> days = new List<string> ();
-			days.Add (DayOfWeek.Monday.ToString ());
-			days.Add (DayOfWeek.Tuesday.ToString ());
-			days.Add (DayOfWeek.Wednesday.ToString ());
-			days.Add (DayOfWeek.Thursday.ToString ());
-			days.Add (DayOfWeek.Friday.ToString ());
-			days.Add (DayOfWeek.Saturday.ToString ());
-			days.Add (DayOfWeek.Sunday.ToString ());
-			
-			return Generate (number, days, offset, increment);
-		}
-		
-		public List<string> Generate (int number, IEnumerable<string> days, int offset, int increment)
-		{
-			var urls = new List<string> ();
-			
-			int i = offset;
-			while (urls.Count < number) {
-				var d = Date.AddDays (i);
-				if (days.Contains (d.DayOfWeek.ToString ())) {			
-					urls.Add (String.Format (comic.Base, d.ToString (Format)));
-				}
-				i += increment;
-			}
-			urls.Reverse ();
-			return urls;			
-		}
-			
 		public static DateTime FindFormat (string date, out string format)
 		{
 			return FindFormat (new string[]{date}, out format);
@@ -163,7 +135,45 @@ namespace SequentialDownloader
 			format = form;
 			return res;
 		}
+
+		public List<string> Generate (int offset, int number, IEnumerable<string> days)
+		{
+			var urls = new List<string> ();
+			int i = offset;
+			while (urls.Count < number) {
+				
+				var d = Date.AddDays (i);
+				
+				if (days.Contains (d.DayOfWeek.ToString ())) {			
+					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
+				}
+				i++;
+			}
+			return urls;			
+		}
 		
+		public List<string> Generate (int startIndex, int number, int increment)
+		{
+			return Generate (startIndex, number, increment, EveryDay);
+		}
+
+		public List<string> Generate (int startIndex, int number, int increment, IEnumerable<string> days)
+		{
+			var urls = new List<string> ();
+			
+			int i = startIndex;
+			while (urls.Count < number) {
+				var d = Date.AddDays (i);
+				if (days.Contains (d.DayOfWeek.ToString ())) {			
+					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
+				}
+				i += increment;
+			}
+			urls.Reverse ();
+			return urls;			
+		}
+			
+	
 		/// <summary>
 		/// Generates URLs for previous 7 dates.
 		/// </summary>
@@ -173,25 +183,24 @@ namespace SequentialDownloader
 		public override List<string> GenerateSome ()
 		{
 			if (Days == null || Days.Count () == 7) {
-				return Generate (7, 0, -1);
+				return Generate (0, 7, -1);
 			} else {
-				return Generate (7, Days, 0, -1);
+				return Generate (0, 7, -1, Days);
 			}
-		}
-		
-		public override List<string> GenerateLast100 ()
-		{
-			return Generate (100, Days, 0, -1);
-		}
-		
-		public override List<string> GenerateNext100 ()
-		{
-			return Generate (100, Days, 1, 1);
 		}
 		
 		public override List<string> Get (int startIndex, int num)
 		{
-			throw new NotImplementedException ();
+			var urls = Generate (startIndex, num, Days);
+			if (IsImageFile) {				
+				// just count
+				return urls;
+			} else {
+				// scan page for img tags, select the most likely
+				var imgUrls = urls.Select<string, string> (x => WebUtils.GetImg (x, ImgIndex));
+				return imgUrls.ToList ();
+			}					
+
 		}
 		#endregion
 	}	

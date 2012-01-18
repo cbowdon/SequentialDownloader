@@ -32,112 +32,7 @@ namespace SequentialDownloader
 		#endregion
 		
 		#region Methods
-		
-		#region FindImgs
-		/// <summary>
-		/// Finds the src of all imgs in the page.
-		/// </summary>
-		/// <returns>
-		/// Source of the imgs.
-		/// </returns>
-		public List<string> FindImgs (string source)
-		{	
-			var quoteChar = "(\"|')";
-			var attrKey = "([A-Za-z0-9\\-]+)\\s*=\\s*";
-			var attrValue = "([A-Za-z0-9\\-/:;&#!\\.\\?\\s]+)";
-			// for some reason, Regex doesn't like OR used with lookbehind
-			var srcBehindA = "(?<=src\\s*=\\s*\")";
-			var srcBehindB = "(?<=src\\s*=\\s*')";
-			var imgPattern = String.Format ("<img ({0}{2}{1}{2}\\s*)+\\s*/*>", attrKey, attrValue, quoteChar);
-			var srcPattern = String.Format ("({0}{2}|{1}{2})", srcBehindA, srcBehindB, attrValue);
 			
-			var img = new Regex (imgPattern, RegexOptions.IgnoreCase);
-			var src = new Regex (srcPattern, RegexOptions.IgnoreCase);
-			
-			var matches = img.Matches (source);	
-			
-			var ans = from Match m in matches
-				let c = m.Captures [0].Value
-				let s = src.Match (c)
-				where s.Success
-				select s.Groups [1].Value;
-			
-			return ans.ToList ();
-		}
-		
-		public List<string> FindImgs ()
-		{
-			return FindImgs (HtmlSource);
-		}
-		#endregion
-	
-		#region IdentifyImg
-		/// <summary>
-		/// Identifies the image.
-		/// </summary>
-		/// <returns>
-		/// The image index (from first page).
-		/// </returns>
-		/// <param name='pageUrls'>
-		/// Page urls.
-		/// </param>
-		/// <param name='imgUrl'>
-		/// Image URL (from first page).
-		/// </param>
-		/// <exception cref='NotImplementedException'>
-		/// Is thrown when a requested operation is not implemented for a given type.
-		/// </exception>
-		public int IdentifyImg (IEnumerable<string> pageUrls, out string imgUrl)
-		{			
-			// fill array of source code
-			var pageSources = pageUrls.Select<string,string> (x => WebUtils.GetSourceCode (x)).ToList ();			
-			// get jagged list
-			var pageImgs = pageSources.Select<string,List<string>> (x => FindImgs (x)).ToList ();
-			
-			// get jagged array
-			var imgUrls = new string[pageUrls.Count ()][];
-			for (int i = 0; i < pageUrls.Count(); i++) {				
-				var source = pageSources [i];
-				var fullImgUrls = FindImgs (source).Select<string, ComicUri> (x => new ComicUri (x));				
-				var rightImgUrls = fullImgUrls.Select<ComicUri, string> (x => x.GetRightPart (UriPartial.Authority));
-				imgUrls [i] = rightImgUrls.ToArray ();
-			}
-			
-			// setup the list of possible indices
-			var possibleIndices = Enumerable.Range (0, imgUrls [0].Length).ToList ();			
-			
-			// remove the index of any item that appears in more than one page
-			for (int i = 0; i < imgUrls[0].GetLength(0); i++) {
-				for (int j = 1; j < imgUrls.GetLength(0); j++) {
-					if (imgUrls [j].Contains (imgUrls [0] [i])) {
-						possibleIndices.Remove (i);
-					}
-				}
-			}
-			
-			// if only one item left, remove it
-			if (possibleIndices.Count == 1) {
-				int index = possibleIndices.Single ();
-				imgUrl = pageImgs [0] [index];
-				return index;
-			}
-			
-			// else choose the remaining item that shows MOST similarity to same item on next list			
-			var scores = possibleIndices.Select<int, double> (p => WebUtils.CompareUrls (imgUrls [0] [p], imgUrls [1] [p])).ToList ();
-			var topIndex = scores.IndexOf (scores.Max ());
-			
-			imgUrl = pageImgs [0] [topIndex];
-			return topIndex;
-		}
-		
-		public int IdentifyImg (IEnumerable<string> pageUrls)
-		{
-			string wasted;
-			return IdentifyImg (pageUrls, out wasted);
-		}
-		#endregion
-			
-#warning Reimplement as Generator/IEnumerable<string> ?
 		/// <summary>
 		/// Finds the urls of other comics.
 		/// </summary>
@@ -169,16 +64,16 @@ namespace SequentialDownloader
 			UrlGenerator gen = GetUrlGenerator ();			
 			
 			// generate whole list of pages
-			var allPages = gen.GenerateLast100 ();
+			var allPages = gen.Get (0, 100);
 			
 			List<string> urls;			
 			if (!comic.IsImageFile) {
 				// identify img tag index
-				int imgIndex = IdentifyImg (gen.GenerateSome ());			
+				int imgIndex = UrlGenerator.IdentifyImg (gen.GenerateSome ());			
 				urls = new List<string> ();
 				foreach (var x in allPages) {					
 					try {
-						var imgs = FindImgs (WebUtils.GetSourceCode (x));	
+						var imgs = WebUtils.GetImgs (WebUtils.GetSourceCode (x));	
 						urls.Add (imgs [imgIndex]);
 					} catch {	
 						urls.Add (String.Empty);
@@ -193,13 +88,36 @@ namespace SequentialDownloader
 		
 		public UrlGenerator GetUrlGenerator ()
 		{
-			var comic = new ComicUri (inputUrl);
+			var comic = new ComicUri (inputUrl);			
+			var urlGen = ChooseGenerator (inputUrl);
+			
+			if (!comic.IsImageFile) {
+				var someUrls = urlGen.GenerateSome ();
+				string srcUrl = "";
+				UrlGenerator.IdentifyImg (someUrls, out srcUrl);				
+				try {
+					return ChooseGenerator (srcUrl);	
+				} catch (NotImplementedException) {
+					return urlGen;
+				}
+				
+			} else {
+				return urlGen;
+			}
+			
+						
+		}
+		
+		private UrlGenerator ChooseGenerator (string comicUrl)
+		{			
+			var aComic = new ComicUri (comicUrl);
+			
 			UrlGenerator gen;
 			
-			if (comic.Indices.Length == 1) {
+			if (aComic.Indices.Length == 1) {
 				// option A or B
 				
-				var dateCount = new DateGenerator (comic);
+				var dateCount = new DateGenerator (aComic);
 					
 				// identify if it's a valid date
 				if (dateCount.Format != DateType.NotRecognized) {					
@@ -207,14 +125,14 @@ namespace SequentialDownloader
 					gen = dateCount;					
 				} else {
 					// A of some kind
-					var seqCount = new SequentialGenerator (comic);
+					var seqCount = new SequentialGenerator (aComic);
 					gen = seqCount;
 				}
 			} else {
 				// option C or D
 				throw new NotImplementedException ();
 			}
-			return gen;
+			return gen;	
 		}
 		
 		

@@ -49,15 +49,15 @@ namespace SequentialDownloader
 		bool IsPadded ()
 		{
 			// identify if it is a fixed-length number	
-			if (WebUtils.UrlExists (string.Format (comic.Base, "1"))) {
+			if (WebUtils.UrlExists (string.Format (Comic.Base, "1"))) {
 				// unpadded
 				return false;		
-			} else if (WebUtils.UrlExists (string.Format (comic.Base, "1".PadLeft (comic.Indices [0].Length, '0')))) {
+			} else if (WebUtils.UrlExists (string.Format (Comic.Base, "1".PadLeft (Comic.Indices [0].Length, '0')))) {
 				// padded
 				return true;
 			} else {
 				// throw error
-				throw new ArgumentException ("SequentialCount.IsPadded: Cannot figure out if {0} is padded.", comic.AbsoluteUri);
+				throw new ArgumentException (String.Format ("SequentialCount.IsPadded: Cannot figure out if {0} is padded.", Comic.AbsoluteUri));
 			} 			
 		}
 		
@@ -66,7 +66,7 @@ namespace SequentialDownloader
 		#region Constructors
 		public SequentialGenerator (ComicUri comic) : base (comic)
 		{
-			this.comic = comic;
+			this.Comic = comic;
 			if (comic.Indices.Length != 1) {
 				throw new ArgumentException ("Sequential Count cannot accept a comic with > 1 index");
 			}
@@ -91,13 +91,13 @@ namespace SequentialDownloader
 			IEnumerable<string> numbers;				
 			
 			if (Padded) {								
-				var len = comic.Indices [0].Length;							
+				var len = Comic.Indices [0].Length;							
 				numbers = range.Select<int,string> (x => x.ToString ().PadLeft (len, '0'));				
 			} else {				
 				numbers = range.Select<int,string> (x => x.ToString ());
 			}
 			
-			urls = numbers.Select<string,string> (x => String.Format (comic.Base, x)).ToList ();
+			urls = numbers.Select<string,string> (x => String.Format (Comic.Base, x)).ToList ();
 
 			return urls;
 
@@ -111,7 +111,7 @@ namespace SequentialDownloader
 		/// </returns>
 		public override List<string> GenerateSome ()
 		{
-			var index = int.Parse (comic.Indices [0]);			
+			var index = int.Parse (Comic.Indices [0]);			
 			IEnumerable<int> range;
 			
 			if (index < 7) {				
@@ -123,34 +123,17 @@ namespace SequentialDownloader
 			return Generate (range);
 		}
 		
-		public override List<string> GenerateLast100 ()
-		{			
-			IEnumerable<int> range;
-			var hiNum = int.Parse (comic.Indices [0]);
-			var loNum = hiNum - 99;
-			if (loNum < 1) {
-				range = Enumerable.Range (int.Parse (Start), hiNum);	
-			} else {
-				range = Enumerable.Range (loNum, 100);
-			}
-			
-			return Generate (range);
-		}
-		
-		public override List<string> GenerateNext100 ()
-		{
-			var index = int.Parse (comic.Indices [0]);
-			return Generate (Enumerable.Range (index + 1, 100));
-		}
-		
 		public override List<string> Get (int startIndex, int num)
 		{
-			if (IsImageFile) {
+			var urls = Generate (Enumerable.Range (startIndex, num));
+			if (IsImageFile) {				
 				// just count
+				return urls;
 			} else {
 				// scan page for img tags, select the most likely
-			}		
-			throw new NotImplementedException ();
+				var imgUrls = urls.Select<string, string> (x => WebUtils.GetImg (x, ImgIndex));
+				return imgUrls.ToList ();
+			}					
 		}
 	}
 }

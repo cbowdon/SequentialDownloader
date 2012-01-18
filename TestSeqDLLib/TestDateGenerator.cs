@@ -72,6 +72,40 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
+		public void GetDirectly ()
+		{
+			var smbc = "http://www.smbc-comics.com/comics/20061017.gif";
+			
+			var smbcUrls = new string[7];
+			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
+			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
+			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061014.gif";
+			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061015.gif";
+			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061016.gif";
+			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061017.gif";
+			
+			var dateCount = new DateGenerator (new ComicUri (smbc));
+			dateCount.Start = "20061011";
+			dateCount.Days = DateGenerator.EveryDay;
+			Assert.AreEqual (smbcUrls, dateCount.Get (0, 7).ToArray ());
+			
+			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
+			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
+			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061018.gif";
+			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061019.gif";
+			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061020.gif";
+			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061025.gif";
+			
+			dateCount = new DateGenerator (new ComicUri (smbc));
+			dateCount.Start = "20061011";
+			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
+			dateCount.Days = new List<string> (days);
+			Assert.AreEqual (smbcUrls, dateCount.Get (0, 7));				
+		}
+		
+		[Test()]
 		public void GenerateSome ()
 		{
 			var smbc = "http://www.smbc-comics.com/comics/20061017.gif";
@@ -94,44 +128,12 @@ namespace TestSeqDLLib
 			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061018.gif";
 			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061019.gif";
 			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061020.gif";
-			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061025.gif";			
+			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061025.gif";		
+			
 			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
 			dateCount = new DateGenerator (new ComicUri (smbcUrls [6]));
 			dateCount.Days = new List<string> (days);
 			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ());			
-		}
-		
-		[Test()]
-		public void GenerateLast100 ()
-		{
-			var url = "http://www.smbc-comics.com/comics/20061011.gif";
-			var dateCount = new DateGenerator (new ComicUri (url));
-			var urls = dateCount.GenerateLast100 ();
-			Assert.AreEqual (100, urls.Count);
-			Assert.AreEqual (url, urls [99]);
-			
-			dateCount.Days = new List<string> ();
-			// 11th Oct 2006 was a Wednesday
-			dateCount.Days.Add ("Wednesday");
-			urls = dateCount.GenerateLast100 ();
-			Assert.AreEqual (100, urls.Count);
-			Assert.AreEqual (url, urls [99]);
-		}
-		
-		[Test()]
-		public void GenerateNext100 ()
-		{
-			var url = "http://www.smbc-comics.com/comics/20061011.gif";
-			var dateCount = new DateGenerator (new ComicUri (url));
-			var urls = dateCount.GenerateNext100 ();
-			Assert.AreEqual (100, urls.Count);
-			Assert.IsFalse (urls.Contains (url));
-			
-			dateCount.Days = new List<string> ();
-			dateCount.Days.Add ("Monday");
-			urls = dateCount.GenerateNext100 ();
-			Assert.AreEqual (100, urls.Count);
-			Assert.IsFalse (urls.Contains (url));
 		}
 	}
 }

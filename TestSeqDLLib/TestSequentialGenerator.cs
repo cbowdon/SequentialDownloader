@@ -55,7 +55,40 @@ namespace TestSeqDLLib
 			Assert.IsFalse (seqCo.Padded);
 		}
 		
-		public void Get ()
+		[Test()]
+		public void GetDirectly ()
+		{
+			var url = "http://comic.com/009.png";
+			var parser = new ComicParser (url);
+			var img0 = "http://comic.com/613.png";
+			var img1 = "http://comic.com/614.png";
+			var img2 = "http://comic.com/615.png";
+			
+			// get the generator object
+			UrlGenerator urlGen = parser.GetUrlGenerator ();
+			Assert.AreEqual ("1", urlGen.Start);
+			
+			// generate 10 urls, starting from 605
+			List<string> backUrls = urlGen.Get (605, 10);
+			// generate 10 urls, starting from 615
+			List<string> forwardUrls = urlGen.Get (615, 10);
+			// generate 10 urls, starting from 614
+			List<string> incUrls = urlGen.Get (614, 10);
+			
+			// each url should be the comic, directly
+			// urls are sorted
+			Assert.AreEqual (10, backUrls.Count ());
+			Assert.AreEqual (img0, backUrls [8]);
+			Assert.AreEqual (img1, backUrls [9]);
+			Assert.AreEqual (10, forwardUrls.Count ());
+			Assert.AreEqual (img2, forwardUrls [0]);
+			Assert.AreEqual (10, incUrls.Count ());
+			Assert.AreEqual (img1, incUrls [0]);
+			Assert.AreEqual (img2, incUrls [1]);			
+		}
+		
+		[Test()]
+		public void GetFromPage ()
 		{
 			var xkcdUrl = "http://xkcd.com/614";
 			var xkcdParser = new ComicParser (xkcdUrl);
@@ -146,37 +179,6 @@ namespace TestSeqDLLib
 			comic = new ComicUri ("http://xkcd.com/3");
 			seqCount = new SequentialGenerator (comic);
 			Assert.AreEqual (xkcdPages, seqCount.GenerateSome ());
-		}
-		
-		[Test()]
-		public void GenerateLast100 ()
-		{
-			var comic = new ComicUri ("http://xkcd.com/60");
-			var seqCount = new SequentialGenerator (comic);
-			seqCount.Padded = false;
-			var all = seqCount.GenerateLast100 ();
-			Assert.AreEqual (60, all.Count);
-			Assert.AreEqual ("http://xkcd.com/1", all [0]);
-			Assert.AreEqual ("http://xkcd.com/60", all [59]);
-			
-			comic = new ComicUri ("http://xkcd.com/1002");
-			seqCount = new SequentialGenerator (comic);
-			seqCount.Padded = false;
-			var all3 = seqCount.GenerateLast100 ();
-			Assert.AreEqual (100, all3.Count);
-			Assert.AreEqual ("http://xkcd.com/1002", all3 [99]);			
-		}
-		
-		[Test()]
-		public void GenerateNext100 ()
-		{
-			var comic = new ComicUri ("http://xkcd.com/614");
-			var seqCount = new SequentialGenerator (comic);
-			seqCount.Padded = false;
-			var all = seqCount.GenerateNext100 ();
-			Assert.AreEqual (100, all.Count);
-			Assert.AreEqual ("http://xkcd.com/615", all [0]);
-			Assert.AreEqual ("http://xkcd.com/714", all [99]);
 		}
 	}
 }
