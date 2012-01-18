@@ -14,11 +14,33 @@ namespace SequentialDownloader
 	/// <exception cref='NotImplementedException'>
 	/// Is thrown when a requested operation is not implemented for a given type.
 	/// </exception>
-	public class BlockDateCount : UrlGenerator
+	public class DateGenerator : UrlGenerator
 	{
-		#region Properties
 		ComicUri comic;
-		DateTime _date = new DateTime (0);
+		
+		#region Start
+		private bool _startSet = false;
+		private DateTime _start;
+			
+		public override string Start {
+			get {
+				if (!_startSet) {
+					// arbitrarily selected starting date
+					_start = DateTime.ParseExact ("20000101", Format, null);
+					_startSet = true;
+				}
+				return _start.ToString (Format);
+			}
+			set {				
+				string throwaway = "";				
+				_start = FindFormat (value, out throwaway);
+				_startSet = true;
+			}
+		}
+		#endregion
+		
+		#region Date
+		private DateTime _date = new DateTime (0);
 		
 		public DateTime Date {
 			get {
@@ -28,9 +50,11 @@ namespace SequentialDownloader
 				return _date;
 			}
 		}
-
-		string _format;
+		#endregion
 		
+		#region Format
+		private string _format;
+
 		public string Format { 
 			get {
 				if (_format == null) {
@@ -39,7 +63,9 @@ namespace SequentialDownloader
 				return _format;
 			}
 		}
+		#endregion
 		
+		#region Days
 		List<string> _days = null;
 
 		public List<string> Days { 
@@ -65,10 +91,15 @@ namespace SequentialDownloader
 		}
 		#endregion
 		
+		
 		#region Constructors		
-		public BlockDateCount (ComicUri comic) : base (comic)
+		public DateGenerator (ComicUri comic) : base (comic)
 		{
 			this.comic = comic;			
+		}
+		
+		public DateGenerator (string url) : this (new ComicUri(url))
+		{
 		}
 		#endregion
 		
@@ -103,6 +134,11 @@ namespace SequentialDownloader
 			return urls;			
 		}
 			
+		public static DateTime FindFormat (string date, out string format)
+		{
+			return FindFormat (new string[]{date}, out format);
+		}
+		
 		public static DateTime FindFormat (string[] indices, out string format)
 		{
 			if (indices.Length != 1) {
@@ -154,6 +190,11 @@ namespace SequentialDownloader
 		public override List<string> GenerateNext100 ()
 		{
 			return Generate (100, Days, 1, 1);
+		}
+		
+		public override List<string> Get (int startIndex, int num)
+		{
+			throw new NotImplementedException ();
 		}
 		#endregion
 	}	

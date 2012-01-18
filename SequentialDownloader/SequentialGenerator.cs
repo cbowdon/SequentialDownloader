@@ -7,9 +7,27 @@ namespace SequentialDownloader
 	/// <summary>
 	/// Sequential count : for basic basic counting.
 	/// </summary>
-	public class SequentialCount : UrlGenerator
+	public class SequentialGenerator : UrlGenerator
 	{
 		ComicUri comic;
+		
+		#region Start
+		private string _start = "1";
+
+		public override string Start {
+			get {
+				return _start;
+			} 
+			set {
+				if (value.Substring (0, 1) == "0" && value.Length > 1) {
+					Padded = true;
+				} else if (value.Length == 1) {
+					Padded = false;
+				}
+				_start = value;
+			}
+		}
+		#endregion
 		
 		#region Padded
 		bool _paddingSet = false;
@@ -47,43 +65,27 @@ namespace SequentialDownloader
 		
 		#endregion
 		
-		#region ZeroBased
-		bool _zeroSet = false;
-		bool zeroBased;
-
-		public bool ZeroBased {
-			get {
-				if (_zeroSet == false) {
-					_zeroSet = true;
-					zeroBased = IsZeroBased ();					
-				}
-				return zeroBased;
-			}
-			
-			set {
-				_zeroSet = true;
-				zeroBased = value;				
-			}
-		}
-		
-		bool IsZeroBased ()
-		{
-			string zeroNum = "0";
-			if (Padded) {
-				var len = comic.Indices [0].Length;
-				zeroNum = "0".PadLeft (len, '0');
-			} 
-			return WebUtils.UrlExists (String.Format (comic.Base, zeroNum));
-		}		
-		#endregion
-		
-		public SequentialCount (ComicUri comic) : base (comic)
+		#region Constructors
+		public SequentialGenerator (ComicUri comic) : base (comic)
 		{
 			this.comic = comic;
 			if (comic.Indices.Length != 1) {
 				throw new ArgumentException ("Sequential Count cannot accept a comic with > 1 index");
 			}
+						
+			if (comic.Indices [0].Substring (0, 1) == "0" && comic.Indices [0].Length > 1) {
+				Padded = true;
+			}
+			
+			if (comic.Indices [0].Length == 1) {
+				Padded = false;
+			}
 		}
+		
+		public SequentialGenerator (string url) : this (new ComicUri(url))
+		{
+		}		
+		#endregion
 		
 		public List<string> Generate (IEnumerable<int> range)
 		{				
@@ -115,11 +117,7 @@ namespace SequentialDownloader
 			IEnumerable<int> range;
 			
 			if (index < 7) {				
-				if (ZeroBased) {
-					range = Enumerable.Range (0, 7);	
-				} else {
-					range = Enumerable.Range (1, 7);	
-				}				
+				range = Enumerable.Range (int.Parse (Start), 7);	
 			} else {
 				range = Enumerable.Range (index - 6, 7);
 			}
@@ -133,11 +131,7 @@ namespace SequentialDownloader
 			var hiNum = int.Parse (comic.Indices [0]);
 			var loNum = hiNum - 99;
 			if (loNum < 1) {
-				if (ZeroBased) {				
-					range = Enumerable.Range (0, hiNum + 1);	
-				} else {
-					range = Enumerable.Range (1, hiNum);	
-				}		
+				range = Enumerable.Range (int.Parse (Start), hiNum);	
 			} else {
 				range = Enumerable.Range (loNum, 100);
 			}
@@ -149,6 +143,11 @@ namespace SequentialDownloader
 		{
 			var index = int.Parse (comic.Indices [0]);
 			return Generate (Enumerable.Range (index + 1, 100));
+		}
+		
+		public override List<string> Get (int startIndex, int num)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

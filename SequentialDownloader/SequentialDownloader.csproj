@@ -42,12 +42,12 @@
     <Compile Include="ComicParser.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="ComicUri.cs" />
-    <Compile Include="SequentialCount.cs" />
-    <Compile Include="BlockDateCount.cs" />
     <Compile Include="DateType.cs" />
     <Compile Include="UrlGenerator.cs" />
     <Compile Include="WebUtils.cs" />
     <Compile Include="ComicConvert.cs" />
+    <Compile Include="SequentialGenerator.cs" />
+    <Compile Include="DateGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

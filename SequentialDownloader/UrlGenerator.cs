@@ -10,15 +10,17 @@ namespace SequentialDownloader
 	/// </summary>
 	public abstract class UrlGenerator
 	{
-		protected UrlGenerator (ComicUri comic)
-		{
-		}
+		public abstract string Start { get; set; }
+		
+		protected UrlGenerator (ComicUri comic){}
 		
 		public abstract List<string> GenerateLast100 ();
 		
 		public abstract List<string> GenerateNext100 ();
 		
 		public abstract List<string> GenerateSome ();
+		
+		public abstract List<string> Get (int startIndex, int num);
 	}
 }
 

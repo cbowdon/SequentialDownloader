@@ -41,10 +41,10 @@
     <Compile Include="TestSeqDL.cs" />
     <Compile Include="TestRepository.cs" />
     <Compile Include="TestComicParser.cs" />
-    <Compile Include="TestDateCount.cs" />
-    <Compile Include="TestSequentialCount.cs" />
     <Compile Include="TestComicUri.cs" />
     <Compile Include="TestComicConvert.cs" />
+    <Compile Include="TestDateGenerator.cs" />
+    <Compile Include="TestSequentialGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -6,13 +6,32 @@ using NUnit.Framework;
 namespace TestSeqDLLib
 {
 	[TestFixture()]
-	public class TestDateCount
+	public class TestDateGenerator
 	{	
+		[Test()]
+		public void Start ()
+		{
+			// default
+			var url = "http://www.smbc-comics.com/comics/20061011.gif";
+			var dateCo = new DateGenerator (url);
+			Assert.AreEqual ("20000101", dateCo.Start);
+			
+			// setting value
+			var newStart = "19871024";
+			dateCo.Start = newStart;
+			Assert.AreEqual (newStart, dateCo.Start);
+			
+			// setting value in wrong format
+			newStart = "31121999";
+			dateCo.Start = newStart;
+			Assert.AreEqual ("19991231", dateCo.Start);
+		}
+		
 		[Test()]
 		public void Days ()
 		{
 			var comic = new ComicUri ("http://www.smbc-comics.com/comics/20061011.gif");
-			var dateCount = new BlockDateCount (comic);
+			var dateCount = new DateGenerator (comic);
 			// by chance, two consecutive Thursdays were missed here
 			Assert.AreEqual (6, dateCount.Days.Count);
 			Assert.IsFalse (dateCount.Days.Contains ("Thursday"));
@@ -30,25 +49,25 @@ namespace TestSeqDLLib
 			var fakeDate = "http://comic.com/99999999";
 			
 			// implicitly tests FindFormat by calling the property BlockDateCount.Format
-			var dateCount = new BlockDateCount (new ComicUri (isoDate));			
+			var dateCount = new DateGenerator (new ComicUri (isoDate));			
 			Assert.AreEqual (DateType.Iso, dateCount.Format);
 			
-			dateCount = new BlockDateCount (new ComicUri (ukDate));			
+			dateCount = new DateGenerator (new ComicUri (ukDate));			
 			Assert.AreEqual (DateType.Uk, dateCount.Format);
 			
-			dateCount = new BlockDateCount (new ComicUri (usDate));			
+			dateCount = new DateGenerator (new ComicUri (usDate));			
 			Assert.AreEqual (DateType.Us, dateCount.Format);
 			
-			dateCount = new BlockDateCount (new ComicUri (isoDateShort));			
+			dateCount = new DateGenerator (new ComicUri (isoDateShort));			
 			Assert.AreEqual (DateType.IsoShort, dateCount.Format);
 
-			dateCount = new BlockDateCount (new ComicUri (ukDateShort));			
+			dateCount = new DateGenerator (new ComicUri (ukDateShort));			
 			Assert.AreEqual (DateType.UkShort, dateCount.Format);
 			
-			dateCount = new BlockDateCount (new ComicUri (usDateShort));			
+			dateCount = new DateGenerator (new ComicUri (usDateShort));			
 			Assert.AreEqual (DateType.UsShort, dateCount.Format);
 			
-			dateCount = new BlockDateCount (new ComicUri (fakeDate));
+			dateCount = new DateGenerator (new ComicUri (fakeDate));
 			Assert.AreEqual (DateType.NotRecognized, dateCount.Format);			
 		}
 		
@@ -66,7 +85,7 @@ namespace TestSeqDLLib
 			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061016.gif";
 			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061017.gif";
 			
-			var dateCount = new BlockDateCount (new ComicUri (smbc));
+			var dateCount = new DateGenerator (new ComicUri (smbc));
 			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ().ToArray ());
 			
 			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
@@ -77,7 +96,7 @@ namespace TestSeqDLLib
 			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061020.gif";
 			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061025.gif";			
 			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
-			dateCount = new BlockDateCount (new ComicUri (smbcUrls [6]));
+			dateCount = new DateGenerator (new ComicUri (smbcUrls [6]));
 			dateCount.Days = new List<string> (days);
 			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ());			
 		}
@@ -86,33 +105,33 @@ namespace TestSeqDLLib
 		public void GenerateLast100 ()
 		{
 			var url = "http://www.smbc-comics.com/comics/20061011.gif";
-			var dateCount = new BlockDateCount (new ComicUri (url));
+			var dateCount = new DateGenerator (new ComicUri (url));
 			var urls = dateCount.GenerateLast100 ();
 			Assert.AreEqual (100, urls.Count);
-			Assert.AreEqual(url, urls[99]);
+			Assert.AreEqual (url, urls [99]);
 			
 			dateCount.Days = new List<string> ();
 			// 11th Oct 2006 was a Wednesday
 			dateCount.Days.Add ("Wednesday");
 			urls = dateCount.GenerateLast100 ();
 			Assert.AreEqual (100, urls.Count);
-			Assert.AreEqual(url, urls[99]);
+			Assert.AreEqual (url, urls [99]);
 		}
 		
 		[Test()]
 		public void GenerateNext100 ()
 		{
 			var url = "http://www.smbc-comics.com/comics/20061011.gif";
-			var dateCount = new BlockDateCount (new ComicUri (url));
+			var dateCount = new DateGenerator (new ComicUri (url));
 			var urls = dateCount.GenerateNext100 ();
 			Assert.AreEqual (100, urls.Count);
-			Assert.IsFalse (urls.Contains(url));
+			Assert.IsFalse (urls.Contains (url));
 			
 			dateCount.Days = new List<string> ();
 			dateCount.Days.Add ("Monday");
 			urls = dateCount.GenerateNext100 ();
 			Assert.AreEqual (100, urls.Count);
-			Assert.IsFalse (urls.Contains(url));
+			Assert.IsFalse (urls.Contains (url));
 		}
 	}
 }

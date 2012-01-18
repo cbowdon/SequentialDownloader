@@ -171,7 +171,7 @@ namespace SequentialDownloader
 			if (comic.Indices.Length == 1) {
 				// option A or B
 				
-				var dateCount = new BlockDateCount (comic);
+				var dateCount = new DateGenerator (comic);
 					
 				// identify if it's a valid date
 				if (dateCount.Format != DateType.NotRecognized) {					
@@ -179,7 +179,7 @@ namespace SequentialDownloader
 					gen = dateCount;					
 				} else {
 					// A of some kind
-					var seqCount = new SequentialCount (comic);
+					var seqCount = new SequentialGenerator (comic);
 					gen = seqCount;
 				}
 			} else {
@@ -220,7 +220,13 @@ namespace SequentialDownloader
 			
 			
 			return urls.ToList ();
-		}		
+		}
+		
+		public UrlGenerator GetUrlGenerator ()
+		{
+			throw new NotImplementedException ();
+		}
+		
 		
 #endregion
 	}
