@@ -16,8 +16,6 @@ namespace SequentialDownloader
 	/// </exception>
 	public class DateGenerator : UrlGenerator
 	{
-		ComicUri comic;
-		
 		#region Start
 		private bool _startSet = false;
 		private DateTime _start;
@@ -38,7 +36,7 @@ namespace SequentialDownloader
 			}
 		}
 		#endregion
-		
+				
 		#region Date
 		private DateTime _date = new DateTime (0);
 		
@@ -90,8 +88,7 @@ namespace SequentialDownloader
 			} 
 		}
 		#endregion
-		
-		
+				
 		#region Constructors		
 		public DateGenerator (ComicUri comic) : base (comic)
 		{

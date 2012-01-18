@@ -54,7 +54,60 @@ namespace SequentialDownloader
 			
 			throw new TimeoutException (errorString);
 		}
-
+		
+		/// <summary>
+		/// Extract one img src from a page
+		/// </summary>
+		/// <returns>
+		/// The image.
+		/// </returns>
+		/// <param name='url'>
+		/// URL.
+		/// </param>
+		/// <param name='index'>
+		/// Index.
+		/// </param>
+		public static string GetImg (string url, int index)
+		{
+			var imgUrls = GetImgs (url);
+			return imgUrls[index];
+		}
+		
+		/// <summary>
+		/// Gets all img src tags from the page.
+		/// </summary>
+		/// <returns>
+		/// The imgs.
+		/// </returns>
+		/// <param name='url'>
+		/// URL.
+		/// </param>
+		public static List<string> GetImgs (string url)
+		{			
+			var source = GetSourceCode(url);
+			var quoteChar = "(\"|')";
+			var attrKey = "([A-Za-z0-9\\-]+)\\s*=\\s*";
+			var attrValue = "([A-Za-z0-9\\-/:;&#!\\.\\?\\s]+)";
+			// for some reason, Regex doesn't like OR used with lookbehind
+			var srcBehindA = "(?<=src\\s*=\\s*\")";
+			var srcBehindB = "(?<=src\\s*=\\s*')";
+			var imgPattern = String.Format ("<img ({0}{2}{1}{2}\\s*)+\\s*/*>", attrKey, attrValue, quoteChar);
+			var srcPattern = String.Format ("({0}{2}|{1}{2})", srcBehindA, srcBehindB, attrValue);
+			
+			var img = new Regex (imgPattern, RegexOptions.IgnoreCase);
+			var src = new Regex (srcPattern, RegexOptions.IgnoreCase);
+			
+			var matches = img.Matches (source);	
+			
+			var ans = from Match m in matches
+				let c = m.Captures [0].Value
+				let s = src.Match (c)
+				where s.Success
+				select s.Groups [1].Value;
+			
+			return ans.ToList ();
+		}
+		
 		public static bool UrlExists (string url)
 		{
 			int i = 0;
@@ -72,6 +125,7 @@ namespace SequentialDownloader
 			}
 			return false;
 		}
+	
 		/// <summary>
 		/// Compares two URLs
 		/// </summary>

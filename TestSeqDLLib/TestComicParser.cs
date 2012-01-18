@@ -17,7 +17,7 @@ namespace TestSeqDLLib
 			var xkcdParser = new ComicParser (xkcdUrl);
 			var xkcdUrls = xkcdParser.FindUrls ().ToArray ();
 			var xkcdImg = "http://imgs.xkcd.com/comics/woodpecker.png";
-			Assert.AreEqual (xkcdImg, xkcdUrls [613]);			
+			Assert.AreEqual (xkcdImg, xkcdUrls [98]);			
 		}
 		
 		[Test()]
@@ -30,6 +30,7 @@ namespace TestSeqDLLib
 			
 			// get the generator object
 			UrlGenerator urlGen = xkcdParser.GetUrlGenerator ();
+			Assert.IsInstanceOfType(typeof(SequentialGenerator), urlGen.GetType(), "Correct type");
 			
 			Assert.AreEqual ("1", urlGen.Start);
 			
@@ -48,8 +49,7 @@ namespace TestSeqDLLib
 			Assert.AreEqual (xkcdImg2, forwardUrls [1]);
 			Assert.AreEqual (10, incUrls.Count ());
 			Assert.AreEqual (xkcdImg, incUrls [0]);
-			Assert.AreEqual (xkcdImg2, incUrls [1]);
-		
+			Assert.AreEqual (xkcdImg2, incUrls [1]);		
 		}
 		
 		[Test()]

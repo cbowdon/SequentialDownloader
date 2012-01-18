@@ -12,7 +12,18 @@ namespace SequentialDownloader
 	{
 		public abstract string Start { get; set; }
 		
-		protected UrlGenerator (ComicUri comic){}
+		protected ComicUri comic;
+		
+		public bool IsImageFile { 
+			get {
+				return comic.IsImageFile;
+			}
+		}
+		
+		protected UrlGenerator (ComicUri comic)
+		{
+			this.comic = comic;
+		}
 		
 		public abstract List<string> GenerateLast100 ();
 		

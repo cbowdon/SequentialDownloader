@@ -166,6 +166,34 @@ namespace SequentialDownloader
 			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
 			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded				
 						
+			UrlGenerator gen = GetUrlGenerator ();			
+			
+			// generate whole list of pages
+			var allPages = gen.GenerateLast100 ();
+			
+			List<string> urls;			
+			if (!comic.IsImageFile) {
+				// identify img tag index
+				int imgIndex = IdentifyImg (gen.GenerateSome ());			
+				urls = new List<string> ();
+				foreach (var x in allPages) {					
+					try {
+						var imgs = FindImgs (WebUtils.GetSourceCode (x));	
+						urls.Add (imgs [imgIndex]);
+					} catch {	
+						urls.Add (String.Empty);
+					}
+				}
+				
+			} else {	
+				urls = allPages;				
+			}			
+			return urls.ToList ();
+		}
+		
+		public UrlGenerator GetUrlGenerator ()
+		{
+			var comic = new ComicUri (inputUrl);
 			UrlGenerator gen;
 			
 			if (comic.Indices.Length == 1) {
@@ -186,45 +214,7 @@ namespace SequentialDownloader
 				// option C or D
 				throw new NotImplementedException ();
 			}
-			
-			// identify img tag index
-			
-			// generate whole list of pages
-			var allPages = gen.GenerateLast100 ();
-			
-			// and get nth tag for each						
-			// (map second (map FindImg, allPages))
-			List<string> urls;			
-			if (!comic.IsImageFile) {
-				
-				int imgIndex = IdentifyImg (gen.GenerateSome ());			
-								
-				urls = new List<string> ();
-				
-				foreach (var x in allPages) {					
-					try {
-						
-						var imgs = FindImgs (WebUtils.GetSourceCode (x));	
-						urls.Add (imgs [imgIndex]);
-						
-					} catch {
-						
-						urls.Add (String.Empty);
-					}
-				}
-				
-			} else {
-				
-				urls = allPages;				
-			}
-			
-			
-			return urls.ToList ();
-		}
-		
-		public UrlGenerator GetUrlGenerator ()
-		{
-			throw new NotImplementedException ();
+			return gen;
 		}
 		
 		

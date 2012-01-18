@@ -8,9 +8,7 @@ namespace SequentialDownloader
 	/// Sequential count : for basic basic counting.
 	/// </summary>
 	public class SequentialGenerator : UrlGenerator
-	{
-		ComicUri comic;
-		
+	{		
 		#region Start
 		private string _start = "1";
 
@@ -28,7 +26,7 @@ namespace SequentialDownloader
 			}
 		}
 		#endregion
-		
+				
 		#region Padded
 		bool _paddingSet = false;
 		bool padded;
@@ -147,6 +145,11 @@ namespace SequentialDownloader
 		
 		public override List<string> Get (int startIndex, int num)
 		{
+			if (IsImageFile) {
+				// just count
+			} else {
+				// scan page for img tags, select the most likely
+			}		
 			throw new NotImplementedException ();
 		}
 	}
