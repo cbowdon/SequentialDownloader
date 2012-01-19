@@ -85,23 +85,28 @@ namespace SequentialDownloader
 			}			
 			return urls.ToList ();
 		}
-		
+				
 		public UrlGenerator GetUrlGenerator ()
 		{
+			// start with the input URL
 			var comic = new ComicUri (inputUrl);			
-			var urlGen = ChooseGenerator (inputUrl);
+			// choose appropriate generator type
+			var urlGen = ChooseGenerator (inputUrl);			
 			
 			if (!comic.IsImageFile) {
+				// find the img src URL
 				var someUrls = urlGen.GenerateSome ();
 				string srcUrl = "";
-				UrlGenerator.IdentifyImg (someUrls, out srcUrl);				
+				UrlGenerator.IdentifyImg (someUrls, out srcUrl);
 				try {
+					// try to create a generator for img src URLs
 					return ChooseGenerator (srcUrl);	
 				} catch (NotImplementedException) {
+					// if not possible, just return page URL generator
 					return urlGen;
-				}
-				
+				}				
 			} else {
+				// return page URL generator
 				return urlGen;
 			}
 			
@@ -109,7 +114,7 @@ namespace SequentialDownloader
 		}
 		
 		private UrlGenerator ChooseGenerator (string comicUrl)
-		{			
+		{									
 			var aComic = new ComicUri (comicUrl);
 			
 			UrlGenerator gen;

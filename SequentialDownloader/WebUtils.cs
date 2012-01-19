@@ -70,7 +70,7 @@ namespace SequentialDownloader
 		public static string GetImg (string url, int index)
 		{
 			var imgUrls = GetImgs (url);
-			return imgUrls[index];
+			return imgUrls [index];
 		}
 		
 		/// <summary>
@@ -84,10 +84,11 @@ namespace SequentialDownloader
 		/// </param>
 		public static List<string> GetImgs (string url)
 		{			
-			var source = GetSourceCode(url);
+			var originalUrl = new Uri (url);
+			var source = GetSourceCode (url);
 			var quoteChar = "(\"|')";
 			var attrKey = "([A-Za-z0-9\\-]+)\\s*=\\s*";
-			var attrValue = "([A-Za-z0-9\\-/:;&#!\\.\\?\\s]+)";
+			var attrValue = "([A-Za-z0-9\\-/:;&#!_\\.\\?\\s]+)";
 			// for some reason, Regex doesn't like OR used with lookbehind
 			var srcBehindA = "(?<=src\\s*=\\s*\")";
 			var srcBehindB = "(?<=src\\s*=\\s*')";
@@ -98,14 +99,28 @@ namespace SequentialDownloader
 			var src = new Regex (srcPattern, RegexOptions.IgnoreCase);
 			
 			var matches = img.Matches (source);	
-			
+		
 			var ans = from Match m in matches
 				let c = m.Captures [0].Value
 				let s = src.Match (c)
 				where s.Success
 				select s.Groups [1].Value;
 			
-			return ans.ToList ();
+			Func<string,bool> isAbsoluteUri = x => {
+				var uri = new Uri (x);
+				return uri.GetLeftPart (UriPartial.Scheme) == "http://";	
+			};
+			
+			var fullAns = new List<string> ();
+			foreach (var x in ans) {
+				if (isAbsoluteUri (x)) {
+					fullAns.Add (x);
+				} else {
+					fullAns.Add (String.Format ("{0}{1}", originalUrl.GetLeftPart(UriPartial.Authority), x));					
+				}
+			}
+			
+			return fullAns.ToList ();
 		}
 		
 		public static bool UrlExists (string url)

@@ -15,11 +15,13 @@ namespace SequentialDownloader
 		
 		public ComicUri Comic { get; protected set; }
 		
+		#region IsImageFile
 		public bool IsImageFile { 
 			get {
 				return Comic.IsImageFile;
 			}
 		}
+		#endregion
 		
 		#region ImgIndex
 		private int _imgIndex = -1;
@@ -38,24 +40,25 @@ namespace SequentialDownloader
 			}			
 		}
 		#endregion
+		
+		#region Constructors
 		protected UrlGenerator (ComicUri comic)
 		{
 			this.Comic = comic;
 		}
+		#endregion
 		
 		#region IdentifyImg
 		public static int IdentifyImg (IEnumerable<string> pageUrls, out string imgUrl)
 		{			
-			// fill array of source code
-			var pageSources = pageUrls.Select<string,string> (x => WebUtils.GetSourceCode (x)).ToList ();			
 			// get jagged list
-			var pageImgs = pageSources.Select<string,List<string>> (x => WebUtils.GetImgs (x)).ToList ();
+			var pages = pageUrls.ToList ();
+			var pageImgs = pageUrls.Select<string,List<string>> (x => WebUtils.GetImgs (x)).ToList ();
 			
 			// get jagged array
 			var imgUrls = new string[pageUrls.Count ()][];
 			for (int i = 0; i < pageUrls.Count(); i++) {				
-				var source = pageSources [i];
-				var fullImgUrls = WebUtils.GetImgs (source).Select<string, ComicUri> (x => new ComicUri (x));				
+				var fullImgUrls = WebUtils.GetImgs (pages [i]).Select<string, ComicUri> (x => new ComicUri (x));				
 				var rightImgUrls = fullImgUrls.Select<ComicUri, string> (x => x.GetRightPart (UriPartial.Authority));
 				imgUrls [i] = rightImgUrls.ToArray ();
 			}

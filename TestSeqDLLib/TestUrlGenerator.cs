@@ -13,16 +13,16 @@ namespace TestSeqDLLib
 		public void ImgIndexXkcd ()
 		{
 			var url = "http://xkcd.com/614";
-			var urlGen = new SequentialGenerator(url);
-			Assert.AreEqual(1, urlGen.ImgIndex);
+			var urlGen = new SequentialGenerator (url);
+			Assert.AreEqual (1, urlGen.ImgIndex);
 		}
 		
 		[Test()]
 		public void ImgIndexSmbc ()
 		{
 			string url = "http://www.smbc-comics.com/index.php?db=comics&id=614";
-			var urlGen = new SequentialGenerator(url);
-			Assert.AreEqual(1, urlGen.ImgIndex);
+			var urlGen = new SequentialGenerator (url);
+			Assert.AreEqual (2, urlGen.ImgIndex);			
 		}
 		
 		[Test()]
@@ -46,6 +46,20 @@ namespace TestSeqDLLib
 			string result = null;
 			Assert.AreEqual (2, UrlGenerator.IdentifyImg (smbcRules.Generate (Enumerable.Range (614, 2)), out result));
 			Assert.IsTrue (result.Equals (actualUrl) || result.Equals (actualUrl2));
+		}
+		
+		[Test()]
+		public void IdentifyImgIrregularWebcomic ()
+		{
+			var pageUrl = "http://www.irregularwebcomic.net/32.html";
+			var fullComicUrl = "http://www.irregularwebcomic.net/comics/irreg0026.jpg";
+			var seqGen = new SequentialGenerator (pageUrl);
+			var somePageUrls = seqGen.GenerateSome ();
+			string imgUrl;
+			var index = UrlGenerator.IdentifyImg (somePageUrls, out imgUrl);
+			Assert.AreEqual (1, index);
+			// depends on what GenerateSome provides
+			Assert.AreEqual (fullComicUrl, imgUrl);
 		}
 	}
 }

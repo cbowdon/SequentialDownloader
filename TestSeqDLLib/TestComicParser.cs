@@ -10,10 +10,24 @@ namespace TestSeqDLLib
 	public class TestComicParser
 	{
 		[Test()]
-		public void TryRedirectToImg ()
+		public void TryRedirectToImgSmbc ()
 		{
 			var url = "http://www.smbc-comics.com/index.php?db=comics&id=614";
 			var imgUrl = "http://www.smbc-comics.com/comics/20061011.gif";
+			var parser = new ComicParser (url);
+			var urlGen = parser.GetUrlGenerator ();
+			Assert.AreEqual (imgUrl, urlGen.Comic.AbsoluteUri);
+						
+			parser = new ComicParser (imgUrl);
+			urlGen = parser.GetUrlGenerator ();
+			Assert.AreEqual (imgUrl, urlGen.Comic.AbsoluteUri);
+		}
+		
+		[Test()]
+		public void TryRedirectToImgIrregularWebcomic ()
+		{
+			var url = "http://www.irregularwebcomic.net/32.html";
+			var imgUrl = "http://www.irregularwebcomic.net/comics/irreg0026.jpg";
 			var parser = new ComicParser (url);
 			var urlGen = parser.GetUrlGenerator ();
 			Assert.AreEqual (imgUrl, urlGen.Comic.AbsoluteUri);
@@ -81,6 +95,16 @@ namespace TestSeqDLLib
 			Assert.AreEqual (10, forwardUrls.Count ());
 			Assert.AreEqual (smbcUrl1, incUrls [0]);
 			Assert.AreEqual (10, incUrls.Count ());
+		}
+		
+		[Test()]
+		public void GetUrlGeneratorIrregularWebcomic ()
+		{
+			var pageUrl = "http://www.irregularwebcomic.net/32.html";
+			var comicUrl = "http://www.irregularwebcomic.net/comics/irreg0032.jpg";
+			var parser = new ComicParser (pageUrl);
+			var urlGen = parser.GetUrlGenerator ();
+			Assert.AreEqual (comicUrl, urlGen.Comic.AbsoluteUri);
 		}
 		
 		[Test()]

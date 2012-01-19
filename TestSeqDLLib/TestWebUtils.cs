@@ -31,7 +31,7 @@ namespace TestSeqDLLib
 		{			
 			string smbc614 = "http://www.smbc-comics.com/index.php?db=comics&id=614";
 			var smbc614Imgs = WebUtils.GetImgs (smbc614);
-			Assert.AreEqual (5, smbc614Imgs.Count);
+			Assert.AreEqual (6, smbc614Imgs.Count);
 			
 			var smbc614ComicA = "http://www.smbc-comics.com/comics/20061011.gif";
 			var smbc614ComicB = "http://zs1.smbc-comics.com/comics/20061011.gif";
@@ -44,6 +44,20 @@ namespace TestSeqDLLib
 			var smbc615ComicA = "http://www.smbc-comics.com/comics/20061012.gif";
 			var smbc615ComicB = "http://zs1.smbc-comics.com/comics/20061012.gif";
 			Assert.IsTrue (smbc615Imgs.Contains (smbc615ComicA) || smbc615Imgs.Contains (smbc615ComicB));
+		}
+		
+		[Test()]
+		public void GetImgsIrregularWebComic ()
+		{
+			var pageUrl = "http://www.irregularwebcomic.net/32.html";
+			var fullComicUrl = "http://www.irregularwebcomic.net/comics/irreg0032.jpg";
+			var imgs = WebUtils.GetImgs (pageUrl);
+			foreach (var x in imgs) {
+				Console.WriteLine (x);
+			}
+			Assert.AreEqual (3, imgs.Count ());
+			Assert.IsTrue (imgs.Contains (fullComicUrl));
+			Assert.AreEqual (fullComicUrl, imgs [1]);
 		}
 		
 		[Test()]
