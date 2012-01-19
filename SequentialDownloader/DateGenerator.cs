@@ -35,10 +35,9 @@ namespace SequentialDownloader
 		}
 		#endregion
 				
-		#region Date		
+		#region Date	
 		public DateTime Date {
 			get {
-				Console.WriteLine ("Called");
 				return DateTime.ParseExact (Start, Format, null);
 			}
 		}
