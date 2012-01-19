@@ -17,11 +17,15 @@ namespace SequentialDownloader
 	public class DateGenerator : UrlGenerator
 	{
 		#region Start
-		private string _start = "20000101";
+		private string _start;
 			
 		public override string Start {
 			get {
-				return _start;//.ToString (Format);
+				if (_start == null) {
+					var date = FindFormat (Comic.Indices, out _format);
+					_start = date.ToString (Format);
+				}
+				return _start;
 			}
 			set {				
 				string throwaway = "";				
@@ -34,6 +38,7 @@ namespace SequentialDownloader
 		#region Date		
 		public DateTime Date {
 			get {
+				Console.WriteLine ("Called");
 				return DateTime.ParseExact (Start, Format, null);
 			}
 		}
@@ -140,10 +145,8 @@ namespace SequentialDownloader
 		{
 			var urls = new List<string> ();
 			int i = offset;
-			while (urls.Count < number) {
-				
+			while (urls.Count < number) {								
 				var d = Date.AddDays (i);
-				
 				if (days.Contains (d.DayOfWeek.ToString ())) {			
 					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
 				}
@@ -182,11 +185,7 @@ namespace SequentialDownloader
 		/// </returns>
 		public override List<string> GenerateSome ()
 		{
-			if (Days == null || Days.Count () == 7) {
-				return Generate (0, 7, -1);
-			} else {
-				return Generate (0, 7, -1, Days);
-			}
+			return Generate (0, 7, Days);
 		}
 		
 		public override List<string> Get (int startIndex, int num)

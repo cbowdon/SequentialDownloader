@@ -14,7 +14,8 @@ namespace TestSeqDLLib
 			// default
 			var url = "http://www.smbc-comics.com/comics/20061011.gif";
 			var dateCo = new DateGenerator (url);
-			Assert.AreEqual ("20000101", dateCo.Start);
+			Assert.AreEqual ("20061011", dateCo.Start);
+			Assert.AreEqual (10, dateCo.Date.Month);
 			
 			// setting value
 			var newStart = "19871024";
@@ -108,8 +109,6 @@ namespace TestSeqDLLib
 		[Test()]
 		public void GenerateSome ()
 		{
-			var smbc = "http://www.smbc-comics.com/comics/20061017.gif";
-			
 			var smbcUrls = new string[7];
 			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
 			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
@@ -119,7 +118,8 @@ namespace TestSeqDLLib
 			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061016.gif";
 			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061017.gif";
 			
-			var dateCount = new DateGenerator (new ComicUri (smbc));
+			var dateCount = new DateGenerator (new ComicUri (smbcUrls [0]));
+			dateCount.Days = DateGenerator.EveryDay;
 			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ().ToArray ());
 			
 			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
@@ -131,7 +131,7 @@ namespace TestSeqDLLib
 			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061025.gif";		
 			
 			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
-			dateCount = new DateGenerator (new ComicUri (smbcUrls [6]));
+			dateCount = new DateGenerator (new ComicUri (smbcUrls [0]));
 			dateCount.Days = new List<string> (days);
 			Assert.AreEqual (smbcUrls, dateCount.GenerateSome ());			
 		}

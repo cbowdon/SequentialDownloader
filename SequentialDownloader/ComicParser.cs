@@ -31,61 +31,7 @@ namespace SequentialDownloader
 		}
 		#endregion
 		
-		#region Methods
-			
-		/// <summary>
-		/// Finds the urls of other comics.
-		/// </summary>
-		/// <returns>
-		/// The urls.
-		/// </returns>
-		public List<string> FindUrls ()
-		{			
-			// take ComicUri(url)
-			var comic = new ComicUri (inputUrl);
-						
-			/// Procedure
-			/// 
-			/// figure out the naming rules --> create an appropriate ICountingRule
-			/// 
-			/// identify which number img tag src is the comic --> use the ICountingRule to generate a few test pages
-			/// 
-			/// for each page, try get the src of the nth img tag -- use the ICountingRule->FindImgs to get urls 
-			/// 
-			
-			// figure out the naming rules
-			
-			/// possible formats:
-			/// A straight number sequence : 1 number, length unknown, possibly padded, increment is 1
-			/// B iso/uk/us dates: 1 number, length 6, padded, increment unknown
-			/// C separated iso/uk/us dates : 3 numbers, length 1-2 and 2-4, possibly padded
-			/// D numbered volumes: 2 or 3 numbers, length unknown, possibly padded				
-						
-			UrlGenerator gen = GetUrlGenerator ();			
-			
-			// generate whole list of pages
-			var allPages = gen.Get (0, 100);
-			
-			List<string> urls;			
-			if (!comic.IsImageFile) {
-				// identify img tag index
-				int imgIndex = UrlGenerator.IdentifyImg (gen.GenerateSome ());			
-				urls = new List<string> ();
-				foreach (var x in allPages) {					
-					try {
-						var imgs = WebUtils.GetImgs (WebUtils.GetSourceCode (x));	
-						urls.Add (imgs [imgIndex]);
-					} catch {	
-						urls.Add (String.Empty);
-					}
-				}
-				
-			} else {	
-				urls = allPages;				
-			}			
-			return urls.ToList ();
-		}
-				
+		#region GetUrlGenerator
 		public UrlGenerator GetUrlGenerator ()
 		{
 			// start with the input URL
@@ -139,9 +85,7 @@ namespace SequentialDownloader
 			}
 			return gen;	
 		}
-		
-		
-#endregion
+		#endregion
 	}
 }
 
