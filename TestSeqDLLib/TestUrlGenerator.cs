@@ -52,9 +52,12 @@ namespace TestSeqDLLib
 		public void IdentifyImgIrregularWebcomic ()
 		{
 			var pageUrl = "http://www.irregularwebcomic.net/32.html";
-			var fullComicUrl = "http://www.irregularwebcomic.net/comics/irreg0026.jpg";
+			var fullComicUrl = "http://www.irregularwebcomic.net/comics/irreg0032.jpg";
 			var seqGen = new SequentialGenerator (pageUrl);
 			var somePageUrls = seqGen.GenerateSome ();
+			foreach (var x in somePageUrls) {
+				Console.WriteLine (x);
+			}
 			string imgUrl;
 			var index = UrlGenerator.IdentifyImg (somePageUrls, out imgUrl);
 			Assert.AreEqual (1, index);

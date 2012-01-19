@@ -117,7 +117,7 @@ namespace SequentialDownloader
 			if (index < 7) {				
 				range = Enumerable.Range (int.Parse (Start), 7);	
 			} else {
-				range = Enumerable.Range (index - 6, 7);
+				range = Enumerable.Range (index, 7);
 			}
 			
 			return Generate (range);

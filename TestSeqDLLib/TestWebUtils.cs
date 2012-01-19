@@ -52,9 +52,6 @@ namespace TestSeqDLLib
 			var pageUrl = "http://www.irregularwebcomic.net/32.html";
 			var fullComicUrl = "http://www.irregularwebcomic.net/comics/irreg0032.jpg";
 			var imgs = WebUtils.GetImgs (pageUrl);
-			foreach (var x in imgs) {
-				Console.WriteLine (x);
-			}
 			Assert.AreEqual (3, imgs.Count ());
 			Assert.IsTrue (imgs.Contains (fullComicUrl));
 			Assert.AreEqual (fullComicUrl, imgs [1]);
