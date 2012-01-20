@@ -17,6 +17,12 @@ namespace SequentialDownloader
 				return _start;
 			} 
 			set {
+				int num;
+				var ok = int.TryParse (value, out num);
+				if (!ok || num < 0) {
+					throw new ArgumentException ("Invalid Start!");
+				}
+				// when setting start value, make some guesses about padding
 				if (value.Substring (0, 1) == "0" && value.Length > 1) {
 					Padded = true;
 				} else if (value.Length == 1) {
@@ -123,9 +129,18 @@ namespace SequentialDownloader
 			return Generate (range);
 		}
 		
+		/// <summary>
+		/// Get the comics at the specified startIndex(+Start) and num.
+		/// </summary>
+		/// <param name='startIndex'>
+		/// Start index.
+		/// </param>
+		/// <param name='num'>
+		/// Number.
+		/// </param>
 		public override List<string> Get (int startIndex, int num)
 		{
-			var urls = Generate (Enumerable.Range (startIndex, num));
+			var urls = Generate (Enumerable.Range (startIndex + int.Parse (Start), num));
 			if (IsImageFile) {				
 				// just count
 				return urls;

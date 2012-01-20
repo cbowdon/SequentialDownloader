@@ -69,26 +69,36 @@ namespace TestSeqDLLib
 			Assert.AreEqual ("1", urlGen.Start);
 			
 			// generate 10 urls, starting from 605
-			List<string> backUrls = urlGen.Get (605, 10);
+			List<string> backUrls = urlGen.Get (612, 10);
 			// generate 10 urls, starting from 615
-			List<string> forwardUrls = urlGen.Get (615, 10);
-			// generate 10 urls, starting from 614
-			List<string> incUrls = urlGen.Get (614, 10);
-			
+			List<string> forwardUrls = urlGen.Get (614, 10);
+		
 			// each url should be the comic, directly
 			// urls are sorted
 			Assert.AreEqual (10, backUrls.Count ());
-			Assert.AreEqual (img0, backUrls [8]);
-			Assert.AreEqual (img1, backUrls [9]);
+			Assert.AreEqual (img0, backUrls [0]);
+			Assert.AreEqual (img1, backUrls [1]);
+			Assert.AreEqual (img2, backUrls [2]);
 			Assert.AreEqual (10, forwardUrls.Count ());
 			Assert.AreEqual (img2, forwardUrls [0]);
-			Assert.AreEqual (10, incUrls.Count ());
-			Assert.AreEqual (img1, incUrls [0]);
-			Assert.AreEqual (img2, incUrls [1]);			
 		}
 		
 		[Test()]
-		public void GetFromPage ()
+		public void GetFromPageIrregularWebcomic ()
+		{
+			var url = "http://www.irregularwebcomic.net/55.html";
+			var parser = new ComicParser (url);
+			var urlGen = parser.GetUrlGenerator ();
+			var urls = urlGen.Get (0, 20);
+			Assert.AreEqual("http://www.irregularwebcomic.net/comics/irreg0001.jpg", urls[0]);				
+			Assert.AreEqual("http://www.irregularwebcomic.net/comics/irreg0002.jpg", urls[1]);				
+			Assert.AreEqual("http://www.irregularwebcomic.net/comics/irreg0003.jpg", urls[2]);				
+			Assert.AreEqual("http://www.irregularwebcomic.net/comics/irreg0004.jpg", urls[3]);				
+			Assert.AreEqual("http://www.irregularwebcomic.net/comics/irreg0005.jpg", urls[4]);				
+		}
+		
+		[Test()]
+		public void GetFromPageXkcd ()
 		{
 			var xkcdUrl = "http://xkcd.com/614";
 			var xkcdParser = new ComicParser (xkcdUrl);

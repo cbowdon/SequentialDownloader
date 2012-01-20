@@ -61,12 +61,18 @@ namespace TestSeqDLLib
 		{			
 			
 			// choose target files to download
-			var smbcUrl = "http://www.smbc-comics.com/comics/20061011.gif";
-			var smbcParser = new ComicParser (smbcUrl);
-			var smbcUrlGen = smbcParser.GetUrlGenerator ();
-			smbcUrlGen.Start = "20061011";
-			var smbcUrls = smbcUrlGen.Get (0, 100);
-			var numComics = smbcUrls.Where<string> (x => x != String.Empty).Count ();
+//			var smbcUrl = "http://www.smbc-comics.com/comics/20061001.gif";
+			var url = "http://www.irregularwebcomic.net/55.html";
+			var parser = new ComicParser (url);
+			var urlGen = parser.GetUrlGenerator ();
+//			smbcUrlGen.Days = DateGenerator.EveryDay;
+			var urls = urlGen.Get (0, 20);
+			
+			foreach(var x in urls) {
+				Console.WriteLine (x);
+			}
+
+			var numComics = urls.Where<string> (x => x != String.Empty).Count ();
 			
 			using (var repo = new Repository ()) {
 			
@@ -79,7 +85,7 @@ namespace TestSeqDLLib
 				};
 			
 				// begin the download and block
-				repo.Download (smbcUrls);
+				repo.Download (urls);
 				auto.WaitOne ();
 				
 				// check that it worked
