@@ -38,7 +38,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestSeqDL.cs" />
     <Compile Include="TestRepository.cs" />
     <Compile Include="TestComicParser.cs" />
     <Compile Include="TestComicUri.cs" />

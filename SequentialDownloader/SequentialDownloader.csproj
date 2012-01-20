@@ -38,7 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="SeqDL.cs" />
     <Compile Include="ComicParser.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="ComicUri.cs" />
