@@ -3,7 +3,7 @@ using System.Linq;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace SequentialDownloader
+namespace ImageScraperLib
 {
 	public class ComicConvert
 	{

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SequentialDownloader
+namespace ImageScraperLib
 {
 	public class ComicUri : Uri
 	{

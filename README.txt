@@ -6,10 +6,15 @@ Barely started.
 
 Functional specification:
 
-"I'm the user and I want to download webcomics and save as CBZ or PDF format, so I can view them on my iPhone. 
+"I'm the user and I want to download webcomics and save as CBZ format,
+so I can view them on my iPhone. [Deleted: PDF format, because too
+much trouble.]
+
+I want to view this on my smart phone. Viewing will be handled by some
+other app I already have, like CloudReader. Ideally, I would like to
+do this all on my phone, but working on the desktop at first will be fine.
 
 "All the webcomics are in pages at URLs that increase sequentially, either just numbers or dates. I want to give the program one URL and have it automatically grab all extant comics. I will be asked where to save the output and what format I want. I want to be able to convert existing files between formats also."
-
 
 Early architectural plan (and hence tests to write):
 

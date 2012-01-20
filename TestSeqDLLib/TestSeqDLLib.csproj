@@ -49,9 +49,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\SequentialDownloader\SequentialDownloader.csproj">
+    <ProjectReference Include="..\SequentialDownloader\ImageScraperLib.csproj">
       <Project>{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}</Project>
-      <Name>SequentialDownloader</Name>
+      <Name>ImageScraperLib</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

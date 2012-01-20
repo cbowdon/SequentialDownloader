@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SequentialDownloader
+namespace ImageScraperLib
 {
 	/// <summary>
 	/// Sequential count : for basic basic counting.

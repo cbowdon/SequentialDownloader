@@ -6,7 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace SequentialDownloader
+namespace ImageScraperLib
 {
 	public static class WebUtils
 	{
