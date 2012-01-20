@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScraperLib", "Sequenti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSeqDLLib", "TestSeqDLLib\TestSeqDLLib.csproj", "{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScraper", "ImageScraper\ImageScraper.csproj", "{CA72DCFB-4B72-49B1-987B-6D9893D548B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,12 +17,16 @@ Global
 		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA72DCFB-4B72-49B1-987B-6D9893D548B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA72DCFB-4B72-49B1-987B-6D9893D548B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA72DCFB-4B72-49B1-987B-6D9893D548B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA72DCFB-4B72-49B1-987B-6D9893D548B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SequentialDownloader\ImageScraperLib.csproj
+		StartupItem = ImageScraper\ImageScraper.csproj
 	EndGlobalSection
 EndGlobal
