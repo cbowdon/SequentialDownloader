@@ -42,7 +42,6 @@ namespace ImageScraperLib
 		}
 		#endregion
 		
-		
 		#region Methods
 		public void Download (string url)
 		{
@@ -60,8 +59,9 @@ namespace ImageScraperLib
 			foreach (var url in urls) {
 				Download (url);
 				auto.WaitOne ();
-			}
-			MultipleDownloadsCompleted.Invoke (this, new EventArgs());
+			}			
+			
+			MultipleDownloadsCompleted.Invoke (this, new EventArgs ());
 		}
 		
 		public new void Dispose ()

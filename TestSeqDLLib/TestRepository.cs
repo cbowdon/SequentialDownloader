@@ -89,7 +89,7 @@ namespace TestSeqDLLib
 				auto.WaitOne ();
 				
 				// check that it worked
-				Assert.AreEqual (numComics, repo.Files.Count);
+				Assert.AreEqual (numComics, repo.Files.Count);				
 			}
 		}
 	}

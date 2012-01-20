@@ -3,6 +3,26 @@
 
 public partial class MainWindow
 {
+	private global::Gtk.VBox vbox1;
+	private global::Gtk.Alignment alignment3;
+	private global::Gtk.Label UrlEntryLabel;
+	private global::Gtk.Alignment alignment4;
+	private global::Gtk.Entry UrlEntry;
+	private global::Gtk.HBox hbox1;
+	private global::Gtk.Table table1;
+	private global::Gtk.Alignment alignment1;
+	private global::Gtk.Entry StartEntry;
+	private global::Gtk.Alignment alignment2;
+	private global::Gtk.Label StartLabel;
+	private global::Gtk.Alignment alignment5;
+	private global::Gtk.SpinButton NumberButton;
+	private global::Gtk.Alignment alignment6;
+	private global::Gtk.Label NumberLabel;
+	private global::Gtk.Alignment alignment7;
+	private global::Gtk.Button ScrapeButton;
+	private global::Gtk.Alignment alignment8;
+	private global::Gtk.ProgressBar ScrapeProgressBar;
+	
 	protected virtual void Build ()
 	{
 		global::Stetic.Gui.Initialize (this);
@@ -10,12 +30,194 @@ public partial class MainWindow
 		this.Name = "MainWindow";
 		this.Title = global::Mono.Unix.Catalog.GetString ("MainWindow");
 		this.WindowPosition = ((global::Gtk.WindowPosition)(4));
+		// Container child MainWindow.Gtk.Container+ContainerChild
+		this.vbox1 = new global::Gtk.VBox ();
+		this.vbox1.Name = "vbox1";
+		this.vbox1.Spacing = 6;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.alignment3 = new global::Gtk.Alignment (0F, 1F, 1F, 1F);
+		this.alignment3.Name = "alignment3";
+		this.alignment3.LeftPadding = ((uint)(10));
+		this.alignment3.TopPadding = ((uint)(10));
+		this.alignment3.RightPadding = ((uint)(10));
+		this.alignment3.BottomPadding = ((uint)(10));
+		// Container child alignment3.Gtk.Container+ContainerChild
+		this.UrlEntryLabel = new global::Gtk.Label ();
+		this.UrlEntryLabel.WidthRequest = 100;
+		this.UrlEntryLabel.Name = "UrlEntryLabel";
+		this.UrlEntryLabel.Xalign = 0F;
+		this.UrlEntryLabel.Yalign = 1F;
+		this.UrlEntryLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Input an URL to scrape. (Hint: if scraping webcomics, choose the URL of comic #1.)");
+		this.alignment3.Add (this.UrlEntryLabel);
+		this.vbox1.Add (this.alignment3);
+		global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment3]));
+		w2.Position = 0;
+		w2.Expand = false;
+		w2.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.alignment4 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment4.Name = "alignment4";
+		this.alignment4.LeftPadding = ((uint)(10));
+		this.alignment4.TopPadding = ((uint)(10));
+		this.alignment4.RightPadding = ((uint)(10));
+		this.alignment4.BottomPadding = ((uint)(10));
+		// Container child alignment4.Gtk.Container+ContainerChild
+		this.UrlEntry = new global::Gtk.Entry ();
+		this.UrlEntry.CanFocus = true;
+		this.UrlEntry.Name = "UrlEntry";
+		this.UrlEntry.Text = global::Mono.Unix.Catalog.GetString ("http://");
+		this.UrlEntry.IsEditable = true;
+		this.UrlEntry.InvisibleChar = '●';
+		this.alignment4.Add (this.UrlEntry);
+		this.vbox1.Add (this.alignment4);
+		global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment4]));
+		w4.Position = 1;
+		w4.Expand = false;
+		w4.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.hbox1 = new global::Gtk.HBox ();
+		this.hbox1.Name = "hbox1";
+		this.hbox1.Spacing = 6;
+		// Container child hbox1.Gtk.Box+BoxChild
+		this.table1 = new global::Gtk.Table (((uint)(2)), ((uint)(2)), false);
+		this.table1.Name = "table1";
+		this.table1.RowSpacing = ((uint)(6));
+		this.table1.ColumnSpacing = ((uint)(6));
+		// Container child table1.Gtk.Table+TableChild
+		this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment1.Name = "alignment1";
+		this.alignment1.LeftPadding = ((uint)(10));
+		this.alignment1.TopPadding = ((uint)(10));
+		this.alignment1.RightPadding = ((uint)(10));
+		this.alignment1.BottomPadding = ((uint)(10));
+		// Container child alignment1.Gtk.Container+ContainerChild
+		this.StartEntry = new global::Gtk.Entry ();
+		this.StartEntry.CanFocus = true;
+		this.StartEntry.Name = "StartEntry";
+		this.StartEntry.Text = global::Mono.Unix.Catalog.GetString ("?");
+		this.StartEntry.IsEditable = true;
+		this.StartEntry.InvisibleChar = '●';
+		this.alignment1.Add (this.StartEntry);
+		this.table1.Add (this.alignment1);
+		global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment1]));
+		w6.LeftAttach = ((uint)(1));
+		w6.RightAttach = ((uint)(2));
+		w6.XOptions = ((global::Gtk.AttachOptions)(4));
+		w6.YOptions = ((global::Gtk.AttachOptions)(4));
+		// Container child table1.Gtk.Table+TableChild
+		this.alignment2 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment2.Name = "alignment2";
+		this.alignment2.LeftPadding = ((uint)(10));
+		this.alignment2.TopPadding = ((uint)(10));
+		this.alignment2.RightPadding = ((uint)(10));
+		this.alignment2.BottomPadding = ((uint)(10));
+		// Container child alignment2.Gtk.Container+ContainerChild
+		this.StartLabel = new global::Gtk.Label ();
+		this.StartLabel.Name = "StartLabel";
+		this.StartLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Starting from:");
+		this.alignment2.Add (this.StartLabel);
+		this.table1.Add (this.alignment2);
+		global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment2]));
+		w8.XOptions = ((global::Gtk.AttachOptions)(4));
+		w8.YOptions = ((global::Gtk.AttachOptions)(4));
+		// Container child table1.Gtk.Table+TableChild
+		this.alignment5 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment5.Name = "alignment5";
+		this.alignment5.LeftPadding = ((uint)(10));
+		this.alignment5.TopPadding = ((uint)(10));
+		this.alignment5.RightPadding = ((uint)(10));
+		this.alignment5.BottomPadding = ((uint)(10));
+		// Container child alignment5.Gtk.Container+ContainerChild
+		this.NumberButton = new global::Gtk.SpinButton (0, 100, 1);
+		this.NumberButton.CanFocus = true;
+		this.NumberButton.Name = "NumberButton";
+		this.NumberButton.Adjustment.PageIncrement = 10;
+		this.NumberButton.ClimbRate = 1;
+		this.NumberButton.Numeric = true;
+		this.NumberButton.Value = 50;
+		this.alignment5.Add (this.NumberButton);
+		this.table1.Add (this.alignment5);
+		global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment5]));
+		w10.TopAttach = ((uint)(1));
+		w10.BottomAttach = ((uint)(2));
+		w10.LeftAttach = ((uint)(1));
+		w10.RightAttach = ((uint)(2));
+		w10.XOptions = ((global::Gtk.AttachOptions)(4));
+		w10.YOptions = ((global::Gtk.AttachOptions)(4));
+		// Container child table1.Gtk.Table+TableChild
+		this.alignment6 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment6.Name = "alignment6";
+		this.alignment6.LeftPadding = ((uint)(10));
+		this.alignment6.TopPadding = ((uint)(10));
+		this.alignment6.RightPadding = ((uint)(10));
+		this.alignment6.BottomPadding = ((uint)(10));
+		// Container child alignment6.Gtk.Container+ContainerChild
+		this.NumberLabel = new global::Gtk.Label ();
+		this.NumberLabel.Name = "NumberLabel";
+		this.NumberLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Number to get:");
+		this.alignment6.Add (this.NumberLabel);
+		this.table1.Add (this.alignment6);
+		global::Gtk.Table.TableChild w12 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment6]));
+		w12.TopAttach = ((uint)(1));
+		w12.BottomAttach = ((uint)(2));
+		w12.XOptions = ((global::Gtk.AttachOptions)(4));
+		w12.YOptions = ((global::Gtk.AttachOptions)(4));
+		this.hbox1.Add (this.table1);
+		global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.table1]));
+		w13.Position = 0;
+		w13.Expand = false;
+		w13.Fill = false;
+		// Container child hbox1.Gtk.Box+BoxChild
+		this.alignment7 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment7.Name = "alignment7";
+		this.alignment7.LeftPadding = ((uint)(10));
+		this.alignment7.TopPadding = ((uint)(10));
+		this.alignment7.RightPadding = ((uint)(10));
+		this.alignment7.BottomPadding = ((uint)(10));
+		// Container child alignment7.Gtk.Container+ContainerChild
+		this.ScrapeButton = new global::Gtk.Button ();
+		this.ScrapeButton.WidthRequest = 100;
+		this.ScrapeButton.CanFocus = true;
+		this.ScrapeButton.Name = "ScrapeButton";
+		this.ScrapeButton.UseUnderline = true;
+		this.ScrapeButton.Label = global::Mono.Unix.Catalog.GetString ("Scrape Images!");
+		this.alignment7.Add (this.ScrapeButton);
+		this.hbox1.Add (this.alignment7);
+		global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment7]));
+		w15.Position = 2;
+		w15.Expand = false;
+		w15.Fill = false;
+		this.vbox1.Add (this.hbox1);
+		global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox1]));
+		w16.Position = 2;
+		w16.Expand = false;
+		w16.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.alignment8 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment8.Name = "alignment8";
+		this.alignment8.LeftPadding = ((uint)(10));
+		this.alignment8.TopPadding = ((uint)(10));
+		this.alignment8.RightPadding = ((uint)(10));
+		this.alignment8.BottomPadding = ((uint)(10));
+		// Container child alignment8.Gtk.Container+ContainerChild
+		this.ScrapeProgressBar = new global::Gtk.ProgressBar ();
+		this.ScrapeProgressBar.Name = "ScrapeProgressBar";
+		this.alignment8.Add (this.ScrapeProgressBar);
+		this.vbox1.Add (this.alignment8);
+		global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment8]));
+		w18.Position = 3;
+		w18.Expand = false;
+		w18.Fill = false;
+		this.Add (this.vbox1);
 		if ((this.Child != null)) {
 			this.Child.ShowAll ();
 		}
-		this.DefaultWidth = 400;
-		this.DefaultHeight = 300;
+		this.DefaultWidth = 502;
+		this.DefaultHeight = 239;
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
+		this.UrlEntry.Changed += new global::System.EventHandler (this.OnChanged);
+		this.NumberButton.ValueChanged += new global::System.EventHandler (this.OnValueChanged);
+		this.ScrapeButton.Clicked += new global::System.EventHandler (this.OnScrapeButtonClicked);
 	}
 }
