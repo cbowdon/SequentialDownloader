@@ -12,7 +12,7 @@ namespace ImageScraperLib
 	{
 		public event EventHandler MultipleDownloadsCompleted;
 		
-		private static AutoResetEvent auto = new AutoResetEvent (false);
+		private AutoResetEvent auto = new AutoResetEvent (false);
 			
 		#region Properties
 		public string Location { get; private set; }
@@ -54,7 +54,7 @@ namespace ImageScraperLib
 		public void Download (IEnumerable<string> urls)
 		{		
 			DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
-				auto.Set ();
+				auto.Set ();				
 			};
 			foreach (var url in urls) {
 				Download (url);

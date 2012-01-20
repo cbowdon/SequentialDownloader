@@ -12,6 +12,15 @@ public partial class MainWindow: Gtk.Window
 		Build ();
 		this.controller = controller;
 		this.controller.NumberToDownload = int.Parse (NumberButton.Text);
+		this.controller.FileDownloaded += delegate(object sender, EventArgs e) {
+			var num = (double)this.controller.NumberDownloaded;
+			var den = (double)this.controller.NumberToDownload;
+			ScrapeProgressBar.Fraction = num / den;
+		};
+		this.controller.AllFilesDownloaded += delegate(object sender, EventArgs e) {
+			ScrapeProgressBar.Fraction = 1.0;
+			ScrapeButton.Label = "Scrape Images!";
+		};
 	}
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -35,27 +44,29 @@ public partial class MainWindow: Gtk.Window
 			FileChooserDialog saveDialog = 
 			new FileChooserDialog ("Save as...", 
 			                       this, 
-			                       FileChooserAction.Save, 
-			                       "Save", 
-			                       ResponseType.Apply, 
-			                       "Cancel", 
-			                       ResponseType.Cancel);
-		
-			if (saveDialog.Run () == (int)ResponseType.Apply) {
+			                       FileChooserAction.Save,
+				                   Stock.Cancel, 
+				                   ResponseType.Cancel, 
+				                   Stock.Save, 
+				                   ResponseType.Ok);
+			if (saveDialog.Run () == (int)ResponseType.Ok) {				
 				outputFileName = saveDialog.Filename;
 				controller.OutputFileName = outputFileName;
-			} else {
+				saveDialog.Destroy ();
+			} else {			
+				saveDialog.Destroy ();
+				ScrapeButton.Label = "Scrape Images!";
 				return;
-			}
-		
-			saveDialog.Destroy ();
+			}   
 			
-			controller.BeginDownloading ();
-			ScrapeButton.Label = "Scrape Images!";
-
-		
-			Console.WriteLine (controller.State.ToString ());
+			thread.Start ();
+			
 		} else {
+			if (thread.IsAlive) {				
+				controller.AfterDownloading ();
+				thread.Join ();				
+			}
+			ScrapeProgressBar.Fraction = 0;
 			ScrapeButton.Label = "Scrape Images!";
 		}	
 	}

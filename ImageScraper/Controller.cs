@@ -1,11 +1,15 @@
 using System;
 using System.IO;
+using System.Threading;
 using ImageScraperLib;
 
 namespace ImageScraper
 {
 	public class Controller
 	{
+		public event EventHandler FileDownloaded;
+		public event EventHandler AllFilesDownloaded;
+		
 		#region State
 		public enum AppState
 		{
@@ -60,11 +64,13 @@ namespace ImageScraper
 				if (int.TryParse (value, out notUsed)) {
 					start = value;
 					// will crash!
-					UrlGen.Start = start;	
+					//UrlGen.Start = start;	
 				}				
 			}
 		}
 		#endregion
+		
+		#region NumberToDownload
 		private int numberToDownload = 100;
 
 		public int NumberToDownload {
@@ -75,8 +81,21 @@ namespace ImageScraper
 				numberToDownload = value;
 			}
 		}
+		#endregion
 		
-		public int NumberDownloaded { get; private set; }
+		#region NumberDownloaded
+		private int numberDownloaded = 0;
+
+		public int NumberDownloaded {
+			get {
+				return numberDownloaded;
+			}
+			set {
+				FileDownloaded.Invoke (this, new EventArgs ());
+				numberDownloaded = value;
+			}
+		}
+		#endregion
 		
 		#region Parser
 		private ComicParser parser;
@@ -106,28 +125,29 @@ namespace ImageScraper
 		
 		public void BeginDownloading ()
 		{
-			using (Repo = new Repository ()) {
-				var imgUrls = UrlGen.Get (0, NumberToDownload);
+			Repo = new Repository ();
+			var imgUrls = UrlGen.Get (0, NumberToDownload);
+								
+			State = AppState.Scraping;
 				
-				foreach (var i in imgUrls) {
-					Console.WriteLine ("imgUrl:\t{0}", i);
-				}
+			Repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
+				AllFilesDownloaded.Invoke (this, new EventArgs ());
+				AfterDownloading ();
+			};
 				
-				State = AppState.Scraping;
+			Repo.DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
+				NumberDownloaded += 1;
+			};
 				
-				Repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
-					AfterDownloading ();
-				};
-				
-				Repo.Download (imgUrls);
-			}
+			Repo.Download (imgUrls);			
 		}
 		
 		public void AfterDownloading ()
-		{
+		{			
 			ComicConvert.ImgsToCbz (Repo.Location, OutputFileName);
+			Repo.Dispose ();
 			State = AppState.NotScraping;			
-		}		
+		}
 	}
 }
 
