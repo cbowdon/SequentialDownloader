@@ -57,7 +57,14 @@ namespace ImageScraperLib
 		
 		public static bool ImgsToCbz (string dir, string cbz)
 		{
-			var fileName = cbz.Substring (cbz.Length - 4, 4).Contains (".cbz") ? cbz : cbz + ".cbz"; 
+			string fileName;
+			
+			if (Path.GetExtension (cbz).ToLower () == ".zip" || Path.GetExtension (cbz).ToLower () == ".cbz") {
+				fileName = cbz;
+			} else {
+				fileName = cbz + ".cbz";
+			}
+			
 			var imgFiles = Directory.GetFiles (Path.GetFullPath (dir));
 			
 			try {

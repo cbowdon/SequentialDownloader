@@ -58,15 +58,20 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void ImgsToPdf ()
+		public void Naming ()
 		{
-			throw new NotImplementedException ();
-		}
-		
-		[Test()]
-		public void PdfToImgs ()
-		{
-			throw new NotImplementedException ();
+			var dir = Path.GetFullPath ("TestFilesSMBC");			
+			var myCbz = "MyTestFile_2";
+			
+			// check it worked
+			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));			
+			Assert.IsTrue (File.Exists (myCbz + ".cbz"));			
+			File.Delete (myCbz + ".cbz");	
+			
+			myCbz = "MyTestFile_2.zip";
+			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));
+			Assert.IsTrue (File.Exists(myCbz));
+			File.Delete (myCbz);
 		}
 	}
 }

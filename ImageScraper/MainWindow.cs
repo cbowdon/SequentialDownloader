@@ -49,17 +49,14 @@ public partial class MainWindow: Gtk.Window
 			}
 		
 			saveDialog.Destroy ();
-		
-			thread.Start ();
+			
+			controller.BeginDownloading ();
+			ScrapeButton.Label = "Scrape Images!";
+
 		
 			Console.WriteLine (controller.State.ToString ());
 		} else {
-			if (thread.IsAlive) {
-				thread.Join ();
-				controller.AfterDownloading ();
-			}
 			ScrapeButton.Label = "Scrape Images!";
-			
 		}	
 	}
 
