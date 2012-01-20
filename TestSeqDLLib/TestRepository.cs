@@ -5,7 +5,7 @@ using System.IO;
 using System.ComponentModel;
 using System.Threading;
 using System.Diagnostics;
-using SequentialDownloader;
+using ImageScraperLib;
 using NUnit.Framework;
 
 namespace TestSeqDLLib

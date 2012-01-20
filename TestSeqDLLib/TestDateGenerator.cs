@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SequentialDownloader;
+using ImageScraperLib;
 using NUnit.Framework;
 
 namespace TestSeqDLLib

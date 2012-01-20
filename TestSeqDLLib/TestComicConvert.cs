@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ICSharpCode.SharpZipLib.Zip;
-using SequentialDownloader;
+using ImageScraperLib;
 
 using NUnit.Framework;
 

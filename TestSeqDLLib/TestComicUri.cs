@@ -1,5 +1,5 @@
 using System;
-using SequentialDownloader;
+using ImageScraperLib;
 using NUnit.Framework;
 
 namespace TestSeqDLLib
