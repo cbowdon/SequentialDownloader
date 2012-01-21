@@ -12,12 +12,14 @@ namespace ImageScraperLib
 	{
 		#region Events
 //		public event EventHandler SingleDownloadCompleted;
-		public event EventHandler MultipleDownloadsCompleted;		
+		public event EventHandler MultipleDownloadsCompleted;
+		public event EventHandler DownloadsCancelled;
+
 		private AutoResetEvent auto = new AutoResetEvent (false);
 		#endregion
 			
 		#region Properties
-		public bool Active { get; set; }
+		public bool Active { get; private set; }
 		
 		public string Location { get; private set; }
 		
@@ -46,13 +48,15 @@ namespace ImageScraperLib
 		}
 		#endregion
 		
-		#region Methods
+		#region Download
 		public void Download (string url)
 		{
 			// create filename			
 			string fileName = (Files.Count + 1).ToString ().PadLeft (5, '0') + Path.GetExtension (url);
+			// add to dictionary
 			Files.TryAdd (url, Path.Combine (Location, fileName));
-			DownloadFileAsync (new Uri (url), Path.Combine (Location, fileName));			
+			// download (async so we can tap into the progress meter)
+			DownloadFileAsync (new Uri (url), Path.Combine (Location, fileName));					
 //			try {
 //				DownloadFile (new Uri (url), Path.Combine (Location, fileName));	
 //				SingleDownloadCompleted.Invoke (this, new EventArgs ());
@@ -78,6 +82,8 @@ namespace ImageScraperLib
 					Download (url);
 					auto.WaitOne ();
 				} else {
+					// fire cancelled event
+					DownloadsCancelled.Invoke (this, new EventArgs ());
 					// return without invoking MultipleDownloadsCompleted
 					return;
 				}
@@ -85,13 +91,20 @@ namespace ImageScraperLib
 			
 			// all done, invoke event
 			MultipleDownloadsCompleted.Invoke (this, new EventArgs ());
+			
+			// turn off the sign
+			Active = false;
 		}
+		#endregion
 		
+		#region Cancel Downloads
 		public void CancelDownloads ()
 		{
 			Active = false;
 		}
+		#endregion
 		
+		#region Dispose
 		public new void Dispose ()
 		{
 			base.Dispose ();
@@ -117,6 +130,53 @@ namespace ImageScraperLib
 					throw;
 				}
 			}
+		}
+		#endregion
+		
+		#region Download and Add
+		public void DownloadAndAdd (IEnumerable<string> urls, string outputFileName)
+		{
+			Active = true;
+			
+			// loop through and download each
+			foreach (var url in urls) {
+				// check we are still a going concern
+				Console.WriteLine(url);
+				
+				if (Active) {
+					DownloadAndAdd (url, outputFileName);					
+				} else {
+					// return without invoking MultipleDownloadsCompleted
+					return;
+				}
+			}			
+			
+			// all done, invoke event
+			MultipleDownloadsCompleted.Invoke (this, new EventArgs ());
+			
+			// turn off the sign
+			Active = false;
+		}
+		
+		public void DownloadAndAdd (string url, string outputFileName)
+		{
+			AutoResetEvent singleAuto = new AutoResetEvent (false);
+			
+			// after each single download, turn the stile
+			DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
+				singleAuto.Set ();				
+			};
+			
+			// create filename			
+			string fileName = (Files.Count + 1).ToString ().PadLeft (5, '0') + Path.GetExtension (url);
+			// add to dictionary
+			Files.TryAdd (url, Path.Combine (Location, fileName));
+			// download (async so we can tap into the progress meter)
+			DownloadFileAsync (new Uri (url), Path.Combine (Location, fileName));			
+			// block this thread until DL completed
+			singleAuto.WaitOne ();
+			// add to zip
+			ComicConvert.AddToCbz (Path.Combine (Location, fileName), outputFileName);
 		}
 		#endregion
 	}

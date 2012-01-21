@@ -94,7 +94,7 @@ public partial class MainWindow
 		this.StartEntry = new global::Gtk.Entry ();
 		this.StartEntry.CanFocus = true;
 		this.StartEntry.Name = "StartEntry";
-		this.StartEntry.Text = global::Mono.Unix.Catalog.GetString ("?");
+		this.StartEntry.Text = global::Mono.Unix.Catalog.GetString ("None");
 		this.StartEntry.IsEditable = true;
 		this.StartEntry.InvisibleChar = '●';
 		this.alignment1.Add (this.StartEntry);
@@ -114,7 +114,7 @@ public partial class MainWindow
 		// Container child alignment2.Gtk.Container+ContainerChild
 		this.StartLabel = new global::Gtk.Label ();
 		this.StartLabel.Name = "StartLabel";
-		this.StartLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Starting from:");
+		this.StartLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Custom start:");
 		this.alignment2.Add (this.StartLabel);
 		this.table1.Add (this.alignment2);
 		global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment2]));
@@ -216,8 +216,8 @@ public partial class MainWindow
 		this.DefaultHeight = 239;
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
-		this.UrlEntry.Changed += new global::System.EventHandler (this.OnChanged);
-		this.NumberButton.ValueChanged += new global::System.EventHandler (this.OnValueChanged);
+		this.UrlEntry.Changed += new global::System.EventHandler (this.OnInputUrlChanged);
+		this.NumberButton.ValueChanged += new global::System.EventHandler (this.OnNumberValueChanged);
 		this.ScrapeButton.Clicked += new global::System.EventHandler (this.OnScrapeButtonClicked);
 	}
 }

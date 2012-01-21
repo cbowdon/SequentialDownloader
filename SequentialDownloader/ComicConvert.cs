@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.IO;
+using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Core;
 
 namespace ImageScraperLib
 {
@@ -50,6 +52,34 @@ namespace ImageScraperLib
 					}
 				}
 				return true;
+			} catch {
+				return false;
+			}
+		}
+		
+		public static bool AddToCbz (string fileName, string zipFileName)
+		{
+			if (Path.GetExtension (zipFileName).Length == 0) {
+				zipFileName = Path.ChangeExtension (zipFileName, ".zip");
+			}
+			
+			ZipFile zipFile;
+
+			try {
+				if (File.Exists (zipFileName)) {
+					zipFile = new ZipFile (zipFileName);
+				} else {
+					zipFile = ZipFile.Create (zipFileName);
+				}
+
+				using (zipFile) {
+					zipFile.UseZip64 = UseZip64.On;
+					zipFile.BeginUpdate ();
+					zipFile.Add (Path.GetFullPath (fileName));
+					zipFile.CommitUpdate ();
+					
+					return true;
+				}
 			} catch {
 				return false;
 			}

@@ -1,28 +1,16 @@
 using System;
+using System.IO;
 using System.Threading;
 using Gtk;
 using ImageScraper;
 
 public partial class MainWindow: Gtk.Window
 {	
-	Controller controller;
+	ModelController model = new ModelController ();
 	
-	public MainWindow (Controller controller): base (Gtk.WindowType.Toplevel)
+	public MainWindow (): base (Gtk.WindowType.Toplevel)
 	{
 		Build ();
-		this.controller = controller;
-		this.controller.NumberToDownload = int.Parse (NumberButton.Text);
-		this.controller.FileDownloaded += delegate(object sender, EventArgs e) {
-			if (controller.Active) {
-				var num = (double)this.controller.NumberDownloaded;
-				var den = (double)this.controller.NumberToDownload;
-				ScrapeProgressBar.Fraction = num / den;
-			} 			
-		};
-		this.controller.AllFilesDownloaded += delegate(object sender, EventArgs e) {
-			ScrapeProgressBar.Fraction = 1.0;
-			ScrapeButton.Label = "Scrape Images!";
-		};
 	}
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -30,59 +18,79 @@ public partial class MainWindow: Gtk.Window
 		Application.Quit ();
 		a.RetVal = true;
 	}
-
-	protected void OnChanged (object sender, System.EventArgs e)
+	
+	protected void OnInputUrlChanged (object sender, System.EventArgs e)
 	{
-		controller.InputUrl = UrlEntry.Text;
-		StartEntry.Text = controller.Start;
+		
+	}
+	
+	protected void OnNumberValueChanged (object sender, System.EventArgs e)
+	{
+		
 	}
 	
 	protected void OnScrapeButtonClicked (object sender, System.EventArgs e)
 	{		
-		Thread thread = new Thread (controller.BeginDownloading);
-		if (!controller.Active) {
-			
-			
-			// show the save dialog
-			FileChooserDialog saveDialog = 
-			new FileChooserDialog ("Save as...", 
-			                       this, 
-			                       FileChooserAction.Save,
-				                   Stock.Cancel, 
-				                   ResponseType.Cancel, 
-				                   Stock.Save, 
-				                   ResponseType.Ok);
-			
-			// get the outputFileName
-			string outputFileName;
-			if (saveDialog.Run () == (int)ResponseType.Ok) {				
-				outputFileName = saveDialog.Filename;
-				// pass to controller
-				controller.OutputFileName = outputFileName;
-				// set label, close dialog, run
+		var number = int.Parse (NumberButton.Text);
+		var inputUrl = UrlEntry.Text;
+		string outputFileName;
+		
+		Thread thread = new Thread (model.RunTask);
+		
+		if (!model.Active) {
+			var chooser = new FileChooserDialog ("Saves as...", 
+		                                     this, 
+		                                     FileChooserAction.Save, 
+		                                     Stock.Save, 
+		                                     ResponseType.Ok, 
+		                                     Stock.Cancel, 
+		                                     ResponseType.Cancel);
+		
+			if (chooser.Run () == (int)ResponseType.Ok) {			
+				
+				outputFileName = chooser.Filename;
 				ScrapeButton.Label = "Cancel";
-				saveDialog.Destroy ();
-				thread.Start ();
-			} else {			
-				// set label, close dialog, do nothing
-				ScrapeButton.Label = "Scrape Images!";
-				saveDialog.Destroy ();				
+				chooser.Destroy ();
+				
+				// re-initialize model and thread
+				model = new ModelController (inputUrl, outputFileName, number);					
+				thread = new Thread (model.RunTask);
+				
+				// start
+				thread.Start ();				
+			} else {
+				
+				ScrapeButton.Label = "Scrape Images";
+				chooser.Destroy ();
 				return;
-			}   
-			
+			}
 			
 		} else {
-			controller.Cancel ();
-			if (thread.IsAlive) {	
-				thread.Join ();				
+			
+			if (thread.IsAlive) {
+				thread.Join ();
 			}
-			ScrapeProgressBar.Fraction = 0;
-			ScrapeButton.Label = "Scrape Images!";
-		}	
+						
+			AutoResetEvent auto = new AutoResetEvent (false);
+			
+			model.TaskCancelled += delegate(object snd, EventArgs evt) {
+				auto.Set ();
+			};
+			
+			model.CancelTask ();
+			auto.WaitOne ();
+			
+			ScrapeButton.Label = "Scrape Images";
+			
+		}
+		
+		
+		
+	}
+	
+	protected void RegisterEvents ()
+	{
+		
 	}
 
-	protected void OnValueChanged (object sender, System.EventArgs e)
-	{
-		controller.NumberToDownload = (int)NumberButton.Value;
-	}
 }

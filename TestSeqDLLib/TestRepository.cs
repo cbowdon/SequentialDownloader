@@ -148,6 +148,77 @@ namespace TestSeqDLLib
 				Assert.AreEqual (5, repo.Files.Count);				
 			}
 		}
+		
+		[Test()]
+		public void DownloadAndAdd ()
+		{
+			// Add to existing:
+			
+			var dir = Path.GetFullPath ("TestFilesSMBC");			
+			var myCbz = "MyTestFile_2.cbz";
+			var urls = new List<string> ();
+			urls.Add ("http://www.smbc-comics.com/comics/20061111.gif");
+			
+			// check original compression worked
+			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));			
+			Assert.IsTrue (File.Exists (myCbz));
+			var sizeBefore = (new FileInfo (myCbz)).Length;			
+									
+			// download and add
+			using (var repo = new Repository()) {
+				
+				// add a turnstile
+				AutoResetEvent auto = new AutoResetEvent (false);				
+				
+				// event handler allows program to progress (in case of cancel failure)
+				repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
+					auto.Set ();
+				};				
+				
+				repo.DownloadAndAdd (urls, myCbz);
+	
+				// hold on until test finished
+				auto.WaitOne ();
+			}
+			
+			// check sizes indicate added file
+			var sizeAfter = (new FileInfo (myCbz)).Length;
+			Assert.Greater (sizeAfter, sizeBefore);
+						
+			// clean up
+			File.Delete (myCbz);
+			
+			// Create new:
+			
+			// download and add
+			using (var repo = new Repository()) {
+				
+				// add a turnstile
+				AutoResetEvent auto = new AutoResetEvent (false);				
+				
+				// event handler allows program to progress (in case of cancel failure)
+				repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
+					auto.Set ();
+				};				
+				
+				repo.DownloadAndAdd (urls, myCbz);
+	
+				// hold on until test finished
+				auto.WaitOne ();
+			}
+			
+			// check file was made
+			Assert.IsTrue (File.Exists (myCbz));
+			
+			// check file size > 0 but less than before
+			var sizeOne = (new FileInfo (myCbz)).Length;			
+			Assert.Greater (sizeOne, 0, "Fresh-made zip file has non-zero size");
+			Assert.Less (sizeOne, sizeBefore, "Zip file with only one entry smaller than with 100 entries");
+			
+			// delete file again
+			File.Delete (myCbz);
+
+		}		
 	}
 }
 

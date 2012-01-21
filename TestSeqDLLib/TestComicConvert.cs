@@ -33,6 +33,29 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
+		public void AddToCbz ()
+		{
+			var dir = Path.GetFullPath ("TestFilesSMBC");			
+			var myCbz = "MyTestFile_2.cbz";
+			var fileName = "extra.gif";
+			
+			// check original compression worked
+			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));			
+			Assert.IsTrue (File.Exists (myCbz));
+			var sizeBefore = (new FileInfo (myCbz)).Length;			
+			
+			// check adding
+			Assert.IsTrue (ComicConvert.AddToCbz (fileName, myCbz));
+			
+			// check sizes indicate added file
+			var sizeAfter = (new FileInfo (myCbz)).Length;
+			Assert.Greater (sizeAfter, sizeBefore);
+						
+			// clean up
+			File.Delete (myCbz);
+		}
+		
+		[Test()]
 		public void CbzToImgs ()
 		{			
 			var myCbz = "MyTestFile.cbz";
@@ -70,7 +93,7 @@ namespace TestSeqDLLib
 			
 			myCbz = "MyTestFile_2.zip";
 			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));
-			Assert.IsTrue (File.Exists(myCbz));
+			Assert.IsTrue (File.Exists (myCbz));
 			File.Delete (myCbz);
 		}
 	}

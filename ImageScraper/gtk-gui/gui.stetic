@@ -57,7 +57,7 @@
                 <property name="Text" translatable="yes">http://</property>
                 <property name="IsEditable">True</property>
                 <property name="InvisibleChar">●</property>
-                <signal name="Changed" handler="OnChanged" />
+                <signal name="Changed" handler="OnInputUrlChanged" />
               </widget>
             </child>
           </widget>
@@ -90,7 +90,7 @@
                       <widget class="Gtk.Entry" id="StartEntry">
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
-                        <property name="Text" translatable="yes">?</property>
+                        <property name="Text" translatable="yes">None</property>
                         <property name="IsEditable">True</property>
                         <property name="InvisibleChar">●</property>
                       </widget>
@@ -120,7 +120,7 @@
                     <child>
                       <widget class="Gtk.Label" id="StartLabel">
                         <property name="MemberName" />
-                        <property name="LabelProp" translatable="yes">Starting from:</property>
+                        <property name="LabelProp" translatable="yes">Custom start:</property>
                       </widget>
                     </child>
                   </widget>
@@ -153,7 +153,7 @@
                         <property name="ClimbRate">1</property>
                         <property name="Numeric">True</property>
                         <property name="Value">50</property>
-                        <signal name="ValueChanged" handler="OnValueChanged" />
+                        <signal name="ValueChanged" handler="OnNumberValueChanged" />
                       </widget>
                     </child>
                   </widget>
