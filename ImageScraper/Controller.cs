@@ -10,14 +10,17 @@ namespace ImageScraper
 		public event EventHandler FileDownloaded;
 		public event EventHandler AllFilesDownloaded;
 		
-		#region State
-		public enum AppState
-		{
-			Scraping,
-			NotScraping
+		#region Active
+		private bool active = false;
+
+		public bool Active {
+			get {
+				return active;
+			}
+			set {
+				active = value;
+			}
 		}
-		
-		public AppState State = AppState.NotScraping;
 		#endregion
 		
 		#region InputUrl
@@ -125,10 +128,11 @@ namespace ImageScraper
 		
 		public void BeginDownloading ()
 		{
+			Console.WriteLine ("BEGIN DOWNLOADING");
 			Repo = new Repository ();
 			var imgUrls = UrlGen.Get (0, NumberToDownload);
 								
-			State = AppState.Scraping;
+			Active = true;
 				
 			Repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
 				AllFilesDownloaded.Invoke (this, new EventArgs ());
@@ -142,11 +146,20 @@ namespace ImageScraper
 			Repo.Download (imgUrls);			
 		}
 		
+		public void Cancel ()
+		{			
+			Console.WriteLine ("CANCEL");
+			Repo.CancelDownloads ();
+			Repo.Dispose ();
+			Active = false;
+		}
+		
 		public void AfterDownloading ()
 		{			
+			Console.WriteLine ("AFTER DOWNLOADING");
 			ComicConvert.ImgsToCbz (Repo.Location, OutputFileName);
 			Repo.Dispose ();
-			State = AppState.NotScraping;			
+			Active = false;
 		}
 	}
 }

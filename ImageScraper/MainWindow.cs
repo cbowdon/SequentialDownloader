@@ -13,9 +13,11 @@ public partial class MainWindow: Gtk.Window
 		this.controller = controller;
 		this.controller.NumberToDownload = int.Parse (NumberButton.Text);
 		this.controller.FileDownloaded += delegate(object sender, EventArgs e) {
-			var num = (double)this.controller.NumberDownloaded;
-			var den = (double)this.controller.NumberToDownload;
-			ScrapeProgressBar.Fraction = num / den;
+			if (controller.Active) {
+				var num = (double)this.controller.NumberDownloaded;
+				var den = (double)this.controller.NumberToDownload;
+				ScrapeProgressBar.Fraction = num / den;
+			} 			
 		};
 		this.controller.AllFilesDownloaded += delegate(object sender, EventArgs e) {
 			ScrapeProgressBar.Fraction = 1.0;
@@ -38,9 +40,10 @@ public partial class MainWindow: Gtk.Window
 	protected void OnScrapeButtonClicked (object sender, System.EventArgs e)
 	{		
 		Thread thread = new Thread (controller.BeginDownloading);
-		if (controller.State == Controller.AppState.NotScraping) {
-			ScrapeButton.Label = "Cancel";
-			string outputFileName;
+		if (!controller.Active) {
+			
+			
+			// show the save dialog
 			FileChooserDialog saveDialog = 
 			new FileChooserDialog ("Save as...", 
 			                       this, 
@@ -49,21 +52,28 @@ public partial class MainWindow: Gtk.Window
 				                   ResponseType.Cancel, 
 				                   Stock.Save, 
 				                   ResponseType.Ok);
+			
+			// get the outputFileName
+			string outputFileName;
 			if (saveDialog.Run () == (int)ResponseType.Ok) {				
 				outputFileName = saveDialog.Filename;
+				// pass to controller
 				controller.OutputFileName = outputFileName;
+				// set label, close dialog, run
+				ScrapeButton.Label = "Cancel";
 				saveDialog.Destroy ();
+				thread.Start ();
 			} else {			
-				saveDialog.Destroy ();
+				// set label, close dialog, do nothing
 				ScrapeButton.Label = "Scrape Images!";
+				saveDialog.Destroy ();				
 				return;
 			}   
 			
-			thread.Start ();
 			
 		} else {
-			if (thread.IsAlive) {				
-				controller.AfterDownloading ();
+			controller.Cancel ();
+			if (thread.IsAlive) {	
 				thread.Join ();				
 			}
 			ScrapeProgressBar.Fraction = 0;

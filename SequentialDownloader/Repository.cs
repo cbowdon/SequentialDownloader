@@ -10,11 +10,15 @@ namespace ImageScraperLib
 {
 	public class Repository : WebClient, IDisposable
 	{
-		public event EventHandler MultipleDownloadsCompleted;
-		
+		#region Events
+//		public event EventHandler SingleDownloadCompleted;
+		public event EventHandler MultipleDownloadsCompleted;		
 		private AutoResetEvent auto = new AutoResetEvent (false);
+		#endregion
 			
 		#region Properties
+		public bool Active { get; set; }
+		
 		public string Location { get; private set; }
 		
 		public ConcurrentDictionary<string, string> Files { get; private set; }
@@ -49,19 +53,43 @@ namespace ImageScraperLib
 			string fileName = (Files.Count + 1).ToString ().PadLeft (5, '0') + Path.GetExtension (url);
 			Files.TryAdd (url, Path.Combine (Location, fileName));
 			DownloadFileAsync (new Uri (url), Path.Combine (Location, fileName));			
+//			try {
+//				DownloadFile (new Uri (url), Path.Combine (Location, fileName));	
+//				SingleDownloadCompleted.Invoke (this, new EventArgs ());
+//			} catch (WebException) {
+//				return;
+//			}
+			
 		}
 		
 		public void Download (IEnumerable<string> urls)
 		{		
+			Active = true;
+			
+			// after each single download, turn the stile
 			DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
 				auto.Set ();				
 			};
+			
+			// loop through and download each
 			foreach (var url in urls) {
-				Download (url);
-				auto.WaitOne ();
+				// check we are still a going concern
+				if (Active) {
+					Download (url);
+					auto.WaitOne ();
+				} else {
+					// return without invoking MultipleDownloadsCompleted
+					return;
+				}
 			}			
 			
+			// all done, invoke event
 			MultipleDownloadsCompleted.Invoke (this, new EventArgs ());
+		}
+		
+		public void CancelDownloads ()
+		{
+			Active = false;
 		}
 		
 		public new void Dispose ()

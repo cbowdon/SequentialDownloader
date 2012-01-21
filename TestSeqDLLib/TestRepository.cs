@@ -38,7 +38,7 @@ namespace TestSeqDLLib
 			Assert.IsTrue (repo.Files.Contains (new KeyValuePair<string,string> (imgUrl, fileUrl)), "Files contains this entry");
 			
 			// wait for auto
-			auto.WaitOne (60000);
+//			auto.WaitOne (60000);
 			Assert.IsTrue (File.Exists (fileUrl), "File exists");
 			Assert.AreEqual (26823, (new FileInfo (fileUrl)).Length, "File is correct size");
 			return fileUrl;
@@ -61,14 +61,14 @@ namespace TestSeqDLLib
 		{			
 			
 			// choose target files to download
-//			var smbcUrl = "http://www.smbc-comics.com/comics/20061001.gif";
-			var url = "http://www.irregularwebcomic.net/55.html";
+			var url = "http://www.smbc-comics.com/comics/20061001.gif";
+//			var url = "http://www.irregularwebcomic.net/55.html";
 			var parser = new ComicParser (url);
-			var urlGen = parser.GetUrlGenerator ();
-//			smbcUrlGen.Days = DateGenerator.EveryDay;
+			var urlGen = parser.GetUrlGenerator () as DateGenerator;
+			urlGen.Days = DateGenerator.EveryDay;
 			var urls = urlGen.Get (0, 20);
 			
-			foreach(var x in urls) {
+			foreach (var x in urls) {
 				Console.WriteLine (x);
 			}
 
@@ -86,10 +86,66 @@ namespace TestSeqDLLib
 			
 				// begin the download and block
 				repo.Download (urls);
-				auto.WaitOne ();
+//				auto.WaitOne ();
 				
 				// check that it worked
 				Assert.AreEqual (numComics, repo.Files.Count);				
+			}
+		}
+		
+		[Test()]
+		public void CancelDownloads ()
+		{
+			// choose target files to download
+			var url = "http://www.smbc-comics.com/comics/20061001.gif";
+//			var url = "http://www.irregularwebcomic.net/55.html";
+			var parser = new ComicParser (url);
+			var urlGen = parser.GetUrlGenerator () as DateGenerator;
+			urlGen.Days = DateGenerator.EveryDay;
+			var urls = urlGen.Get (0, 20);
+			
+			foreach (var x in urls) {
+				Console.WriteLine (x);
+			}
+			
+			using (var repo = new Repository ()) {
+			
+				// set the gate
+				AutoResetEvent auto = new AutoResetEvent (false);
+				
+				int num = 0;
+				
+//				// event handler to count number of downloads
+//				repo.SingleDownloadCompleted += delegate(object sender, EventArgs e) {
+//					num += 1;
+//					// here we set the canceller
+//					if (num == 5) {
+//						repo.CancelDownloads ();
+//						auto.Set ();
+//					}
+//				};
+
+				// event handler to count number of async downloads
+				repo.DownloadFileCompleted += delegate(object sender, AsyncCompletedEventArgs e) {
+					num += 1;
+					// here we set the canceller
+					if (num == 5) {
+						repo.CancelDownloads ();
+						auto.Set ();
+					}
+				};
+				
+				// event handler allows program to progress (in case of cancel failure)
+				repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
+					auto.Set ();
+				};
+			
+				// begin the download and block
+				repo.Download (urls);
+				auto.WaitOne ();
+				
+				// check that it worked
+				Assert.AreEqual (5, repo.Files.Count);				
 			}
 		}
 	}
