@@ -9,6 +9,9 @@ public partial class MainWindow: Gtk.Window
 {	
 	ModelController model;
 	
+	string overallProgress = "Overall Progress";
+	string individualProgress = "Individual Progress";
+	
 	public MainWindow (ModelController model): base (Gtk.WindowType.Toplevel)
 	{
 		Build ();
@@ -108,6 +111,7 @@ public partial class MainWindow: Gtk.Window
 	{
 		IndividualProgressBar.Fraction = 1.0;
 		OverallProgressBar.Fraction = 1.0;
+		OverallProgressLabel.Text = String.Format("{0}: 100% (FINISHED!)", overallProgress);
 		ScrapeButton.Label = "Scrape Images";		
 	}
 	
@@ -118,10 +122,16 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnOverallProgressUpdate (object sender, EventArgs e)
 	{
+		// 100% individual progress
 		IndividualProgressBar.Fraction = 1.0;
+		
+		// update overall progress
 		double frac = (double)model.NumberDownloaded / (double)model.NumberToDownload;
 		OverallProgressBar.Fraction = frac;
-		IndividualProgressBar.Fraction = 0;
+		OverallProgressLabel.Text = String.Format("{0}: {1}%", overallProgress, Math.Round(100*frac));
+		
+		// 0% individual progress
+		IndividualProgressBar.Fraction = 0;		
 	}
 	
 	protected void OnIndividualProgressUpdate (object sender, ProgressChangedEventArgs e)

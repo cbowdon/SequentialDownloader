@@ -9,6 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ImageScraper</RootNamespace>
     <AssemblyName>ImageScraper</AssemblyName>
+    <StartupObject>ImageScraper.MainClass</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
