@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using ImageScraperLib;
 
 namespace ImageScraper
@@ -127,69 +128,69 @@ namespace ImageScraper
 			
 			var urls = urlGen.Get (0, NumberToDownload);
 			
-			repo = new Repository ();
-			
-			// pass on the events
-			repo.DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
-				NumberDownloaded += 1;
-				Console.WriteLine ("\tfile dl'd ({0})", NumberDownloaded);
-				try {
-					FileDownloaded.Invoke (sender, e);									
-				} catch (NullReferenceException) {
-					// no handler was added
-				}
-			};
-			
-			repo.DownloadProgressChanged += delegate(object sender, System.Net.DownloadProgressChangedEventArgs e) {
-				Console.Write ("{0}, ", e.ProgressPercentage);
-				try {
-					FileProgress.Invoke (sender, e);					
-				} catch (NullReferenceException) {
-					// no handler was added	
-				}
-
-			};
-			
-			repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
-				Console.WriteLine ("[Done]");
-				try {
-					TaskCompleted.Invoke (this, new EventArgs ());								
-				} catch (NullReferenceException) {
-					// no handler was added
-				} finally {
-					ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
-					repo.Dispose ();
-					Active = false;					
-				}
-			};
-			
-			// set number downloaded to zero
-			NumberDownloaded = 0;
+			using (repo = new Repository ()) {
 				
-			// begin (blocks)
-			// repo.Active is set and unset automatically			
-			Console.WriteLine ("[Downloading and Adding]");
+				// pass on the events
+				repo.DownloadFileCompleted += OnSingleDownloadCompleted;
 			
+				repo.DownloadProgressChanged += OnDownloadProgressChanged;
 			
-//			repo.DownloadAndAdd (urls, OutputFileName);
-			repo.Download (urls);
+				repo.MultipleDownloadsCompleted += OnMultipleDownloadsCompleted;
 			
+				// set number downloaded to zero
+				NumberDownloaded = 0;
+				
+				// begin (blocks)			
+				repo.Download (urls);// DownloadAndAdd is not used because of Zip64 issues
+				// repo.Active is set and unset automatically			
+			}
 		}
 		
 		public void CancelTask ()
 		{
 			if (repo.Active) {
-				Console.WriteLine ("[Cancelling downloads]");
 				repo.CancelDownloads ();
-				Console.WriteLine ("[Cancelled]");
-				repo.Dispose ();
-				Console.WriteLine ("[Disposed]");
 				Active = false;
 				try {
 					TaskCancelled.Invoke (this, new EventArgs ());					
 				} catch (NullReferenceException) {
 					// no handler was added
 				}
+			}
+		}
+		
+		public void OnMultipleDownloadsCompleted (object sender, EventArgs e)
+		{			
+			try {
+				TaskCompleted.Invoke (this, new EventArgs ());								
+			} catch (NullReferenceException) {
+				// no handler was added
+			} finally {
+				ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
+				Active = false;					
+			}
+		}
+		
+		public void OnSingleDownloadCompleted (object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			NumberDownloaded += 1;
+			// caching behaviour
+			if (NumberDownloaded % 10 == 0) {
+				ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
+			}
+			try {
+				FileDownloaded.Invoke (sender, e);									
+			} catch (NullReferenceException) {
+				// no handler was added
+			}
+		}
+		
+		public void OnDownloadProgressChanged (object sender, System.Net.DownloadProgressChangedEventArgs e)
+		{
+			try {
+				FileProgress.Invoke (sender, e);					
+			} catch (NullReferenceException) {
+				// no handler was added	
 			}
 		}
 	}
