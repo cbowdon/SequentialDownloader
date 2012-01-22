@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.ComponentModel;
 using System.Threading;
 using Gtk;
 using ImageScraper;
@@ -22,12 +23,16 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnInputUrlChanged (object sender, System.EventArgs e)
 	{
-		
+		if (!model.Active) {
+			Reset ();	
+		}		
 	}
 	
 	protected void OnNumberValueChanged (object sender, System.EventArgs e)
 	{
-		
+		if (!model.Active) {
+			Reset ();	
+		}		
 	}
 	
 	protected void OnScrapeButtonClicked (object sender, System.EventArgs e)
@@ -39,6 +44,7 @@ public partial class MainWindow: Gtk.Window
 		Thread thread = new Thread (model.RunTask);
 		
 		if (!model.Active) {
+			
 			var chooser = new FileChooserDialog ("Saves as...", 
 		                                     this, 
 		                                     FileChooserAction.Save, 
@@ -47,19 +53,28 @@ public partial class MainWindow: Gtk.Window
 		                                     Stock.Cancel, 
 		                                     ResponseType.Cancel);
 		
+			// present dialog
 			if (chooser.Run () == (int)ResponseType.Ok) {			
 				
 				outputFileName = chooser.Filename;
 				ScrapeButton.Label = "Cancel";
 				chooser.Destroy ();
 				
+				// validate and run
 				if (model.ValidateInputs (inputUrl, outputFileName, number)) {
+										
+					model.TaskCompleted += OnTaskCompleted;
+					model.FileProgress += OnIndividualProgressUpdate;
+					model.FileDownloaded += OnOverallProgressUpdate;
+					model.TaskCancelled += OnTaskCancelled;
 					
-					model.TaskCompleted += delegate(object snd, EventArgs evt) {
-						ScrapeButton.Label = "Scrape Images";
-					};
+					OverallProgressBar.Fraction = 0;
 					
 					thread.Start ();					
+					
+				} else {
+					// handle this properly in future
+					chooser.Destroy ();
 				}
 				
 			} else {
@@ -85,11 +100,43 @@ public partial class MainWindow: Gtk.Window
 			}
 						
 			
-			ScrapeButton.Label = "Scrape Images";
-			
+			ScrapeButton.Label = "Scrape Images";			
 		}
-		
-		
-		
 	}
+
+	protected void OnTaskCompleted (object sender, EventArgs e)
+	{
+		IndividualProgressBar.Fraction = 1.0;
+		OverallProgressBar.Fraction = 1.0;
+		ScrapeButton.Label = "Scrape Images";		
+	}
+	
+	protected void OnTaskCancelled (object sender, EventArgs e)
+	{		
+		ScrapeButton.Label = "Scrape Images";		
+	}
+	
+	protected void OnOverallProgressUpdate (object sender, EventArgs e)
+	{
+		IndividualProgressBar.Fraction = 1.0;
+		double frac = (double)model.NumberDownloaded / (double)model.NumberToDownload;
+		OverallProgressBar.Fraction = frac;
+		IndividualProgressBar.Fraction = 0;
+	}
+	
+	protected void OnIndividualProgressUpdate (object sender, ProgressChangedEventArgs e)
+	{
+		IndividualProgressBar.Fraction = e.ProgressPercentage / (double)100;
+	}
+	
+	protected void Reset ()
+	{
+		IndividualProgressBar.Fraction = 0;
+		OverallProgressBar.Fraction = 0;
+		ScrapeButton.Label = "Scrape Images";
+	}
+	
+	
+
+
 }

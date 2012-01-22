@@ -57,9 +57,7 @@ namespace ImageScraper
 		private Repository repo;
 		
 		#region Constructors
-		public ModelController ()
-		{
-		}
+		public ModelController () {}
 		#endregion
 		
 		#region ValidInputs
@@ -159,6 +157,7 @@ namespace ImageScraper
 			}
 		}
 		
+		#region EventHandlers
 		public void OnMultipleDownloadsCompleted (object sender, EventArgs e)
 		{			
 			try {
@@ -193,6 +192,8 @@ namespace ImageScraper
 				// no handler was added	
 			}
 		}
+		#endregion
 	}
+	
 }
 

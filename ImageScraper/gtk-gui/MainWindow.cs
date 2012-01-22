@@ -10,18 +10,21 @@ public partial class MainWindow
 	private global::Gtk.Entry UrlEntry;
 	private global::Gtk.HBox hbox1;
 	private global::Gtk.Table table1;
-	private global::Gtk.Alignment alignment1;
-	private global::Gtk.Entry StartEntry;
-	private global::Gtk.Alignment alignment2;
-	private global::Gtk.Label StartLabel;
 	private global::Gtk.Alignment alignment5;
 	private global::Gtk.SpinButton NumberButton;
 	private global::Gtk.Alignment alignment6;
 	private global::Gtk.Label NumberLabel;
 	private global::Gtk.Alignment alignment7;
 	private global::Gtk.Button ScrapeButton;
+	private global::Gtk.HSeparator hseparator1;
+	private global::Gtk.Alignment alignment11;
+	private global::Gtk.Label IndividualProgressLabel;
+	private global::Gtk.Alignment alignment9;
+	private global::Gtk.ProgressBar IndividualProgressBar;
+	private global::Gtk.Alignment alignment10;
+	private global::Gtk.Label OverallProgressLabel;
 	private global::Gtk.Alignment alignment8;
-	private global::Gtk.ProgressBar ScrapeProgressBar;
+	private global::Gtk.ProgressBar OverallProgressBar;
 	
 	protected virtual void Build ()
 	{
@@ -79,47 +82,10 @@ public partial class MainWindow
 		this.hbox1.Name = "hbox1";
 		this.hbox1.Spacing = 6;
 		// Container child hbox1.Gtk.Box+BoxChild
-		this.table1 = new global::Gtk.Table (((uint)(2)), ((uint)(2)), false);
+		this.table1 = new global::Gtk.Table (((uint)(1)), ((uint)(2)), false);
 		this.table1.Name = "table1";
 		this.table1.RowSpacing = ((uint)(6));
 		this.table1.ColumnSpacing = ((uint)(6));
-		// Container child table1.Gtk.Table+TableChild
-		this.alignment1 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
-		this.alignment1.Name = "alignment1";
-		this.alignment1.LeftPadding = ((uint)(10));
-		this.alignment1.TopPadding = ((uint)(10));
-		this.alignment1.RightPadding = ((uint)(10));
-		this.alignment1.BottomPadding = ((uint)(10));
-		// Container child alignment1.Gtk.Container+ContainerChild
-		this.StartEntry = new global::Gtk.Entry ();
-		this.StartEntry.CanFocus = true;
-		this.StartEntry.Name = "StartEntry";
-		this.StartEntry.Text = global::Mono.Unix.Catalog.GetString ("None");
-		this.StartEntry.IsEditable = true;
-		this.StartEntry.InvisibleChar = '●';
-		this.alignment1.Add (this.StartEntry);
-		this.table1.Add (this.alignment1);
-		global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment1]));
-		w6.LeftAttach = ((uint)(1));
-		w6.RightAttach = ((uint)(2));
-		w6.XOptions = ((global::Gtk.AttachOptions)(4));
-		w6.YOptions = ((global::Gtk.AttachOptions)(4));
-		// Container child table1.Gtk.Table+TableChild
-		this.alignment2 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
-		this.alignment2.Name = "alignment2";
-		this.alignment2.LeftPadding = ((uint)(10));
-		this.alignment2.TopPadding = ((uint)(10));
-		this.alignment2.RightPadding = ((uint)(10));
-		this.alignment2.BottomPadding = ((uint)(10));
-		// Container child alignment2.Gtk.Container+ContainerChild
-		this.StartLabel = new global::Gtk.Label ();
-		this.StartLabel.Name = "StartLabel";
-		this.StartLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Custom start:");
-		this.alignment2.Add (this.StartLabel);
-		this.table1.Add (this.alignment2);
-		global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment2]));
-		w8.XOptions = ((global::Gtk.AttachOptions)(4));
-		w8.YOptions = ((global::Gtk.AttachOptions)(4));
 		// Container child table1.Gtk.Table+TableChild
 		this.alignment5 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 		this.alignment5.Name = "alignment5";
@@ -137,13 +103,11 @@ public partial class MainWindow
 		this.NumberButton.Value = 50;
 		this.alignment5.Add (this.NumberButton);
 		this.table1.Add (this.alignment5);
-		global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment5]));
-		w10.TopAttach = ((uint)(1));
-		w10.BottomAttach = ((uint)(2));
-		w10.LeftAttach = ((uint)(1));
-		w10.RightAttach = ((uint)(2));
-		w10.XOptions = ((global::Gtk.AttachOptions)(4));
-		w10.YOptions = ((global::Gtk.AttachOptions)(4));
+		global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment5]));
+		w6.LeftAttach = ((uint)(1));
+		w6.RightAttach = ((uint)(2));
+		w6.XOptions = ((global::Gtk.AttachOptions)(4));
+		w6.YOptions = ((global::Gtk.AttachOptions)(4));
 		// Container child table1.Gtk.Table+TableChild
 		this.alignment6 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 		this.alignment6.Name = "alignment6";
@@ -157,16 +121,14 @@ public partial class MainWindow
 		this.NumberLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Number to get:");
 		this.alignment6.Add (this.NumberLabel);
 		this.table1.Add (this.alignment6);
-		global::Gtk.Table.TableChild w12 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment6]));
-		w12.TopAttach = ((uint)(1));
-		w12.BottomAttach = ((uint)(2));
-		w12.XOptions = ((global::Gtk.AttachOptions)(4));
-		w12.YOptions = ((global::Gtk.AttachOptions)(4));
+		global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.alignment6]));
+		w8.XOptions = ((global::Gtk.AttachOptions)(4));
+		w8.YOptions = ((global::Gtk.AttachOptions)(4));
 		this.hbox1.Add (this.table1);
-		global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.table1]));
-		w13.Position = 0;
-		w13.Expand = false;
-		w13.Fill = false;
+		global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.table1]));
+		w9.Position = 0;
+		w9.Expand = false;
+		w9.Fill = false;
 		// Container child hbox1.Gtk.Box+BoxChild
 		this.alignment7 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 		this.alignment7.Name = "alignment7";
@@ -180,40 +142,94 @@ public partial class MainWindow
 		this.ScrapeButton.CanFocus = true;
 		this.ScrapeButton.Name = "ScrapeButton";
 		this.ScrapeButton.UseUnderline = true;
-		this.ScrapeButton.Label = global::Mono.Unix.Catalog.GetString ("Scrape Images!");
+		this.ScrapeButton.Label = global::Mono.Unix.Catalog.GetString ("Scrape Images");
 		this.alignment7.Add (this.ScrapeButton);
 		this.hbox1.Add (this.alignment7);
-		global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment7]));
-		w15.Position = 2;
+		global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment7]));
+		w11.Position = 2;
+		w11.Expand = false;
+		w11.Fill = false;
+		this.vbox1.Add (this.hbox1);
+		global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox1]));
+		w12.Position = 2;
+		w12.Expand = false;
+		w12.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.hseparator1 = new global::Gtk.HSeparator ();
+		this.hseparator1.Name = "hseparator1";
+		this.vbox1.Add (this.hseparator1);
+		global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hseparator1]));
+		w13.Position = 3;
+		w13.Expand = false;
+		w13.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.alignment11 = new global::Gtk.Alignment (0F, 0.5F, 1F, 1F);
+		this.alignment11.Name = "alignment11";
+		this.alignment11.LeftPadding = ((uint)(10));
+		this.alignment11.RightPadding = ((uint)(10));
+		// Container child alignment11.Gtk.Container+ContainerChild
+		this.IndividualProgressLabel = new global::Gtk.Label ();
+		this.IndividualProgressLabel.Name = "IndividualProgressLabel";
+		this.IndividualProgressLabel.Xalign = 0F;
+		this.IndividualProgressLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Individual Progress");
+		this.alignment11.Add (this.IndividualProgressLabel);
+		this.vbox1.Add (this.alignment11);
+		global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment11]));
+		w15.Position = 4;
 		w15.Expand = false;
 		w15.Fill = false;
-		this.vbox1.Add (this.hbox1);
-		global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.hbox1]));
-		w16.Position = 2;
-		w16.Expand = false;
-		w16.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.alignment9 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
+		this.alignment9.Name = "alignment9";
+		this.alignment9.LeftPadding = ((uint)(10));
+		this.alignment9.RightPadding = ((uint)(10));
+		this.alignment9.BottomPadding = ((uint)(10));
+		// Container child alignment9.Gtk.Container+ContainerChild
+		this.IndividualProgressBar = new global::Gtk.ProgressBar ();
+		this.IndividualProgressBar.Name = "IndividualProgressBar";
+		this.alignment9.Add (this.IndividualProgressBar);
+		this.vbox1.Add (this.alignment9);
+		global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment9]));
+		w17.Position = 5;
+		w17.Expand = false;
+		w17.Fill = false;
+		// Container child vbox1.Gtk.Box+BoxChild
+		this.alignment10 = new global::Gtk.Alignment (0F, 0.5F, 1F, 1F);
+		this.alignment10.Name = "alignment10";
+		this.alignment10.LeftPadding = ((uint)(10));
+		this.alignment10.RightPadding = ((uint)(10));
+		// Container child alignment10.Gtk.Container+ContainerChild
+		this.OverallProgressLabel = new global::Gtk.Label ();
+		this.OverallProgressLabel.Name = "OverallProgressLabel";
+		this.OverallProgressLabel.Xalign = 0F;
+		this.OverallProgressLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Overall Progress");
+		this.alignment10.Add (this.OverallProgressLabel);
+		this.vbox1.Add (this.alignment10);
+		global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment10]));
+		w19.Position = 6;
+		w19.Expand = false;
+		w19.Fill = false;
 		// Container child vbox1.Gtk.Box+BoxChild
 		this.alignment8 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 		this.alignment8.Name = "alignment8";
 		this.alignment8.LeftPadding = ((uint)(10));
-		this.alignment8.TopPadding = ((uint)(10));
 		this.alignment8.RightPadding = ((uint)(10));
 		this.alignment8.BottomPadding = ((uint)(10));
 		// Container child alignment8.Gtk.Container+ContainerChild
-		this.ScrapeProgressBar = new global::Gtk.ProgressBar ();
-		this.ScrapeProgressBar.Name = "ScrapeProgressBar";
-		this.alignment8.Add (this.ScrapeProgressBar);
+		this.OverallProgressBar = new global::Gtk.ProgressBar ();
+		this.OverallProgressBar.Name = "OverallProgressBar";
+		this.alignment8.Add (this.OverallProgressBar);
 		this.vbox1.Add (this.alignment8);
-		global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment8]));
-		w18.Position = 3;
-		w18.Expand = false;
-		w18.Fill = false;
+		global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment8]));
+		w21.Position = 7;
+		w21.Expand = false;
+		w21.Fill = false;
 		this.Add (this.vbox1);
 		if ((this.Child != null)) {
 			this.Child.ShowAll ();
 		}
-		this.DefaultWidth = 502;
-		this.DefaultHeight = 239;
+		this.DefaultWidth = 564;
+		this.DefaultHeight = 256;
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 		this.UrlEntry.Changed += new global::System.EventHandler (this.OnInputUrlChanged);

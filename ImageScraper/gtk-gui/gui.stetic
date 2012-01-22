@@ -8,7 +8,7 @@
     <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <widget-library name="../bin/Debug/ImageScraper.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="502 239">
+  <widget class="Gtk.Window" id="MainWindow" design-size="564 256">
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -75,67 +75,9 @@
             <child>
               <widget class="Gtk.Table" id="table1">
                 <property name="MemberName" />
-                <property name="NRows">2</property>
                 <property name="NColumns">2</property>
                 <property name="RowSpacing">6</property>
                 <property name="ColumnSpacing">6</property>
-                <child>
-                  <widget class="Gtk.Alignment" id="alignment1">
-                    <property name="MemberName" />
-                    <property name="LeftPadding">10</property>
-                    <property name="TopPadding">10</property>
-                    <property name="RightPadding">10</property>
-                    <property name="BottomPadding">10</property>
-                    <child>
-                      <widget class="Gtk.Entry" id="StartEntry">
-                        <property name="MemberName" />
-                        <property name="CanFocus">True</property>
-                        <property name="Text" translatable="yes">None</property>
-                        <property name="IsEditable">True</property>
-                        <property name="InvisibleChar">●</property>
-                      </widget>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="LeftAttach">1</property>
-                    <property name="RightAttach">2</property>
-                    <property name="AutoSize">True</property>
-                    <property name="XOptions">Fill</property>
-                    <property name="YOptions">Fill</property>
-                    <property name="XExpand">False</property>
-                    <property name="XFill">True</property>
-                    <property name="XShrink">False</property>
-                    <property name="YExpand">False</property>
-                    <property name="YFill">True</property>
-                    <property name="YShrink">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="Gtk.Alignment" id="alignment2">
-                    <property name="MemberName" />
-                    <property name="LeftPadding">10</property>
-                    <property name="TopPadding">10</property>
-                    <property name="RightPadding">10</property>
-                    <property name="BottomPadding">10</property>
-                    <child>
-                      <widget class="Gtk.Label" id="StartLabel">
-                        <property name="MemberName" />
-                        <property name="LabelProp" translatable="yes">Custom start:</property>
-                      </widget>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="AutoSize">True</property>
-                    <property name="XOptions">Fill</property>
-                    <property name="YOptions">Fill</property>
-                    <property name="XExpand">False</property>
-                    <property name="XFill">True</property>
-                    <property name="XShrink">False</property>
-                    <property name="YExpand">False</property>
-                    <property name="YFill">True</property>
-                    <property name="YShrink">False</property>
-                  </packing>
-                </child>
                 <child>
                   <widget class="Gtk.Alignment" id="alignment5">
                     <property name="MemberName" />
@@ -158,8 +100,6 @@
                     </child>
                   </widget>
                   <packing>
-                    <property name="TopAttach">1</property>
-                    <property name="BottomAttach">2</property>
                     <property name="LeftAttach">1</property>
                     <property name="RightAttach">2</property>
                     <property name="AutoSize">True</property>
@@ -188,8 +128,6 @@
                     </child>
                   </widget>
                   <packing>
-                    <property name="TopAttach">1</property>
-                    <property name="BottomAttach">2</property>
                     <property name="AutoSize">True</property>
                     <property name="XOptions">Fill</property>
                     <property name="YOptions">Fill</property>
@@ -225,7 +163,7 @@
                     <property name="WidthRequest">100</property>
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
-                    <property name="Label" translatable="yes">Scrape Images!</property>
+                    <property name="Label" translatable="yes">Scrape Images</property>
                     <property name="UseUnderline">True</property>
                     <signal name="Clicked" handler="OnScrapeButtonClicked" />
                   </widget>
@@ -247,20 +185,91 @@
           </packing>
         </child>
         <child>
-          <widget class="Gtk.Alignment" id="alignment8">
+          <widget class="Gtk.HSeparator" id="hseparator1">
+            <property name="MemberName" />
+          </widget>
+          <packing>
+            <property name="Position">3</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment11">
+            <property name="MemberName" />
+            <property name="Xalign">0</property>
+            <property name="LeftPadding">10</property>
+            <property name="RightPadding">10</property>
+            <child>
+              <widget class="Gtk.Label" id="IndividualProgressLabel">
+                <property name="MemberName" />
+                <property name="Xalign">0</property>
+                <property name="LabelProp" translatable="yes">Individual Progress</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">4</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment9">
             <property name="MemberName" />
             <property name="LeftPadding">10</property>
-            <property name="TopPadding">10</property>
             <property name="RightPadding">10</property>
             <property name="BottomPadding">10</property>
             <child>
-              <widget class="Gtk.ProgressBar" id="ScrapeProgressBar">
+              <widget class="Gtk.ProgressBar" id="IndividualProgressBar">
                 <property name="MemberName" />
               </widget>
             </child>
           </widget>
           <packing>
-            <property name="Position">3</property>
+            <property name="Position">5</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment10">
+            <property name="MemberName" />
+            <property name="Xalign">0</property>
+            <property name="LeftPadding">10</property>
+            <property name="RightPadding">10</property>
+            <child>
+              <widget class="Gtk.Label" id="OverallProgressLabel">
+                <property name="MemberName" />
+                <property name="Xalign">0</property>
+                <property name="LabelProp" translatable="yes">Overall Progress</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">6</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Alignment" id="alignment8">
+            <property name="MemberName" />
+            <property name="LeftPadding">10</property>
+            <property name="RightPadding">10</property>
+            <property name="BottomPadding">10</property>
+            <child>
+              <widget class="Gtk.ProgressBar" id="OverallProgressBar">
+                <property name="MemberName" />
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">7</property>
             <property name="AutoSize">True</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
