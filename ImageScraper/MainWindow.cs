@@ -10,7 +10,6 @@ public partial class MainWindow: Gtk.Window
 	ModelController model;
 	
 	string overallProgress = "Overall Progress";
-	string individualProgress = "Individual Progress";
 	
 	public MainWindow (ModelController model): base (Gtk.WindowType.Toplevel)
 	{
