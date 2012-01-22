@@ -83,7 +83,11 @@ namespace ImageScraperLib
 					auto.WaitOne ();
 				} else {
 					// fire cancelled event
-					DownloadsCancelled.Invoke (this, new EventArgs ());
+					try {
+						DownloadsCancelled.Invoke (this, new EventArgs ());	
+					} catch (NullReferenceException) {
+						// no handlers were added
+					}
 					// return without invoking MultipleDownloadsCompleted
 					return;
 				}
@@ -141,7 +145,7 @@ namespace ImageScraperLib
 			// loop through and download each
 			foreach (var url in urls) {
 				// check we are still a going concern
-				Console.WriteLine(url);
+				Console.WriteLine (url);
 				
 				if (Active) {
 					DownloadAndAdd (url, outputFileName);					
@@ -164,6 +168,7 @@ namespace ImageScraperLib
 			
 			// after each single download, turn the stile
 			DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
+				Console.WriteLine ("Download completed:\t{0}\t{1}", url, outputFileName);
 				singleAuto.Set ();				
 			};
 			

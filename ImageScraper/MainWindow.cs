@@ -6,11 +6,12 @@ using ImageScraper;
 
 public partial class MainWindow: Gtk.Window
 {	
-	ModelController model = new ModelController ();
+	ModelController model;
 	
-	public MainWindow (): base (Gtk.WindowType.Toplevel)
+	public MainWindow (ModelController model): base (Gtk.WindowType.Toplevel)
 	{
 		Build ();
+		this.model = model;
 	}
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -52,12 +53,15 @@ public partial class MainWindow: Gtk.Window
 				ScrapeButton.Label = "Cancel";
 				chooser.Destroy ();
 				
-				// re-initialize model and thread
-				model = new ModelController (inputUrl, outputFileName, number);					
-				thread = new Thread (model.RunTask);
+				if (model.ValidateInputs (inputUrl, outputFileName, number)) {
+					
+					model.TaskCompleted += delegate(object snd, EventArgs evt) {
+						ScrapeButton.Label = "Scrape Images";
+					};
+					
+					thread.Start ();					
+				}
 				
-				// start
-				thread.Start ();				
 			} else {
 				
 				ScrapeButton.Label = "Scrape Images";
@@ -66,10 +70,6 @@ public partial class MainWindow: Gtk.Window
 			}
 			
 		} else {
-			
-			if (thread.IsAlive) {
-				thread.Join ();
-			}
 						
 			AutoResetEvent auto = new AutoResetEvent (false);
 			
@@ -78,7 +78,12 @@ public partial class MainWindow: Gtk.Window
 			};
 			
 			model.CancelTask ();
-			auto.WaitOne ();
+			auto.WaitOne ();				
+			
+			if (thread.IsAlive) {
+				thread.Join ();
+			}
+						
 			
 			ScrapeButton.Label = "Scrape Images";
 			
@@ -87,10 +92,4 @@ public partial class MainWindow: Gtk.Window
 		
 		
 	}
-	
-	protected void RegisterEvents ()
-	{
-		
-	}
-
 }

@@ -114,16 +114,6 @@ namespace TestSeqDLLib
 				AutoResetEvent auto = new AutoResetEvent (false);
 				
 				int num = 0;
-				
-//				// event handler to count number of downloads
-//				repo.SingleDownloadCompleted += delegate(object sender, EventArgs e) {
-//					num += 1;
-//					// here we set the canceller
-//					if (num == 5) {
-//						repo.CancelDownloads ();
-//						auto.Set ();
-//					}
-//				};
 
 				// event handler to count number of async downloads
 				repo.DownloadFileCompleted += delegate(object sender, AsyncCompletedEventArgs e) {

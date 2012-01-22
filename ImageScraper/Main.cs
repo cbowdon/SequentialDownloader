@@ -8,7 +8,8 @@ namespace ImageScraper
 		public static void Main (string[] args)
 		{
 			Application.Init ();
-			MainWindow win = new MainWindow ();
+			ModelController model = new ModelController ();
+			MainWindow win = new MainWindow (model);
 			win.Show ();
 			Application.Run ();
 		}

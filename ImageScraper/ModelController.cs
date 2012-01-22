@@ -9,8 +9,7 @@ namespace ImageScraper
 	{			
 		public event EventHandler TaskCompleted;
 		public event EventHandler TaskCancelled;
-//		public event AsyncCompletedEventHandler FileDownloaded;
-		public event EventHandler FileDownloaded;
+		public event AsyncCompletedEventHandler FileDownloaded;
 		public event ProgressChangedEventHandler FileProgress;
 		
 		public bool Active { get; private set; }
@@ -53,37 +52,42 @@ namespace ImageScraper
 		
 		public int NumberDownloaded { get; private set; }
 		
-		private bool readyToGo = false;
+		private bool readyToGo;
 		private Repository repo;
 		
 		#region Constructors
 		public ModelController ()
 		{
-			
 		}
+		#endregion
 		
-		public ModelController (string inputUrl, string outputFileName, int numberToDownload, string start, List<string> days) : this (inputUrl, outputFileName, numberToDownload)
+		#region ValidInputs
+		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload, string start, List<string> days)
 		{
 			this.Start = start;
 			this.Days = days;
+			return ValidateInputs (inputUrl, outputFileName, numberToDownload);
 		}
 		
-		public ModelController (string inputUrl, string outputFileName, int numberToDownload, string start) : this (inputUrl, outputFileName, numberToDownload)
-		{
-			this.Start = start;
-		}
-		
-		public ModelController (string inputUrl, string outputFileName, int numberToDownload, List<string> days) : this (inputUrl, outputFileName, numberToDownload)
+		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload, List<string> days)
 		{
 			this.Days = days;
+			return ValidateInputs (inputUrl, outputFileName, numberToDownload);
 		}
 		
-		public ModelController (string inputUrl, string outputFileName, int numberToDownload)
+		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload, string start)
+		{
+			this.Start = start;
+			return ValidateInputs (inputUrl, outputFileName, numberToDownload);
+		}
+
+		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload)
 		{
 			this.InputUrl = inputUrl;
 			this.OutputFileName = outputFileName;
-			this.NumberToDownload = numberToDownload;	
+			this.NumberToDownload = numberToDownload;
 			this.readyToGo = true;
+			return true;
 		}
 		#endregion
 		
@@ -129,28 +133,47 @@ namespace ImageScraper
 			repo.DownloadFileCompleted += delegate(object sender, System.ComponentModel.AsyncCompletedEventArgs e) {
 				NumberDownloaded += 1;
 				Console.WriteLine ("\tfile dl'd ({0})", NumberDownloaded);
-//				FileDownloaded.Invoke (sender, e);				
+				try {
+					FileDownloaded.Invoke (sender, e);									
+				} catch (NullReferenceException) {
+					// no handler was added
+				}
 			};
 			
 			repo.DownloadProgressChanged += delegate(object sender, System.Net.DownloadProgressChangedEventArgs e) {
 				Console.Write ("{0}, ", e.ProgressPercentage);
-				FileProgress.Invoke (sender, e);
+				try {
+					FileProgress.Invoke (sender, e);					
+				} catch (NullReferenceException) {
+					// no handler was added	
+				}
+
 			};
-				
+			
+			repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
+				Console.WriteLine ("[Done]");
+				try {
+					TaskCompleted.Invoke (this, new EventArgs ());								
+				} catch (NullReferenceException) {
+					// no handler was added
+				} finally {
+					ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
+					repo.Dispose ();
+					Active = false;					
+				}
+			};
+			
 			// set number downloaded to zero
 			NumberDownloaded = 0;
 				
 			// begin (blocks)
-			// repo.Active is set and unset automatically
-			
+			// repo.Active is set and unset automatically			
 			Console.WriteLine ("[Downloading and Adding]");
-			repo.DownloadAndAdd (urls, OutputFileName);					
-			Console.WriteLine ("[Done]");
 			
-			// fire event and dispose
-			TaskCompleted.Invoke (this, new EventArgs ());			
-			repo.Dispose ();
-			Active = false;
+			
+//			repo.DownloadAndAdd (urls, OutputFileName);
+			repo.Download (urls);
+			
 		}
 		
 		public void CancelTask ()
@@ -162,7 +185,11 @@ namespace ImageScraper
 				repo.Dispose ();
 				Console.WriteLine ("[Disposed]");
 				Active = false;
-				TaskCancelled.Invoke (this, new EventArgs ());
+				try {
+					TaskCancelled.Invoke (this, new EventArgs ());					
+				} catch (NullReferenceException) {
+					// no handler was added
+				}
 			}
 		}
 	}

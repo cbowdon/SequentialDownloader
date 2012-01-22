@@ -129,10 +129,11 @@ namespace ImageScraper
 		public void BeginDownloading ()
 		{
 			Console.WriteLine ("BEGIN DOWNLOADING");
-			Repo = new Repository ();
 			var imgUrls = UrlGen.Get (0, NumberToDownload);
 								
 			Active = true;
+
+			Repo = new Repository ();
 				
 			Repo.MultipleDownloadsCompleted += delegate(object sender, EventArgs e) {
 				AllFilesDownloaded.Invoke (this, new EventArgs ());
