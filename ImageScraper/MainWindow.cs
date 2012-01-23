@@ -8,7 +8,6 @@ using ImageScraper;
 public partial class MainWindow: Gtk.Window
 {	
 	ModelController model;
-	
 	string overallProgress = "Overall Progress";
 	
 	public MainWindow (ModelController model): base (Gtk.WindowType.Toplevel)
@@ -101,7 +100,6 @@ public partial class MainWindow: Gtk.Window
 				thread.Join ();
 			}
 						
-			
 			ScrapeButton.Label = "Scrape Images";			
 		}
 	}
@@ -109,39 +107,49 @@ public partial class MainWindow: Gtk.Window
 	protected void OnTaskCompleted (object sender, EventArgs e)
 	{
 		IndividualProgressBar.Fraction = 1.0;
+		IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
 		OverallProgressBar.Fraction = 1.0;
-		OverallProgressLabel.Text = String.Format("{0}: 100% (FINISHED!)", overallProgress);
+		OverallProgressLabel.Text = String.Format ("{0}: 100%", overallProgress);
 		ScrapeButton.Label = "Scrape Images";		
 	}
 	
 	protected void OnTaskCancelled (object sender, EventArgs e)
-	{		
+	{	
+		IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
 		ScrapeButton.Label = "Scrape Images";		
 	}
 	
 	protected void OnOverallProgressUpdate (object sender, EventArgs e)
 	{
-		// 100% individual progress
-		IndividualProgressBar.Fraction = 1.0;
+		if (model.Active) {
+			// 100% individual progress
+			IndividualProgressBar.Fraction = 1.0;		
+			IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
 		
-		// update overall progress
-		double frac = (double)model.NumberDownloaded / (double)model.NumberToDownload;
-		OverallProgressBar.Fraction = frac;
-		OverallProgressLabel.Text = String.Format("{0}: {1}%", overallProgress, Math.Round(100*frac));
+			// update overall progress
+			double frac = (double)model.NumberDownloaded / (double)model.NumberToDownload;
+			OverallProgressBar.Fraction = frac;
+			OverallProgressLabel.Text = String.Format ("{0}: {1}%", overallProgress, Math.Round (100 * frac));
 		
-		// 0% individual progress
-		IndividualProgressBar.Fraction = 0;		
+			// 0% individual progress
+			IndividualProgressBar.Fraction = 0;	
+		}
 	}
 	
 	protected void OnIndividualProgressUpdate (object sender, ProgressChangedEventArgs e)
 	{
-		IndividualProgressBar.Fraction = e.ProgressPercentage / (double)100;
+		if (model.Active) {
+			IndividualProgressBar.Fraction = e.ProgressPercentage / (double)100;	
+		}
+		
 	}
 	
 	protected void Reset ()
 	{
 		IndividualProgressBar.Fraction = 0;
+		IndividualProgressLabel.Text = "Individual Progress";
 		OverallProgressBar.Fraction = 0;
+		OverallProgressLabel.Text = "Overall Progress";
 		ScrapeButton.Label = "Scrape Images";
 	}
 	

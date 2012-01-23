@@ -36,9 +36,10 @@ namespace TestSeqDLLib
 			Assert.AreEqual (1, repo.Files.Count, "Only one entry in Files");												
 			var fileUrl = Path.Combine (repo.Location, "00001.gif");
 			Assert.IsTrue (repo.Files.Contains (new KeyValuePair<string,string> (imgUrl, fileUrl)), "Files contains this entry");
+			Assert.AreEqual (imgUrl, repo.CurrentlyDownloadingUrl);
 			
 			// wait for auto
-//			auto.WaitOne (60000);
+			auto.WaitOne ();
 			Assert.IsTrue (File.Exists (fileUrl), "File exists");
 			Assert.AreEqual (26823, (new FileInfo (fileUrl)).Length, "File is correct size");
 			return fileUrl;

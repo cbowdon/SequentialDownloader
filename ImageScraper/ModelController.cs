@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
+using System.Threading;
 using ImageScraperLib;
 
 namespace ImageScraper
@@ -53,11 +54,15 @@ namespace ImageScraper
 		
 		public int NumberDownloaded { get; private set; }
 		
+		public string Status { get; private set; }
+		
 		private bool readyToGo;
 		private Repository repo;
 		
 		#region Constructors
-		public ModelController () {}
+		public ModelController ()
+		{
+		}
 		#endregion
 		
 		#region ValidInputs
@@ -137,10 +142,12 @@ namespace ImageScraper
 			
 				// set number downloaded to zero
 				NumberDownloaded = 0;
-				
+								
 				// begin (blocks)			
 				repo.Download (urls);// DownloadAndAdd is not used because of Zip64 issues
 				// repo.Active is set and unset automatically			
+				
+				Status = String.Format ("Downloading {0}", repo.CurrentlyDownloadingUrl);
 			}
 		}
 		
@@ -148,31 +155,36 @@ namespace ImageScraper
 		{
 			if (repo.Active) {
 				repo.CancelDownloads ();
-				Active = false;
+				Active = false;				
+				Status = "Task cancelled";
 				try {
 					TaskCancelled.Invoke (this, new EventArgs ());					
 				} catch (NullReferenceException) {
 					// no handler was added
-				}
-			}
+				} 
+			}			
 		}
 		
 		#region EventHandlers
 		public void OnMultipleDownloadsCompleted (object sender, EventArgs e)
-		{			
+		{					
+			ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
+			Active = false;
+			Status = "Finished";
 			try {
 				TaskCompleted.Invoke (this, new EventArgs ());								
 			} catch (NullReferenceException) {
 				// no handler was added
-			} finally {
-				ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
-				Active = false;					
-			}
+			} 
 		}
 		
 		public void OnSingleDownloadCompleted (object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
 			NumberDownloaded += 1;
+			// update status, don't contradict MultipleDownloadsCompleted
+			if (NumberDownloaded != NumberToDownload) {
+				Status = String.Format ("Downloading {0}", repo.CurrentlyDownloadingUrl);
+			}
 			// caching behaviour
 			if (NumberDownloaded % 10 == 0) {
 				ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			

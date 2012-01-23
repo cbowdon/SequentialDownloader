@@ -11,7 +11,6 @@ namespace ImageScraperLib
 	public class Repository : WebClient, IDisposable
 	{
 		#region Events
-//		public event EventHandler SingleDownloadCompleted;
 		public event EventHandler MultipleDownloadsCompleted;
 		public event EventHandler DownloadsCancelled;
 
@@ -22,6 +21,8 @@ namespace ImageScraperLib
 		public bool Active { get; private set; }
 		
 		public string Location { get; private set; }
+		
+		public string CurrentlyDownloadingUrl { get; private set; }
 		
 		public ConcurrentDictionary<string, string> Files { get; private set; }
 		#endregion
@@ -55,15 +56,10 @@ namespace ImageScraperLib
 			string fileName = (Files.Count + 1).ToString ().PadLeft (5, '0') + Path.GetExtension (url);
 			// add to dictionary
 			Files.TryAdd (url, Path.Combine (Location, fileName));
+			// declare current download
+			CurrentlyDownloadingUrl = url;
 			// download (async so we can tap into the progress meter)
 			DownloadFileAsync (new Uri (url), Path.Combine (Location, fileName));					
-//			try {
-//				DownloadFile (new Uri (url), Path.Combine (Location, fileName));	
-//				SingleDownloadCompleted.Invoke (this, new EventArgs ());
-//			} catch (WebException) {
-//				return;
-//			}
-			
 		}
 		
 		public void Download (IEnumerable<string> urls)
@@ -80,6 +76,7 @@ namespace ImageScraperLib
 				// check we are still a going concern
 				if (Active) {
 					Download (url);
+					// block until download finished (turning async into sync)
 					auto.WaitOne ();
 				} else {
 					// fire cancelled event
