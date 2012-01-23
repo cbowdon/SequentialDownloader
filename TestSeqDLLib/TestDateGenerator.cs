@@ -73,7 +73,26 @@ namespace TestSeqDLLib
 		}
 		
 		[Test()]
-		public void GetDirectly ()
+		public void DaysNotAssignedExplicitly ()
+		{
+			var smbc = "http://www.smbc-comics.com/comics/20061017.gif";
+			
+			var smbcUrls = new string[7];
+			smbcUrls [0] = "http://www.smbc-comics.com/comics/20061011.gif";
+			smbcUrls [1] = "http://www.smbc-comics.com/comics/20061012.gif";
+			smbcUrls [2] = "http://www.smbc-comics.com/comics/20061013.gif";
+			smbcUrls [3] = "http://www.smbc-comics.com/comics/20061014.gif";
+			smbcUrls [4] = "http://www.smbc-comics.com/comics/20061015.gif";
+			smbcUrls [5] = "http://www.smbc-comics.com/comics/20061016.gif";
+			smbcUrls [6] = "http://www.smbc-comics.com/comics/20061017.gif";
+			
+			var dateCount = new DateGenerator (new ComicUri (smbc));
+			dateCount.Start = "20061011";
+			Assert.AreEqual (smbcUrls, dateCount.Get (0, 7).ToArray ());
+		}
+		
+		[Test()]
+		public void GetDirectlySmbc ()
 		{
 			var smbc = "http://www.smbc-comics.com/comics/20061017.gif";
 			
@@ -104,6 +123,39 @@ namespace TestSeqDLLib
 			var days = new string[]{DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString (), DayOfWeek.Friday.ToString ()};
 			dateCount.Days = new List<string> (days);
 			Assert.AreEqual (smbcUrls, dateCount.Get (0, 7));				
+		}
+		
+		[Test()]
+		public void GetDirectlyLicd ()
+		{			
+			var licdUrls = new string[7];
+			licdUrls [0] = "http://cdn.leasticoulddo.com/comics/20100309.gif";
+			licdUrls [1] = "http://cdn.leasticoulddo.com/comics/20100310.gif";
+			licdUrls [2] = "http://cdn.leasticoulddo.com/comics/20100311.gif";
+			licdUrls [3] = "http://cdn.leasticoulddo.com/comics/20100312.gif";
+			licdUrls [4] = "http://cdn.leasticoulddo.com/comics/20100313.gif";
+			licdUrls [5] = "http://cdn.leasticoulddo.com/comics/20100314.gif";
+			licdUrls [6] = "http://cdn.leasticoulddo.com/comics/20100315.gif";
+			
+			var dateCount = new DateGenerator (new ComicUri (licdUrls [2]));
+			dateCount.Start = "20100309";
+			dateCount.Days = DateGenerator.EveryDay;
+			Assert.AreEqual (licdUrls, dateCount.Get (0, 7).ToArray ());
+			
+			licdUrls [0] = "http://cdn.leasticoulddo.com/comics/20100309.gif";
+			licdUrls [1] = "http://cdn.leasticoulddo.com/comics/20100310.gif";
+			licdUrls [2] = "http://cdn.leasticoulddo.com/comics/20100311.gif";
+			licdUrls [3] = "http://cdn.leasticoulddo.com/comics/20100316.gif";
+			licdUrls [4] = "http://cdn.leasticoulddo.com/comics/20100317.gif";
+			licdUrls [5] = "http://cdn.leasticoulddo.com/comics/20100318.gif";
+			licdUrls [6] = "http://cdn.leasticoulddo.com/comics/20100323.gif";
+			
+			
+			dateCount = new DateGenerator (new ComicUri (licdUrls [0]));
+			dateCount.Start = "20100309";
+			var days = new string[]{DayOfWeek.Tuesday.ToString (), DayOfWeek.Wednesday.ToString (), DayOfWeek.Thursday.ToString ()};
+			dateCount.Days = new List<string> (days);
+			Assert.AreEqual (licdUrls, dateCount.Get (0, 7));				
 		}
 		
 		[Test()]

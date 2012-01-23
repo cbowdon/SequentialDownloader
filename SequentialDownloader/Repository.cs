@@ -12,6 +12,7 @@ namespace ImageScraperLib
 	{
 		#region Events
 		public event EventHandler MultipleDownloadsCompleted;
+		public event EventHandler DownloadStarted;
 		public event EventHandler DownloadsCancelled;
 
 		private AutoResetEvent auto = new AutoResetEvent (false);
@@ -46,18 +47,25 @@ namespace ImageScraperLib
 			Directory.CreateDirectory (fullLoc);
 			this.Location = Path.GetFullPath (fullLoc);
 			this.Files = new ConcurrentDictionary<string, string> ();
+			DownloadStarted += HandleDownloadStarted;
+		}
+
+		void HandleDownloadStarted (object sender, EventArgs e)
+		{
+			var url = sender as string;
+			CurrentlyDownloadingUrl = url;
 		}
 		#endregion
 		
 		#region Download
 		public void Download (string url)
 		{
+			// declare current download
+			DownloadStarted.Invoke ((object)url, new EventArgs ());
 			// create filename			
 			string fileName = (Files.Count + 1).ToString ().PadLeft (5, '0') + Path.GetExtension (url);
 			// add to dictionary
 			Files.TryAdd (url, Path.Combine (Location, fileName));
-			// declare current download
-			CurrentlyDownloadingUrl = url;
 			// download (async so we can tap into the progress meter)
 			DownloadFileAsync (new Uri (url), Path.Combine (Location, fileName));					
 		}

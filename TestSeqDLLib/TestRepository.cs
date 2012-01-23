@@ -30,7 +30,15 @@ namespace TestSeqDLLib
 			repo.DownloadFileCompleted += delegate(object sender, AsyncCompletedEventArgs e) {
 				auto.Set ();
 			};
+			
+			bool downloadStartedEvent = false;
+			repo.DownloadStarted += delegate(object sender, EventArgs e) {
+				downloadStartedEvent = true;
+			};
+			
 			repo.Download (imgUrl);
+			
+			Assert.IsTrue(downloadStartedEvent);
 			
 			// check on Files dict
 			Assert.AreEqual (1, repo.Files.Count, "Only one entry in Files");												

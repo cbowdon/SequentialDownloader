@@ -18,6 +18,9 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
+		if (model.Active) {
+			model.CancelTask ();
+		}
 		Application.Quit ();
 		a.RetVal = true;
 	}
@@ -46,20 +49,9 @@ public partial class MainWindow: Gtk.Window
 		
 		if (!model.Active) {
 			
-			var chooser = new FileChooserDialog ("Saves as...", 
-		                                     this, 
-		                                     FileChooserAction.Save, 
-		                                     Stock.Save, 
-		                                     ResponseType.Ok, 
-		                                     Stock.Cancel, 
-		                                     ResponseType.Cancel);
-		
-			// present dialog
-			if (chooser.Run () == (int)ResponseType.Ok) {			
+			if (SaveDialog (out outputFileName)) {
 				
-				outputFileName = chooser.Filename;
 				ScrapeButton.Label = "Cancel";
-				chooser.Destroy ();
 				
 				// validate and run
 				if (model.ValidateInputs (inputUrl, outputFileName, number)) {
@@ -70,31 +62,19 @@ public partial class MainWindow: Gtk.Window
 					model.TaskCancelled += OnTaskCancelled;
 					
 					OverallProgressBar.Fraction = 0;
-					
+
 					thread.Start ();					
-					
-				} else {
-					// handle this properly in future
-					chooser.Destroy ();
-				}
+					IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
+				} 
 				
 			} else {
 				
-				ScrapeButton.Label = "Scrape Images";
-				chooser.Destroy ();
 				return;
 			}
 			
 		} else {
 						
-			AutoResetEvent auto = new AutoResetEvent (false);
-			
-			model.TaskCancelled += delegate(object snd, EventArgs evt) {
-				auto.Set ();
-			};
-			
 			model.CancelTask ();
-			auto.WaitOne ();				
 			
 			if (thread.IsAlive) {
 				thread.Join ();
@@ -151,6 +131,46 @@ public partial class MainWindow: Gtk.Window
 		OverallProgressBar.Fraction = 0;
 		OverallProgressLabel.Text = "Overall Progress";
 		ScrapeButton.Label = "Scrape Images";
+	}
+	
+	protected bool SaveDialog (out string outputFileName)
+	{
+		var chooser = new FileChooserDialog ("Saves as...", 
+		                                     this, 
+		                                     FileChooserAction.Save, 
+		                                     Stock.Save, 
+		                                     ResponseType.Ok, 
+		                                     Stock.Cancel, 
+		                                     ResponseType.Cancel);
+		
+		// present dialog
+		var ans = chooser.Run () == (int)ResponseType.Ok;				
+		var temp = chooser.Filename;
+		chooser.Destroy ();
+		
+		if (!CanWriteFile (temp)) {
+			return SaveDialog (out outputFileName);
+		}
+		
+		outputFileName = temp;
+		return ans;
+	}
+	
+	protected bool CanWriteFile (string fileName)
+	{
+		if (File.Exists (fileName)) {
+			var md = new MessageDialog (this, 
+			                            DialogFlags.DestroyWithParent, 
+			                            MessageType.Question, 
+			                            ButtonsType.YesNo, 
+			                            "File already exists! Do you want to over-write it?");
+			var result = (ResponseType)md.Run ();
+			var ans = result == ResponseType.Yes;
+			md.Destroy ();
+			return ans;
+		} else {
+			return true;
+		}
 	}
 	
 	

@@ -62,6 +62,7 @@ namespace ImageScraper
 		#region Constructors
 		public ModelController ()
 		{
+			Status = "Determining image source";
 		}
 		#endregion
 		
@@ -87,11 +88,24 @@ namespace ImageScraper
 
 		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload)
 		{
-			this.InputUrl = inputUrl;
+			this.InputUrl = ParseInputUrl (inputUrl);
+			Console.WriteLine (InputUrl);
 			this.OutputFileName = outputFileName;
 			this.NumberToDownload = numberToDownload;
 			this.readyToGo = true;
 			return true;
+		}
+		
+		private string ParseInputUrl (string inputUrl)
+		{
+			var scheme = "http://";
+			if (inputUrl.Substring (0, 7) != scheme &&
+			    inputUrl.Substring (0, 7) != "ftp://" &&
+			    inputUrl.Substring (0, 7) != "https://") {
+				return String.Format ("{0}{1}", scheme, inputUrl);
+			} else {
+				return inputUrl;	
+			}				
 		}
 		#endregion
 		
@@ -127,9 +141,16 @@ namespace ImageScraper
 			
 			Active = true;
 			
+			Status = "Determining image source";
+			
 			var urlGen = SetupTask ();
 			
 			var urls = urlGen.Get (0, NumberToDownload);
+			
+			foreach (var x in urls) {			
+				Console.WriteLine (x);
+			}
+			
 			
 			using (repo = new Repository ()) {
 				
@@ -153,16 +174,29 @@ namespace ImageScraper
 		
 		public void CancelTask ()
 		{
-			if (repo.Active) {
-				repo.CancelDownloads ();
-				Active = false;				
-				Status = "Task cancelled";
-				try {
-					TaskCancelled.Invoke (this, new EventArgs ());					
-				} catch (NullReferenceException) {
-					// no handler was added
-				} 
-			}			
+			try {
+				if (repo.Active) {
+					repo.CancelDownloads ();
+					Active = false;				
+					Status = "Task cancelled";
+					ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
+					try {
+						TaskCancelled.Invoke (this, new EventArgs ());					
+					} catch (NullReferenceException) {
+						// no handler was added
+					} 
+				}	
+			} catch (Exception ex) {
+				Console.WriteLine (ex.Message);
+			}
+			
+			Active = false;				
+			Status = "Task cancelled";
+			try {
+				TaskCancelled.Invoke (this, new EventArgs ());					
+			} catch (NullReferenceException) {
+				// no handler was added
+			} 
 		}
 		
 		#region EventHandlers

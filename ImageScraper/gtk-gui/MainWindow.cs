@@ -46,7 +46,7 @@ public partial class MainWindow
 		this.alignment3.BottomPadding = ((uint)(10));
 		// Container child alignment3.Gtk.Container+ContainerChild
 		this.UrlEntryLabel = new global::Gtk.Label ();
-		this.UrlEntryLabel.WidthRequest = 100;
+		this.UrlEntryLabel.WidthRequest = 200;
 		this.UrlEntryLabel.Name = "UrlEntryLabel";
 		this.UrlEntryLabel.Xalign = 0F;
 		this.UrlEntryLabel.Yalign = 1F;
@@ -169,6 +169,7 @@ public partial class MainWindow
 		this.alignment11.RightPadding = ((uint)(10));
 		// Container child alignment11.Gtk.Container+ContainerChild
 		this.IndividualProgressLabel = new global::Gtk.Label ();
+		this.IndividualProgressLabel.WidthRequest = 600;
 		this.IndividualProgressLabel.Name = "IndividualProgressLabel";
 		this.IndividualProgressLabel.Xalign = 0F;
 		this.IndividualProgressLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Individual Progress");
@@ -228,7 +229,7 @@ public partial class MainWindow
 		if ((this.Child != null)) {
 			this.Child.ShowAll ();
 		}
-		this.DefaultWidth = 564;
+		this.DefaultWidth = 620;
 		this.DefaultHeight = 256;
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);

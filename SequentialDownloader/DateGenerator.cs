@@ -57,11 +57,12 @@ namespace ImageScraperLib
 		#endregion
 		
 		#region Days
+		bool _daysSet = false;
 		List<string> _days = null;
 
 		public List<string> Days { 
 			get {
-				if (_days == null) {
+				if (!_daysSet) {
 					_days = new List<string> ();
 					var urls = Generate (14, 0, -1);
 					var hits = urls.Select<string,bool> (x => WebUtils.UrlExists (x)).ToList ();
@@ -73,10 +74,12 @@ namespace ImageScraperLib
 							}								
 						} 
 					}
+					_daysSet = true;
 				}
 				return _days;
 			} 
 			set {
+				_daysSet = true;
 				_days = value;
 			} 
 		}
@@ -144,9 +147,9 @@ namespace ImageScraperLib
 		{
 			var urls = new List<string> ();
 			int i = offset;
-			while (urls.Count < number) {								
+			while (urls.Count < number) {
 				var d = Date.AddDays (i);
-				if (days.Contains (d.DayOfWeek.ToString ())) {			
+				if (days.Contains (d.DayOfWeek.ToString ()) || !_daysSet) {			
 					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
 				}
 				i++;
@@ -166,7 +169,7 @@ namespace ImageScraperLib
 			int i = startIndex;
 			while (urls.Count < number) {
 				var d = Date.AddDays (i);
-				if (days.Contains (d.DayOfWeek.ToString ())) {			
+				if (days.Contains (d.DayOfWeek.ToString ()) || !_daysSet) {			
 					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
 				}
 				i += increment;

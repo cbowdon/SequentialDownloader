@@ -8,7 +8,7 @@
     <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <widget-library name="../bin/Debug/ImageScraper.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="564 256">
+  <widget class="Gtk.Window" id="MainWindow" design-size="620 256">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Image Scraper</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -29,7 +29,7 @@
             <child>
               <widget class="Gtk.Label" id="UrlEntryLabel">
                 <property name="MemberName" />
-                <property name="WidthRequest">100</property>
+                <property name="WidthRequest">200</property>
                 <property name="Xalign">0</property>
                 <property name="Yalign">1</property>
                 <property name="LabelProp" translatable="yes">Input an URL to scrape. (Hint: if scraping webcomics, choose the URL of comic #1.)</property>
@@ -204,6 +204,7 @@
             <child>
               <widget class="Gtk.Label" id="IndividualProgressLabel">
                 <property name="MemberName" />
+                <property name="WidthRequest">600</property>
                 <property name="Xalign">0</property>
                 <property name="LabelProp" translatable="yes">Individual Progress</property>
               </widget>

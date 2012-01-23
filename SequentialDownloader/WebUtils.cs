@@ -44,11 +44,11 @@ namespace ImageScraperLib
 			
 			var errorString = String.Format ("GetSourceCode({0}): time-out exception", url);
 			
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 10; i++) {
 				try {
 					return getSource (url);
-				} catch {
-					continue;
+				} catch (TimeoutException) {
+					continue;						
 				}
 			}
 			
@@ -116,7 +116,7 @@ namespace ImageScraperLib
 				if (isAbsoluteUri (x)) {
 					fullAns.Add (x);
 				} else {
-					fullAns.Add (String.Format ("{0}{1}", originalUrl.GetLeftPart(UriPartial.Authority), x));					
+					fullAns.Add (String.Format ("{0}{1}", originalUrl.GetLeftPart (UriPartial.Authority), x));					
 				}
 			}
 			

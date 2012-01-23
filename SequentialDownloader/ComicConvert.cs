@@ -9,7 +9,7 @@ namespace ImageScraperLib
 {
 	public class ComicConvert
 	{
-		public static bool CbzToImgs (string cbz, string dir)
+		public static bool CbzToImgs (string cbz)
 		{			
 			var dirName = Path.GetFileNameWithoutExtension (cbz);
 			var unpackDirectory = Path.GetFullPath (dirName);
@@ -105,6 +105,11 @@ namespace ImageScraperLib
 					byte[] buffer = new byte[4096];
 				
 					foreach (string file in imgFiles) {
+						
+						var info = new FileInfo(file);
+						if (info.Length == 0) {
+							continue;
+						}
 						
 						// Using GetFileName makes the result compatible with XP
 						// as the resulting path is not absolute.
