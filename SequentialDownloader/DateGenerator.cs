@@ -63,17 +63,7 @@ namespace ImageScraperLib
 		public List<string> Days { 
 			get {
 				if (!_daysSet) {
-					_days = new List<string> ();
-					var urls = Generate (14, 0, -1);
-					var hits = urls.Select<string,bool> (x => WebUtils.UrlExists (x)).ToList ();
-					for (int i = 0; i < urls.Count(); i++) {
-						if (hits [i]) {
-							var d = Date.AddDays (1 - i).DayOfWeek.ToString ();							
-							if (!_days.Contains (d)) {
-								_days.Add (d);
-							}								
-						} 
-					}
+					_days = DateGenerator.EveryDay;
 					_daysSet = true;
 				}
 				return _days;
@@ -110,6 +100,22 @@ namespace ImageScraperLib
 		#endregion
 		
 		#region Methods
+		private List<string> FindDays ()
+		{
+			var days = new List<string> ();
+			var urls = Generate (14, 0, -1);
+			var hits = urls.Select<string,bool> (x => WebUtils.UrlExists (x)).ToList ();
+			for (int i = 0; i < urls.Count(); i++) {
+				if (hits [i]) {
+					var d = Date.AddDays (1 - i).DayOfWeek.ToString ();							
+					if (!days.Contains (d)) {
+						days.Add (d);
+					}								
+				} 
+			}
+			return days;
+		}
+		
 		public static DateTime FindFormat (string date, out string format)
 		{
 			return FindFormat (new string[]{date}, out format);
@@ -149,7 +155,7 @@ namespace ImageScraperLib
 			int i = offset;
 			while (urls.Count < number) {
 				var d = Date.AddDays (i);
-				if (days.Contains (d.DayOfWeek.ToString ()) || !_daysSet) {			
+				if (days.Contains (d.DayOfWeek.ToString ())) {			
 					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
 				}
 				i++;
@@ -169,7 +175,7 @@ namespace ImageScraperLib
 			int i = startIndex;
 			while (urls.Count < number) {
 				var d = Date.AddDays (i);
-				if (days.Contains (d.DayOfWeek.ToString ()) || !_daysSet) {			
+				if (days.Contains (d.DayOfWeek.ToString ())) {			
 					urls.Add (String.Format (Comic.Base, d.ToString (Format)));
 				}
 				i += increment;

@@ -147,11 +147,6 @@ namespace ImageScraper
 			
 			var urls = urlGen.Get (0, NumberToDownload);
 			
-			foreach (var x in urls) {			
-				Console.WriteLine (x);
-			}
-			
-			
 			using (repo = new Repository ()) {
 				
 				// pass on the events
