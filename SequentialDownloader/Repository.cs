@@ -61,6 +61,7 @@ namespace ImageScraperLib
 		public void Download (string url)
 		{
 			// declare current download
+			
 			DownloadStarted.Invoke ((object)url, new EventArgs ());
 			// create filename			
 			string fileName = (Files.Count + 1).ToString ().PadLeft (5, '0') + Path.GetExtension (url);
@@ -84,8 +85,8 @@ namespace ImageScraperLib
 				// check we are still a going concern
 				if (Active) {
 					Download (url);
-					// block until download finished (turning async into sync)
-					auto.WaitOne ();
+					// block until download finished/5 mins (turning async into sync)
+					auto.WaitOne (300000);
 				} else {
 					// fire cancelled event
 					try {
@@ -99,7 +100,11 @@ namespace ImageScraperLib
 			}			
 			
 			// all done, invoke event
-			MultipleDownloadsCompleted.Invoke (this, new EventArgs ());
+			try {
+				MultipleDownloadsCompleted.Invoke (this, new EventArgs ());	
+			} catch (NullReferenceException) {
+				// no handlers were added
+			}
 			
 			// turn off the sign
 			Active = false;

@@ -163,8 +163,9 @@ namespace ImageScraper
 				repo.Download (urls);// DownloadAndAdd is not used because of Zip64 issues
 				// repo.Active is set and unset automatically			
 				
-				Status = String.Format ("Downloading {0}", repo.CurrentlyDownloadingUrl);
+				Console.WriteLine ("post repo.Download");
 			}
+			Console.WriteLine ("post repo");
 		}
 		
 		public void CancelTask ()
@@ -197,6 +198,7 @@ namespace ImageScraper
 		#region EventHandlers
 		public void OnMultipleDownloadsCompleted (object sender, EventArgs e)
 		{					
+			Console.WriteLine ("onMultipleDownloadsCompleted");
 			ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
 			Active = false;
 			Status = "Finished";
@@ -210,6 +212,7 @@ namespace ImageScraper
 		public void OnSingleDownloadCompleted (object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
 			NumberDownloaded += 1;
+			Console.WriteLine ("{0} download", NumberDownloaded);
 			// update status, don't contradict MultipleDownloadsCompleted
 			if (NumberDownloaded != NumberToDownload) {
 				Status = String.Format ("Downloading {0}", repo.CurrentlyDownloadingUrl);
