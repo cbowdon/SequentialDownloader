@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Threading;
+using System.IO;
 using ImageScraperLib;
 
 namespace ImageScraper
@@ -89,8 +90,8 @@ namespace ImageScraper
 		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload)
 		{
 			this.InputUrl = ParseInputUrl (inputUrl);
-			Console.WriteLine (InputUrl);
-			this.OutputFileName = outputFileName;
+			this.OutputFileName = ParseOutputFileName (outputFileName);
+			Console.WriteLine (OutputFileName);
 			this.NumberToDownload = numberToDownload;
 			this.readyToGo = true;
 			return true;
@@ -106,6 +107,33 @@ namespace ImageScraper
 			} else {
 				return inputUrl;	
 			}				
+		}
+		
+		private string ParseOutputFileName (string outputFileName)
+		{
+			string outputFilePath;
+			if (Path.GetExtension (outputFileName) == string.Empty) {
+				outputFilePath = String.Format ("{0}.cbz", outputFileName);
+			} else {
+				outputFilePath = outputFileName;
+			}
+			if (File.Exists (outputFilePath)) {
+				var name = Path.GetFileNameWithoutExtension (outputFilePath);
+				var ext = Path.GetExtension (outputFilePath);
+				int i = 1;
+				while (i < 10000) {
+					var newName = String.Format ("{0} ({1}){2}", name, i, ext);
+					if (!File.Exists (newName)) {
+						return newName;
+					} else {
+						i++;
+					}
+				}
+				throw new IOException (String.Format ("Can't find a filename like {0} that isn't taken!", outputFilePath));
+				
+			} else {
+				return outputFilePath;
+			}
 		}
 		#endregion
 		
@@ -162,10 +190,7 @@ namespace ImageScraper
 				// begin (blocks)			
 				repo.Download (urls);// DownloadAndAdd is not used because of Zip64 issues
 				// repo.Active is set and unset automatically			
-				
-				Console.WriteLine ("post repo.Download");
 			}
-			Console.WriteLine ("post repo");
 		}
 		
 		public void CancelTask ()
@@ -198,7 +223,6 @@ namespace ImageScraper
 		#region EventHandlers
 		public void OnMultipleDownloadsCompleted (object sender, EventArgs e)
 		{					
-			Console.WriteLine ("onMultipleDownloadsCompleted");
 			ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
 			Active = false;
 			Status = "Finished";
@@ -212,7 +236,6 @@ namespace ImageScraper
 		public void OnSingleDownloadCompleted (object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
 			NumberDownloaded += 1;
-			Console.WriteLine ("{0} download", NumberDownloaded);
 			// update status, don't contradict MultipleDownloadsCompleted
 			if (NumberDownloaded != NumberToDownload) {
 				Status = String.Format ("Downloading {0}", repo.CurrentlyDownloadingUrl);

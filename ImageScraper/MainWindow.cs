@@ -15,7 +15,6 @@ public partial class MainWindow: Gtk.Window
 	{
 		Build ();
 		this.model = model;
-//		this.thread = new Thread (this.model.RunTask);
 	}
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -91,6 +90,7 @@ public partial class MainWindow: Gtk.Window
 			OverallProgressBar.Fraction = 1.0;
 			OverallProgressLabel.Text = String.Format ("{0}: 100%", overallProgress);
 			ScrapeButton.Label = "Scrape Images";			
+			FinishedAlert ();
 		});		
 	}
 	
@@ -151,33 +151,41 @@ public partial class MainWindow: Gtk.Window
 		                                     ResponseType.Cancel);
 		
 		// present dialog
+		chooser.DoOverwriteConfirmation = true;
 		var ans = chooser.Run () == (int)ResponseType.Ok;				
 		var temp = chooser.Filename;
 		chooser.Destroy ();
-		
-		if (!CanWriteFile (temp)) {
-			return SaveDialog (out outputFileName);
-		}
 		
 		outputFileName = temp;
 		return ans;
 	}
 	
-	protected bool CanWriteFile (string fileName)
+//	protected bool CanWriteFile (string fileName)
+//	{
+//		if (File.Exists (fileName)) {
+//			var md = new MessageDialog (this, 
+//			                            DialogFlags.DestroyWithParent, 
+//			                            MessageType.Question, 
+//			                            ButtonsType.YesNo, 
+//			                            "File already exists! Do you want to over-write it?");
+//			var result = (ResponseType)md.Run ();
+//			var ans = result == ResponseType.Yes;
+//			md.Destroy ();
+//			return ans;
+//		} else {
+//			return true;
+//		}
+//	}
+	
+	protected void FinishedAlert ()
 	{
-		if (File.Exists (fileName)) {
-			var md = new MessageDialog (this, 
-			                            DialogFlags.DestroyWithParent, 
-			                            MessageType.Question, 
-			                            ButtonsType.YesNo, 
-			                            "File already exists! Do you want to over-write it?");
-			var result = (ResponseType)md.Run ();
-			var ans = result == ResponseType.Yes;
-			md.Destroy ();
-			return ans;
-		} else {
-			return true;
-		}
+		var md = new MessageDialog (this,
+		                           DialogFlags.DestroyWithParent,
+		                           MessageType.Info,
+		                           ButtonsType.Ok,
+		                           "Scraping finished!");
+		md.Run ();
+		md.Destroy ();
 	}
 	
 	
