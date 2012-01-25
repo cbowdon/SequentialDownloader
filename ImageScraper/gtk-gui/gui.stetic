@@ -32,7 +32,7 @@
                 <property name="WidthRequest">200</property>
                 <property name="Xalign">0</property>
                 <property name="Yalign">1</property>
-                <property name="LabelProp" translatable="yes">Input an URL to scrape. (Hint: if scraping webcomics, choose the URL of comic #1.)</property>
+                <property name="LabelProp" translatable="yes">Input an URL to scrape (e.g. if scraping webcomics, choose the URL of comic #1).</property>
               </widget>
             </child>
           </widget>
@@ -89,7 +89,8 @@
                       <widget class="Gtk.SpinButton" id="NumberButton">
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
-                        <property name="Upper">100</property>
+                        <property name="Lower">1</property>
+                        <property name="Upper">99999</property>
                         <property name="PageIncrement">10</property>
                         <property name="StepIncrement">1</property>
                         <property name="ClimbRate">1</property>

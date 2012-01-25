@@ -19,11 +19,13 @@ public partial class MainWindow: Gtk.Window
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
-		if (model.Active) {
-			model.CancelTask ();
-		}
-		Application.Quit ();
-		a.RetVal = true;
+		Application.Invoke (delegate {
+			if (model.Active) {
+				model.CancelTask ();
+			}
+			Application.Quit ();
+			a.RetVal = true;	
+		});		
 	}
 	
 	protected void OnInputUrlChanged (object sender, System.EventArgs e)
@@ -52,8 +54,6 @@ public partial class MainWindow: Gtk.Window
 			
 			if (SaveDialog (out outputFileName)) {
 				
-				ScrapeButton.Label = "Cancel";
-				
 				// validate and run
 				bool valid = false;
 				try {
@@ -63,26 +63,32 @@ public partial class MainWindow: Gtk.Window
 				}
 				if (valid) {
 										
+					model.TaskStarted += OnTaskStarted;
+					model.TaskCancelled += OnTaskCancelled;
 					model.TaskCompleted += OnTaskCompleted;
 					model.FileProgress += OnIndividualProgressUpdate;
 					model.FileDownloaded += OnOverallProgressUpdate;
-					model.TaskCancelled += OnTaskCancelled;
-					
+										
 					OverallProgressBar.Fraction = 0;
 			
-					thread.Start ();					
-					IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
+					thread.Start ();
 				} 
 				
-			} else {
-				
+			} else {				
 				return;
 			}
 			
-		} else {
-						
+		} else {						
 			model.CancelTask ();
 		}
+	}
+	
+	protected void OnTaskStarted (object sender, EventArgs e)
+	{
+		Application.Invoke (delegate {
+			IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
+			ScrapeButton.Label = "Cancel";
+		});
 	}
 
 	protected void OnTaskCompleted (object sender, EventArgs e)

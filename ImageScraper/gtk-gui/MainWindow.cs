@@ -50,7 +50,7 @@ public partial class MainWindow
 		this.UrlEntryLabel.Name = "UrlEntryLabel";
 		this.UrlEntryLabel.Xalign = 0F;
 		this.UrlEntryLabel.Yalign = 1F;
-		this.UrlEntryLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Input an URL to scrape. (Hint: if scraping webcomics, choose the URL of comic #1.)");
+		this.UrlEntryLabel.LabelProp = global::Mono.Unix.Catalog.GetString ("Input an URL to scrape (e.g. if scraping webcomics, choose the URL of comic #1).");
 		this.alignment3.Add (this.UrlEntryLabel);
 		this.vbox1.Add (this.alignment3);
 		global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.alignment3]));
@@ -94,7 +94,7 @@ public partial class MainWindow
 		this.alignment5.RightPadding = ((uint)(10));
 		this.alignment5.BottomPadding = ((uint)(10));
 		// Container child alignment5.Gtk.Container+ContainerChild
-		this.NumberButton = new global::Gtk.SpinButton (0, 100, 1);
+		this.NumberButton = new global::Gtk.SpinButton (1, 99999, 1);
 		this.NumberButton.CanFocus = true;
 		this.NumberButton.Name = "NumberButton";
 		this.NumberButton.Adjustment.PageIncrement = 10;

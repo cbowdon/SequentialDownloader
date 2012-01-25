@@ -47,8 +47,14 @@ namespace ImageScraperLib
 			for (int i = 0; i < 10; i++) {
 				try {
 					return getSource (url);
-				} catch (TimeoutException) {
-					continue;						
+				} catch (Exception ex) {
+					if (ex is TimeoutException ||
+					    ex is WebException) {
+						continue;							
+					} else {
+						throw;
+					}
+					
 				}
 			}
 			

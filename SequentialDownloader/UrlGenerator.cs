@@ -84,6 +84,7 @@ namespace ImageScraperLib
 			
 			// else choose the remaining item that shows MOST similarity to same item on next list			
 			var scores = possibleIndices.Select<int, double> (p => WebUtils.CompareUrls (imgUrls [0] [p], imgUrls [1] [p])).ToList ();
+			// error here?
 			var topIndex = scores.IndexOf (scores.Max ());
 			
 			imgUrl = pageImgs [0] [topIndex];

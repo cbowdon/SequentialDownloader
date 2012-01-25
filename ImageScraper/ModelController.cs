@@ -10,6 +10,7 @@ namespace ImageScraper
 {
 	public class ModelController
 	{			
+		public event EventHandler TaskStarted;
 		public event EventHandler TaskCompleted;
 		public event EventHandler TaskCancelled;
 		public event AsyncCompletedEventHandler FileDownloaded;
@@ -91,10 +92,13 @@ namespace ImageScraper
 		{
 			this.InputUrl = ParseInputUrl (inputUrl);
 			if ((new ComicUri (InputUrl)).Indices.Length != 1) {
-				throw new ArgumentException ("Cannot parse this input url!");
+				throw new ArgumentException ("Invalid input URL: could not find the index.");
 			}
 			this.OutputFileName = ParseOutputFileName (outputFileName);
 			this.NumberToDownload = numberToDownload;
+			if (NumberToDownload < 0) {
+				throw new ArgumentException("Invalid number to download: cannot download < 1 files.");
+			}
 			this.readyToGo = true;
 			return true;				
 		}
@@ -167,6 +171,12 @@ namespace ImageScraper
 		{
 			if (!readyToGo) {
 				throw new ArgumentException ("Not ready to go!");
+			} else {
+				try {
+					TaskStarted.Invoke(this, new EventArgs());
+				} catch (NullReferenceException) {
+					// no handler was added
+				}
 			}
 			
 			Active = true;
