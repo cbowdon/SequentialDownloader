@@ -95,7 +95,7 @@ namespace ScraperLib
 				fileName = cbz + ".zip";
 			}
 			
-			Console.WriteLine ("{0}\t{1}", dir, fileName);
+//			Console.WriteLine ("{0}\t{1}", dir, fileName);
 			
 			var imgFiles = Directory.GetFiles (Path.GetFullPath (dir));			
 			
