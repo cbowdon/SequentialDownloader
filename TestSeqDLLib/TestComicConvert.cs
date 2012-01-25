@@ -7,7 +7,7 @@ using ScraperLib;
 
 using NUnit.Framework;
 
-namespace TestSeqDLLib
+namespace TestScraperLibLib
 {
 	[TestFixture()]
 	public class TestComicConvert

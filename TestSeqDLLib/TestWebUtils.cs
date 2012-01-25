@@ -4,7 +4,7 @@ using System.Linq;
 using ScraperLib;
 using NUnit.Framework;
 
-namespace TestSeqDLLib
+namespace TestScraperLibLib
 {
 	[TestFixture()]
 	public class TestWebUtils

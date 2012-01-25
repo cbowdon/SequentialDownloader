@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScraperLib", "SequentialDownloader\ScraperLib.csproj", "{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSeqDLLib", "TestSeqDLLib\TestSeqDLLib.csproj", "{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestScraperLib", "TestSeqDLLib\TestScraperLib.csproj", "{DA567C9D-9D2B-4CC0-8B1A-52A18C92E731}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scraper", "ImageScraper\Scraper.csproj", "{CA72DCFB-4B72-49B1-987B-6D9893D548B0}"
 EndProject
