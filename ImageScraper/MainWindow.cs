@@ -165,10 +165,10 @@ public partial class MainWindow: Gtk.Window
 		
 		// present dialog
 		chooser.DoOverwriteConfirmation = true;
+		chooser.ShowHidden = false;
 		var ans = chooser.Run () == (int)ResponseType.Ok;				
-		var temp = chooser.Filename;
+		var temp = chooser.Filename;		
 		chooser.Destroy ();
-		
 		outputFileName = temp;
 		return ans;
 	}

@@ -97,7 +97,7 @@ namespace Scraper
 			this.OutputFileName = ParseOutputFileName (outputFileName);
 			this.NumberToDownload = numberToDownload;
 			if (NumberToDownload < 0) {
-				throw new ArgumentException("Invalid number to download: cannot download < 1 files.");
+				throw new ArgumentException ("Invalid number to download: cannot download < 1 files.");
 			}
 			this.readyToGo = true;
 			return true;				
@@ -109,7 +109,7 @@ namespace Scraper
 			if (inputUrl.Substring (0, 7) != scheme &&
 			    inputUrl.Substring (0, 6) != "ftp://" &&
 			    inputUrl.Substring (0, 8) != "https://" &&
-			    inputUrl.Substring(0,7) != "file://") {
+			    inputUrl.Substring (0, 7) != "file://") {
 				return String.Format ("{0}{1}", scheme, inputUrl);
 			} else {
 				return inputUrl;	
@@ -120,16 +120,17 @@ namespace Scraper
 		{
 			string outputFilePath;
 			if (Path.GetExtension (outputFileName) == string.Empty) {
-				outputFilePath = String.Format ("{0}.zip", outputFileName);
+				outputFilePath = String.Format ("{0}.zip", Path.GetFullPath (outputFileName));
 			} else {
-				outputFilePath = outputFileName;
+				outputFilePath = Path.GetFullPath (outputFileName);
 			}
 			if (File.Exists (outputFilePath)) {
+				var dir = Path.GetDirectoryName (outputFilePath);
 				var name = Path.GetFileNameWithoutExtension (outputFilePath);
 				var ext = Path.GetExtension (outputFilePath);
 				int i = 1;
 				while (i < 10000) {
-					var newName = String.Format ("{0} ({1}){2}", name, i, ext);
+					var newName = Path.GetFullPath(String.Format ("{0} ({1}){2}", Path.Combine (dir, name), i, ext));
 					if (!File.Exists (newName)) {
 						return newName;
 					} else {
@@ -174,7 +175,7 @@ namespace Scraper
 				throw new ArgumentException ("Not ready to go!");
 			} else {
 				try {
-					TaskStarted.Invoke(this, new EventArgs());
+					TaskStarted.Invoke (this, new EventArgs ());
 				} catch (NullReferenceException) {
 					// no handler was added
 				}
@@ -201,7 +202,7 @@ namespace Scraper
 				NumberDownloaded = 0;
 								
 				// begin (blocks)			
-				repo.Download (urls);// DownloadAndAdd is not used because of Zip64 issues
+				repo.Download (urls);
 				// repo.Active is set and unset automatically			
 			}
 		}
@@ -253,7 +254,7 @@ namespace Scraper
 			if (NumberDownloaded != NumberToDownload) {
 				Status = String.Format ("Downloading {0}", repo.CurrentlyDownloadingUrl);
 			}
-			// caching behaviour
+			// efficient dumping behaviour
 			if (NumberDownloaded % 10 == 0) {
 				ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
 			}

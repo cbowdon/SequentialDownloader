@@ -73,7 +73,7 @@ namespace ScraperLib
 				}
 
 				using (zipFile) {
-					zipFile.UseZip64 = UseZip64.On;
+					zipFile.UseZip64 = UseZip64.Off;
 					zipFile.BeginUpdate ();
 					zipFile.Add (Path.GetFullPath (fileName));
 					zipFile.CommitUpdate ();
@@ -95,18 +95,23 @@ namespace ScraperLib
 				fileName = cbz + ".zip";
 			}
 			
-			var imgFiles = Directory.GetFiles (Path.GetFullPath (dir));
+			Console.WriteLine ("{0}\t{1}", dir, fileName);
+			
+			var imgFiles = Directory.GetFiles (Path.GetFullPath (dir));			
 			
 			try {
 				using (ZipOutputStream s = new ZipOutputStream(File.Create(fileName))) {
 			
+					s.UseZip64 = UseZip64.Off;
+					
 					s.SetLevel (9); // 0 - store only to 9 - means best compression
 		
+					
 					byte[] buffer = new byte[4096];
 				
 					foreach (string file in imgFiles) {
 						
-						var info = new FileInfo(file);
+						var info = new FileInfo (file);
 						if (info.Length == 0) {
 							continue;
 						}
@@ -136,6 +141,7 @@ namespace ScraperLib
 						}
 					}
 				}
+
 				return true;
 			} catch {
 				return false;
