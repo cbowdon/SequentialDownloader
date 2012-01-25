@@ -18,17 +18,15 @@ public partial class MainWindow: Gtk.Window
 	}
 	
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
-	{
+	{		
 		Application.Invoke (delegate {
 			if (model.Active) {
-				model.CancelTask ();
-			}
-			if (thread.IsAlive) {
-				thread.Abort ();
-			}
+				model.CancelTask ();	
+			}			
 			Application.Quit ();
 			a.RetVal = true;	
-		});		
+		});
+		
 	}
 	
 	protected void OnInputUrlChanged (object sender, System.EventArgs e)
