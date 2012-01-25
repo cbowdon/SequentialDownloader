@@ -23,6 +23,9 @@ public partial class MainWindow: Gtk.Window
 			if (model.Active) {
 				model.CancelTask ();
 			}
+			if (thread.IsAlive) {
+				thread.Abort ();
+			}
 			Application.Quit ();
 			a.RetVal = true;	
 		});		
