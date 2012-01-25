@@ -55,7 +55,13 @@ public partial class MainWindow: Gtk.Window
 				ScrapeButton.Label = "Cancel";
 				
 				// validate and run
-				if (model.ValidateInputs (inputUrl, outputFileName, number)) {
+				bool valid = false;
+				try {
+					valid = model.ValidateInputs (inputUrl, outputFileName, number);	
+				} catch (Exception ex) {
+					ErrorAlert (ex.Message);					
+				}
+				if (valid) {
 										
 					model.TaskCompleted += OnTaskCompleted;
 					model.FileProgress += OnIndividualProgressUpdate;
@@ -116,7 +122,7 @@ public partial class MainWindow: Gtk.Window
 				OverallProgressLabel.Text = String.Format ("{0}: {1}%", overallProgress, Math.Round (100 * frac));
 		
 				// 0% individual progress
-//			IndividualProgressBar.Fraction = 0;	
+//				IndividualProgressBar.Fraction = 0;	
 			}
 		});
 	}
@@ -160,23 +166,6 @@ public partial class MainWindow: Gtk.Window
 		return ans;
 	}
 	
-//	protected bool CanWriteFile (string fileName)
-//	{
-//		if (File.Exists (fileName)) {
-//			var md = new MessageDialog (this, 
-//			                            DialogFlags.DestroyWithParent, 
-//			                            MessageType.Question, 
-//			                            ButtonsType.YesNo, 
-//			                            "File already exists! Do you want to over-write it?");
-//			var result = (ResponseType)md.Run ();
-//			var ans = result == ResponseType.Yes;
-//			md.Destroy ();
-//			return ans;
-//		} else {
-//			return true;
-//		}
-//	}
-	
 	protected void FinishedAlert ()
 	{
 		var md = new MessageDialog (this,
@@ -184,6 +173,17 @@ public partial class MainWindow: Gtk.Window
 		                           MessageType.Info,
 		                           ButtonsType.Ok,
 		                           "Scraping finished!");
+		md.Run ();
+		md.Destroy ();
+	}
+	
+	protected void ErrorAlert (string message)
+	{
+		var md = new MessageDialog (this,
+		                           DialogFlags.DestroyWithParent,
+		                           MessageType.Warning,
+		                           ButtonsType.Ok,
+		                           message);
 		md.Run ();
 		md.Destroy ();
 	}

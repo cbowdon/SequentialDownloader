@@ -90,11 +90,13 @@ namespace ImageScraper
 		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload)
 		{
 			this.InputUrl = ParseInputUrl (inputUrl);
+			if ((new ComicUri (InputUrl)).Indices.Length != 1) {
+				throw new ArgumentException ("Cannot parse this input url!");
+			}
 			this.OutputFileName = ParseOutputFileName (outputFileName);
-			Console.WriteLine (OutputFileName);
 			this.NumberToDownload = numberToDownload;
 			this.readyToGo = true;
-			return true;
+			return true;				
 		}
 		
 		private string ParseInputUrl (string inputUrl)
