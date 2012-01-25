@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	/// <summary>
 	/// Counter for dates expressed as single block number, e.g. "241087" or "19871024".

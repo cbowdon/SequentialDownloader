@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>ImageScraperLib</RootNamespace>
-    <AssemblyName>SequentialDownloader</AssemblyName>
+    <RootNamespace>ScraperLib</RootNamespace>
+    <AssemblyName>ScraperLib</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

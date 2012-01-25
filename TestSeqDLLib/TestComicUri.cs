@@ -1,5 +1,5 @@
 using System;
-using ImageScraperLib;
+using ScraperLib;
 using NUnit.Framework;
 
 namespace TestSeqDLLib
@@ -8,12 +8,17 @@ namespace TestSeqDLLib
 	public class TestComicUri
 	{
 		[Test()]
-		public void IsImageFile ()
+		public void IsRemoteFile ()
 		{
 			var smbc614 = "http://www.smbc-comics.com/index.php?db=comics&id=614";
-			Assert.IsFalse ((new ComicUri (smbc614)).IsImageFile);
+			Assert.IsFalse ((new ComicUri (smbc614)).IsRemoteFile, "smbc comic page");
+			
 			var smbc614Comic = "http://www.smbc-comics.com/comics/20061011.gif";
-			Assert.IsTrue ((new ComicUri (smbc614Comic)).IsImageFile);
+			Assert.IsTrue ((new ComicUri (smbc614Comic)).IsRemoteFile, "smbc comic");
+			
+			Assert.IsFalse ((new ComicUri ("http://www.smbc-comics.com/")).IsRemoteFile, "smbc index");
+			
+			Assert.IsFalse ((new ComicUri ("http://www.xkcd.com/")).IsRemoteFile, "xkcd index");
 		}
 		
 		#region ParameterizeUrls

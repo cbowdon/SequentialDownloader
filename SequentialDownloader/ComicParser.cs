@@ -6,7 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	public class ComicParser
 	{
@@ -39,7 +39,7 @@ namespace ImageScraperLib
 			// choose appropriate generator type
 			var urlGen = ChooseGenerator (inputUrl);			
 			
-			if (!comic.IsImageFile) {
+			if (!comic.IsRemoteFile) {
 				// find the img src URL
 				var someUrls = urlGen.GenerateSome ();
 				string srcUrl = "";

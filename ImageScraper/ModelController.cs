@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Net;
 using System.Threading;
 using System.IO;
-using ImageScraperLib;
+using ScraperLib;
 
-namespace ImageScraper
+namespace Scraper
 {
 	public class ModelController
 	{			
@@ -107,8 +107,9 @@ namespace ImageScraper
 		{
 			var scheme = "http://";
 			if (inputUrl.Substring (0, 7) != scheme &&
-			    inputUrl.Substring (0, 7) != "ftp://" &&
-			    inputUrl.Substring (0, 7) != "https://") {
+			    inputUrl.Substring (0, 6) != "ftp://" &&
+			    inputUrl.Substring (0, 8) != "https://" &&
+			    inputUrl.Substring(0,7) != "file://") {
 				return String.Format ("{0}{1}", scheme, inputUrl);
 			} else {
 				return inputUrl;	
@@ -119,7 +120,7 @@ namespace ImageScraper
 		{
 			string outputFilePath;
 			if (Path.GetExtension (outputFileName) == string.Empty) {
-				outputFilePath = String.Format ("{0}.cbz", outputFileName);
+				outputFilePath = String.Format ("{0}.zip", outputFileName);
 			} else {
 				outputFilePath = outputFileName;
 			}
@@ -155,7 +156,7 @@ namespace ImageScraper
 			}
 			
 			// if date, set days and return
-			if (urlGen.ToString () == "ImageScraperLib.DateGenerator") {
+			if (urlGen.ToString () == "ScraperLib.DateGenerator") {
 				var dateGen = (DateGenerator)urlGen;
 				if (daysSet) {
 					dateGen.Days = Days;
@@ -181,7 +182,7 @@ namespace ImageScraper
 			
 			Active = true;
 			
-			Status = "Determining image source";
+			Status = "Analyzing source";
 			
 			var urlGen = SetupTask ();
 			

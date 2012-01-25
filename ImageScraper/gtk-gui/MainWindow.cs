@@ -31,7 +31,7 @@ public partial class MainWindow
 		global::Stetic.Gui.Initialize (this);
 		// Widget MainWindow
 		this.Name = "MainWindow";
-		this.Title = global::Mono.Unix.Catalog.GetString ("Image Scraper");
+		this.Title = global::Mono.Unix.Catalog.GetString ("Scraper");
 		this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 		// Container child MainWindow.Gtk.Container+ContainerChild
 		this.vbox1 = new global::Gtk.VBox ();
@@ -142,7 +142,7 @@ public partial class MainWindow
 		this.ScrapeButton.CanFocus = true;
 		this.ScrapeButton.Name = "ScrapeButton";
 		this.ScrapeButton.UseUnderline = true;
-		this.ScrapeButton.Label = global::Mono.Unix.Catalog.GetString ("Scrape Images");
+		this.ScrapeButton.Label = global::Mono.Unix.Catalog.GetString ("Scrape");
 		this.alignment7.Add (this.ScrapeButton);
 		this.hbox1.Add (this.alignment7);
 		global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment7]));

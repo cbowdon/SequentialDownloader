@@ -7,9 +7,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CA72DCFB-4B72-49B1-987B-6D9893D548B0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ImageScraper</RootNamespace>
-    <AssemblyName>ImageScraper</AssemblyName>
-    <StartupObject>ImageScraper.MainClass</StartupObject>
+    <RootNamespace>Scraper</RootNamespace>
+    <AssemblyName>Scraper</AssemblyName>
+    <StartupObject>Scraper.MainClass</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,9 +54,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\SequentialDownloader\ImageScraperLib.csproj">
+    <ProjectReference Include="..\SequentialDownloader\ScraperLib.csproj">
       <Project>{4EDD6856-EFAE-4590-BE30-88FB8ADD12C1}</Project>
-      <Name>ImageScraperLib</Name>
+      <Name>ScraperLib</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

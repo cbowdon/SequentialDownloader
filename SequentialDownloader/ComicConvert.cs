@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	public class ComicConvert
 	{
@@ -92,7 +92,7 @@ namespace ImageScraperLib
 			if (Path.GetExtension (cbz).ToLower () == ".zip" || Path.GetExtension (cbz).ToLower () == ".cbz") {
 				fileName = cbz;
 			} else {
-				fileName = cbz + ".cbz";
+				fileName = cbz + ".zip";
 			}
 			
 			var imgFiles = Directory.GetFiles (Path.GetFullPath (dir));

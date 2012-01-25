@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	/// <summary>
 	/// Abstract base class for SequentialCount and DateCount.
@@ -18,7 +18,7 @@ namespace ImageScraperLib
 		#region IsImageFile
 		public bool IsImageFile { 
 			get {
-				return Comic.IsImageFile;
+				return Comic.IsRemoteFile;
 			}
 		}
 		#endregion

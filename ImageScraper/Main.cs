@@ -1,7 +1,7 @@
 using System;
 using Gtk;
 
-namespace ImageScraper
+namespace Scraper
 {
 	class MainClass
 	{

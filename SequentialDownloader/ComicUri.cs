@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	public class ComicUri : Uri
 	{
@@ -50,12 +50,32 @@ namespace ImageScraperLib
 		}
 		#endregion
 		
-		#region IsImageFile
-		public bool IsImageFile {
+		#region IsFile
+		public bool IsRemoteFile {
 			get {
-				var pattern = @"(.png)|(.jpg)|(.gif)|(.jpeg)|(.bmp)|(.tif)|(.tiff)";
-				var regex = new Regex (pattern, RegexOptions.IgnoreCase);
-				return regex.IsMatch (GetRightPart (UriPartial.Authority));
+				var htmlExts = @"(.html)|(.shtml)|(.cshtml)|(.aspx)|(.php)|(.dhtml)|(.ars)|(\?[a-zA-Z0-9_]+=[a-zA-Z0-9_]+)";
+				var docExts = @"(.png)|(.jpg)|(.gif)|(.jpeg)|(.bmp)|(.tif)|(.tiff)|(.doc)|(.docx)|(.xls)|(.xlsx)|(.ppt)|(.pptx)|(.txt)|(.dat)|(.zip)|(.cbz)|(.mp3)|(.mov)|(.avi)|(.mkv)|(.swf)|(.m4a)|(.m4v)|(.aac)|(.ogg)|(.wma)|(.wav)|(.mp4)|(.pdf)|(.rar)";
+				var htmlRegex = new Regex (htmlExts, RegexOptions.IgnoreCase);
+				var definiteHtml = htmlRegex.IsMatch (GetRightPart (UriPartial.Authority));
+				var docRegex = new Regex (docExts, RegexOptions.IgnoreCase);
+				var definiteDoc = docRegex.IsMatch (GetRightPart (UriPartial.Authority));
+				if (definiteHtml) {
+					return false;
+				} else if (definiteDoc) {
+					return true;
+				} else {
+					try {
+						var firstText = WebUtils.DownloadPartial (AbsoluteUri);
+						if (Regex.IsMatch (firstText.ToLower (), @"(<html)|(doctype html)")) {
+							return false;
+						} else {
+							return true;
+						}						
+					} catch {
+						return true;
+					}
+				}
+				
 			}
 		}
 		#endregion

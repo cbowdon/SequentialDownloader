@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	public class Repository : WebClient, IDisposable
 	{

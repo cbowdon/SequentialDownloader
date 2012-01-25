@@ -1,12 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
-using System.Net;
 using System.Text.RegularExpressions;
-using System.Linq;
+using System.Net;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	public static class WebUtils
 	{
@@ -230,6 +230,25 @@ namespace ImageScraperLib
 						} while(count != 0);
  
 						result = memoryStream.ToArray ();
+						return result;
+					}
+				}
+			}
+		}
+		
+		public static string DownloadPartial (string url)
+		{
+			byte[] buffer = new byte[256];
+ 
+			WebRequest wr = WebRequest.Create (url);
+ 
+			using (WebResponse response = wr.GetResponse()) {
+				using (Stream responseStream = response.GetResponseStream()) {
+					using (MemoryStream memoryStream = new MemoryStream()) {
+						int count = responseStream.Read (buffer, 0, buffer.Length);
+						memoryStream.Write (buffer, 0, count);
+						var rawBytes = memoryStream.ToArray ();												
+						var result = UTF8Encoding.UTF8.GetString (rawBytes);
 						return result;
 					}
 				}

@@ -3,7 +3,7 @@ using System.IO;
 using System.ComponentModel;
 using System.Threading;
 using Gtk;
-using ImageScraper;
+using Scraper;
 
 public partial class MainWindow: Gtk.Window
 {	
@@ -102,7 +102,7 @@ public partial class MainWindow: Gtk.Window
 			IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
 			OverallProgressBar.Fraction = 1.0;
 			OverallProgressLabel.Text = String.Format ("{0}: 100%", overallProgress);
-			ScrapeButton.Label = "Scrape Images";			
+			ScrapeButton.Label = "Scrape";			
 			FinishedAlert ();
 		});		
 	}
@@ -111,7 +111,7 @@ public partial class MainWindow: Gtk.Window
 	{	
 		Application.Invoke (delegate {
 			IndividualProgressLabel.Text = String.Format ("Individual Progress: {0}", model.Status.ToLower ());
-			ScrapeButton.Label = "Scrape Images";		
+			ScrapeButton.Label = "Scrape";		
 		});
 	}
 	
@@ -150,7 +150,7 @@ public partial class MainWindow: Gtk.Window
 		IndividualProgressLabel.Text = "Individual Progress";
 		OverallProgressBar.Fraction = 0;
 		OverallProgressLabel.Text = "Overall Progress";
-		ScrapeButton.Label = "Scrape Images";
+		ScrapeButton.Label = "Scrape";
 	}
 	
 	protected bool SaveDialog (out string outputFileName)

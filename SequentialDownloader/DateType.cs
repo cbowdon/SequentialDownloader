@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ImageScraperLib
+namespace ScraperLib
 {
 	/// <summary>
 	/// Date type.
@@ -35,7 +35,7 @@ namespace ImageScraperLib
 		
 		#region Indexer and GetEnumerator
 		/// <summary>
-		/// Gets the <see cref="ImageScraperLib.DateType"/> at the specified index.
+		/// Gets the <see cref="ScraperLib.DateType"/> at the specified index.
 		/// I essentially wanted something between an enum and a dictionary
 		/// </summary>
 		/// <param name='index'>
