@@ -58,6 +58,7 @@
                 <property name="IsEditable">True</property>
                 <property name="InvisibleChar">●</property>
                 <signal name="Changed" handler="OnInputUrlChanged" />
+                <signal name="KeyReleaseEvent" handler="OnEnter" />
               </widget>
             </child>
           </widget>
@@ -97,6 +98,8 @@
                         <property name="Numeric">True</property>
                         <property name="Value">50</property>
                         <signal name="ValueChanged" handler="OnNumberValueChanged" />
+                        <signal name="EditingDone" handler="OnEditingDone" />
+                        <signal name="KeyReleaseEvent" handler="OnEnter" />
                       </widget>
                     </child>
                   </widget>
@@ -149,12 +152,9 @@
               </packing>
             </child>
             <child>
-              <placeholder />
-            </child>
-            <child>
               <widget class="Gtk.Alignment" id="alignment7">
                 <property name="MemberName" />
-                <property name="LeftPadding">10</property>
+                <property name="LeftPadding">50</property>
                 <property name="TopPadding">10</property>
                 <property name="RightPadding">10</property>
                 <property name="BottomPadding">10</property>
@@ -167,11 +167,12 @@
                     <property name="Label" translatable="yes">Scrape</property>
                     <property name="UseUnderline">True</property>
                     <signal name="Clicked" handler="OnScrapeButtonClicked" />
+                    <signal name="KeyReleaseEvent" handler="OnEnter" />
                   </widget>
                 </child>
               </widget>
               <packing>
-                <property name="Position">2</property>
+                <property name="Position">1</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>

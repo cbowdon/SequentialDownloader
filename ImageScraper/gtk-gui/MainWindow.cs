@@ -132,7 +132,7 @@ public partial class MainWindow
 		// Container child hbox1.Gtk.Box+BoxChild
 		this.alignment7 = new global::Gtk.Alignment (0.5F, 0.5F, 1F, 1F);
 		this.alignment7.Name = "alignment7";
-		this.alignment7.LeftPadding = ((uint)(10));
+		this.alignment7.LeftPadding = ((uint)(50));
 		this.alignment7.TopPadding = ((uint)(10));
 		this.alignment7.RightPadding = ((uint)(10));
 		this.alignment7.BottomPadding = ((uint)(10));
@@ -146,7 +146,7 @@ public partial class MainWindow
 		this.alignment7.Add (this.ScrapeButton);
 		this.hbox1.Add (this.alignment7);
 		global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.alignment7]));
-		w11.Position = 2;
+		w11.Position = 1;
 		w11.Expand = false;
 		w11.Fill = false;
 		this.vbox1.Add (this.hbox1);
@@ -234,7 +234,11 @@ public partial class MainWindow
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 		this.UrlEntry.Changed += new global::System.EventHandler (this.OnInputUrlChanged);
+		this.UrlEntry.KeyReleaseEvent += new global::Gtk.KeyReleaseEventHandler (this.OnEnter);
 		this.NumberButton.ValueChanged += new global::System.EventHandler (this.OnNumberValueChanged);
+		this.NumberButton.EditingDone += new global::System.EventHandler (this.OnEditingDone);
+		this.NumberButton.KeyReleaseEvent += new global::Gtk.KeyReleaseEventHandler (this.OnEnter);
 		this.ScrapeButton.Clicked += new global::System.EventHandler (this.OnScrapeButtonClicked);
+		this.ScrapeButton.KeyReleaseEvent += new global::Gtk.KeyReleaseEventHandler (this.OnEnter);
 	}
 }

@@ -194,8 +194,27 @@ public partial class MainWindow: Gtk.Window
 		md.Run ();
 		md.Destroy ();
 	}
-	
-	
 
+	protected void OnEnter (object o, Gtk.KeyReleaseEventArgs args)
+	{
+		
+		if (args.Event.Key == Gdk.Key.KP_Enter || args.Event.Key == Gdk.Key.Return) {
+			Console.WriteLine ("onEnter");
+			if (o is Entry) {
+				NumberButton.GrabFocus ();
+			} else if (o is SpinButton) {
+				Console.WriteLine ("spinButton");
+				ScrapeButton.Click ();
+			} else {
+				Console.WriteLine ("other");
+				// do nothing
+			}
+			
+		}
+	}
 
+	protected void OnEditingDone (object sender, System.EventArgs e)
+	{
+		Console.WriteLine ("editing done");
+	}
 }
