@@ -6,7 +6,7 @@
   </configuration>
   <import>
     <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <widget-library name="../bin/Release/Scraper.exe" internal="true" />
+    <widget-library name="../bin/Debug/Scraper.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="620 256">
     <property name="MemberName" />
@@ -58,7 +58,7 @@
                 <property name="IsEditable">True</property>
                 <property name="InvisibleChar">●</property>
                 <signal name="Changed" handler="OnInputUrlChanged" />
-                <signal name="KeyReleaseEvent" handler="OnEnter" />
+                <signal name="Activated" handler="OnActivated" />
               </widget>
             </child>
           </widget>
@@ -98,8 +98,7 @@
                         <property name="Numeric">True</property>
                         <property name="Value">50</property>
                         <signal name="ValueChanged" handler="OnNumberValueChanged" />
-                        <signal name="EditingDone" handler="OnEditingDone" />
-                        <signal name="KeyReleaseEvent" handler="OnEnter" />
+                        <signal name="Activated" handler="OnActivated" />
                       </widget>
                     </child>
                   </widget>
@@ -167,7 +166,6 @@
                     <property name="Label" translatable="yes">Scrape</property>
                     <property name="UseUnderline">True</property>
                     <signal name="Clicked" handler="OnScrapeButtonClicked" />
-                    <signal name="KeyReleaseEvent" handler="OnEnter" />
                   </widget>
                 </child>
               </widget>

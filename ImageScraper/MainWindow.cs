@@ -194,27 +194,17 @@ public partial class MainWindow: Gtk.Window
 		md.Run ();
 		md.Destroy ();
 	}
-
-	protected void OnEnter (object o, Gtk.KeyReleaseEventArgs args)
+	
+	// text entries (including spin buttons) invoke Activate on enter key hit 
+	protected void OnActivated (object sender, System.EventArgs e)
 	{
-		
-		if (args.Event.Key == Gdk.Key.KP_Enter || args.Event.Key == Gdk.Key.Return) {
-			Console.WriteLine ("onEnter");
-			if (o is Entry) {
-				NumberButton.GrabFocus ();
-			} else if (o is SpinButton) {
-				Console.WriteLine ("spinButton");
-				ScrapeButton.Click ();
-			} else {
-				Console.WriteLine ("other");
-				// do nothing
-			}
-			
+		if (sender.GetType () == typeof(Gtk.SpinButton)) {
+			ScrapeButton.Click ();
+		} else if (sender.GetType () == typeof(Gtk.Entry)) {
+			NumberButton.GrabFocus ();
+		} else {
+			// pass
 		}
-	}
-
-	protected void OnEditingDone (object sender, System.EventArgs e)
-	{
-		Console.WriteLine ("editing done");
+	
 	}
 }

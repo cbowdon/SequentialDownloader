@@ -234,11 +234,9 @@ public partial class MainWindow
 		this.Show ();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 		this.UrlEntry.Changed += new global::System.EventHandler (this.OnInputUrlChanged);
-		this.UrlEntry.KeyReleaseEvent += new global::Gtk.KeyReleaseEventHandler (this.OnEnter);
+		this.UrlEntry.Activated += new global::System.EventHandler (this.OnActivated);
 		this.NumberButton.ValueChanged += new global::System.EventHandler (this.OnNumberValueChanged);
-		this.NumberButton.EditingDone += new global::System.EventHandler (this.OnEditingDone);
-		this.NumberButton.KeyReleaseEvent += new global::Gtk.KeyReleaseEventHandler (this.OnEnter);
+		this.NumberButton.Activated += new global::System.EventHandler (this.OnActivated);
 		this.ScrapeButton.Clicked += new global::System.EventHandler (this.OnScrapeButtonClicked);
-		this.ScrapeButton.KeyReleaseEvent += new global::Gtk.KeyReleaseEventHandler (this.OnEnter);
 	}
 }
