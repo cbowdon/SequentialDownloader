@@ -23,9 +23,7 @@ namespace ScraperLib
 		
 					ZipEntry theEntry;
 					while ((theEntry = s.GetNextEntry()) != null) {
-				
-//						Console.WriteLine (theEntry.Name);
-				
+								
 						string directoryName = Path.GetDirectoryName (theEntry.Name);
 						string fileName = Path.GetFileName (theEntry.Name);
 				

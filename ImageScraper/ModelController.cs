@@ -21,36 +21,6 @@ namespace Scraper
 		public string OutputFileName { get; private set; }
 		
 		public string InputUrl { get; private set; }
-		
-		#region Start
-		private bool startSet = false;
-		private string start;
-
-		public string Start {
-			get {
-				return start;
-			}
-			set {
-				startSet = true;
-				start = value;
-			}
-		}
-		#endregion
-		
-		#region Days
-		private bool daysSet = false;
-		private List<string> days;
-
-		public List<string> Days {
-			get {
-				return days;
-			}
-			set {
-				daysSet = true;
-				days = value;
-			}
-		}
-		#endregion
 				
 		public int NumberToDownload { get; private set; }
 		
@@ -69,25 +39,6 @@ namespace Scraper
 		#endregion
 		
 		#region ValidInputs
-		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload, string start, List<string> days)
-		{
-			this.Start = start;
-			this.Days = days;
-			return ValidateInputs (inputUrl, outputFileName, numberToDownload);
-		}
-		
-		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload, List<string> days)
-		{
-			this.Days = days;
-			return ValidateInputs (inputUrl, outputFileName, numberToDownload);
-		}
-		
-		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload, string start)
-		{
-			this.Start = start;
-			return ValidateInputs (inputUrl, outputFileName, numberToDownload);
-		}
-
 		public bool ValidateInputs (string inputUrl, string outputFileName, int numberToDownload)
 		{
 			this.InputUrl = ParseInputUrl (inputUrl);
@@ -147,26 +98,16 @@ namespace Scraper
 		
 		private UrlGenerator SetupTask ()
 		{
-			ComicParser parser = new ComicParser (InputUrl);
+			var comic = new ComicUri(InputUrl);
+
+			var parser = new ComicParser (InputUrl);
 			
 			var urlGen = parser.GetUrlGenerator ();
 			
-			// set start
-			if (startSet) {
-				urlGen.Start = Start;
-			}
+			// in the interests of simplicity, just start from given comicå			
+			urlGen.Start = comic.Indices[0];
 			
-			// if date, set days and return
-			if (urlGen.ToString () == "ScraperLib.DateGenerator") {
-				var dateGen = (DateGenerator)urlGen;
-				if (daysSet) {
-					dateGen.Days = Days;
-				}				
-				return dateGen;
-			} else {
-				// else just return
-				return urlGen;
-			}			
+			return urlGen;
 		}
 		
 		public void RunTask ()

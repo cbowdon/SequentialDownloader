@@ -120,8 +120,9 @@ namespace ScraperLib
 			var index = int.Parse (Comic.Indices [0]);			
 			IEnumerable<int> range;
 			
-			if (index < 7) {				
-				range = Enumerable.Range (int.Parse (Start), 7);	
+			if (index < 10) {
+				// first two pages are often unusual, skip
+				range = Enumerable.Range (Math.Max (int.Parse (Start), 3), 7);	
 			} else {
 				range = Enumerable.Range (index, 7);
 			}

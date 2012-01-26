@@ -184,14 +184,14 @@ namespace TestScraperLibLib
 			Assert.AreEqual (xkcdPages, seqCount.GenerateSome ());				
 			
 			xkcdPages = new string[7];
-			xkcdPages [0] = "http://xkcd.com/1";
-			xkcdPages [1] = "http://xkcd.com/2";
-			xkcdPages [2] = "http://xkcd.com/3";
-			xkcdPages [3] = "http://xkcd.com/4";
-			xkcdPages [4] = "http://xkcd.com/5";
-			xkcdPages [5] = "http://xkcd.com/6";
-			xkcdPages [6] = "http://xkcd.com/7";
-			comic = new ComicUri ("http://xkcd.com/3");
+			xkcdPages [0] = "http://xkcd.com/3";
+			xkcdPages [1] = "http://xkcd.com/4";
+			xkcdPages [2] = "http://xkcd.com/5";
+			xkcdPages [3] = "http://xkcd.com/6";
+			xkcdPages [4] = "http://xkcd.com/7";
+			xkcdPages [5] = "http://xkcd.com/8";
+			xkcdPages [6] = "http://xkcd.com/9";
+			comic = new ComicUri ("http://xkcd.com/5");
 			seqCount = new SequentialGenerator (comic);
 			Assert.AreEqual (xkcdPages, seqCount.GenerateSome ());
 		}
