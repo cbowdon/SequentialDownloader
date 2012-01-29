@@ -16,33 +16,16 @@ do this all on my phone, but working on the desktop at first will be fine.
 
 "All the webcomics are in pages at URLs that increase sequentially, either just numbers or dates. I want to give the program one URL and have it automatically grab all extant comics. I will be asked where to save the output and what format I want. I want to be able to convert existing files between formats also."
 
-Early architectural plan (and hence tests to write):
+Post-completion review:
 
-// functions to generate comic URLs
-// including something to parse the HTML and find which <img> is correct
-ComicUrl ParseComicUrl (string originalUrl);
-List<ComicUrl> GenerateComicUrls (ComicUrl originalComicUrl);
+Most of the above was met, with a nice responsive GUI that seems to work without error. It performs as fast as the Internet connection will allow and does not consume excessive resources. 
 
-// repository object to manage collection
-Path Repository.Location;
-Dictionary<ComicUrl, Path> Repository.Files;
+However, there was some specification drift as I realised that restricting this to just an image scraper was unnecessary. So the app's new functional spec would be: 
 
-// functions to download comics
-bool Repository.DownloadSingle (ComicUrl url);
-List<bool> Repository.DownloadComics (IEnumerable<ComicUrl> urls);
+"I'm the user and I want to download remote files and save as zip archives. The remote files are at sequentially increasing URLs, either dates or just integers." 
 
-// repository utilities
-bool Repository.RenameFiles();
-bool Repository.Contains(ComicUrl url);
+Given this new spec, the ability to parse a webpage and estimate the source URL of a comic image is no longer required. I am unsure whether to remove it to avoid confusion, or to leave it as extra functionality.
 
-// function to compile comic
-bool CompileComic(Dictionary<Dictionary<ComicUrl,string> repoFiles, string outputstring);
+Grabbing all extant comics from one URL is impractical and slow at best, so this requirement was dropped. I regret that I wasted time on this, and on automatically working out which was the first comic in a series.
 
-// function wrapping it all up
-bool GetComics (string originalUrl, string outputstring);
-
-// also
-bool ConvertComic (string input, string output);
-bool ExtractComic (string input, string output);
-
-
+Every modern operating system can zip and unzip, so the ability to convert between formats was left out of the GUI.
