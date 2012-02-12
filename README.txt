@@ -1,8 +1,8 @@
 What it is: 
-An app to scrape comics into a CBZ.
+An app to scrape remote files into a zip archive.
 
 Status: 
-Barely started.
+Mostly finished, distributables to be created.
 
 Functional specification:
 

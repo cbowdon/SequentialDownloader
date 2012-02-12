@@ -155,7 +155,7 @@ public partial class MainWindow: Gtk.Window
 	
 	protected bool SaveDialog (out string outputFileName)
 	{
-		var chooser = new FileChooserDialog ("Saves as...", 
+		var chooser = new FileChooserDialog ("Save as...", 
 		                                     this, 
 		                                     FileChooserAction.Save, 
 		                                     Stock.Save, 
