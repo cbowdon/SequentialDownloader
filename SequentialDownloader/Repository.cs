@@ -89,10 +89,8 @@ namespace ScraperLib
 					auto.WaitOne (300000);
 				} else {
 					// fire cancelled event
-					try {
+					if (DownloadsCancelled != null) {	
 						DownloadsCancelled.Invoke (this, new EventArgs ());	
-					} catch (NullReferenceException) {
-						// no handlers were added
 					}
 					// return without invoking MultipleDownloadsCompleted
 					return;
@@ -100,11 +98,9 @@ namespace ScraperLib
 			}			
 			
 			// all done, invoke event
-			try {
+			if (MultipleDownloadsCompleted != null) {
 				MultipleDownloadsCompleted.Invoke (this, new EventArgs ());	
-			} catch (NullReferenceException) {
-				// no handlers were added
-			}
+			} 
 			
 			// turn off the sign
 			Active = false;

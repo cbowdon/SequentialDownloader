@@ -111,24 +111,27 @@ namespace TestScraperLibLib
 			Assert.AreEqual ("1", urlGen.Start);
 			
 			// generate 10 urls, starting from 605
-			List<string> backUrls = urlGen.Get (605, 5);
+			List<string> backUrls = urlGen.Get (605, 10);
 			// generate 10 urls, starting from 615
-			List<string> forwardUrls = urlGen.Get (615, 5);
+			List<string> forwardUrls = urlGen.Get (615, 10);
 			// generate 10 urls, starting from 614
-			List<string> incUrls = urlGen.Get (614, 5);
+			List<string> incUrls = urlGen.Get (614, 10);
 			
 			// each url should be the comic, directly
 			// urls are sorted
 			
-			foreach (var x in backUrls) {
-				Console.WriteLine (x);
-			}
+//			foreach (var x in backUrls) {
+//				Console.WriteLine (x);
+//			}
 			
-			Assert.AreEqual (5, backUrls.Count ());
+			// Seems like this is a legitimate fail... 
+			// backUrls[0] is actually comic 606, expected 605
+			// further investigation required
+			Assert.AreEqual (10, backUrls.Count ());
 			Assert.AreEqual (xkcdImg, backUrls [9]);
-			Assert.AreEqual (5, forwardUrls.Count ());
-			Assert.AreEqual (xkcdImg2, forwardUrls [1]);
-			Assert.AreEqual (5, incUrls.Count ());
+			Assert.AreEqual (10, forwardUrls.Count ());
+			Assert.AreEqual (xkcdImg2, forwardUrls [0]);
+			Assert.AreEqual (10, incUrls.Count ());
 			Assert.AreEqual (xkcdImg, incUrls [0]);
 			Assert.AreEqual (xkcdImg2, incUrls [1]);		
 		}

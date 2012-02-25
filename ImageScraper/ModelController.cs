@@ -81,7 +81,7 @@ namespace Scraper
 				var ext = Path.GetExtension (outputFilePath);
 				int i = 1;
 				while (i < 10000) {
-					var newName = Path.GetFullPath(String.Format ("{0} ({1}){2}", Path.Combine (dir, name), i, ext));
+					var newName = Path.GetFullPath (String.Format ("{0} ({1}){2}", Path.Combine (dir, name), i, ext));
 					if (!File.Exists (newName)) {
 						return newName;
 					} else {
@@ -98,14 +98,14 @@ namespace Scraper
 		
 		private UrlGenerator SetupTask ()
 		{
-			var comic = new ComicUri(InputUrl);
+			var comic = new ComicUri (InputUrl);
 
 			var parser = new ComicParser (InputUrl);
 			
 			var urlGen = parser.GetUrlGenerator ();
 			
 			// in the interests of simplicity, just start from given comicå			
-			urlGen.Start = comic.Indices[0];
+			urlGen.Start = comic.Indices [0];
 			
 			return urlGen;
 		}
@@ -115,10 +115,8 @@ namespace Scraper
 			if (!readyToGo) {
 				throw new ArgumentException ("Not ready to go!");
 			} else {
-				try {
+				if (TaskStarted != null) {
 					TaskStarted.Invoke (this, new EventArgs ());
-				} catch (NullReferenceException) {
-					// no handler was added
 				}
 			}
 			
@@ -156,11 +154,9 @@ namespace Scraper
 					Active = false;				
 					Status = "Task cancelled";
 					ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
-					try {
-						TaskCancelled.Invoke (this, new EventArgs ());					
-					} catch (NullReferenceException) {
-						// no handler was added
-					} 
+					if (TaskCancelled != null) {
+						TaskCancelled.Invoke (this, new EventArgs ());						
+					}
 				}	
 			} catch (Exception ex) {
 				Console.WriteLine (ex.Message);
@@ -168,11 +164,9 @@ namespace Scraper
 			
 			Active = false;				
 			Status = "Task cancelled";
-			try {
-				TaskCancelled.Invoke (this, new EventArgs ());					
-			} catch (NullReferenceException) {
-				// no handler was added
-			} 
+			if (TaskCancelled != null) {
+				TaskCancelled.Invoke (this, new EventArgs ());						
+			}
 		}
 		
 		#region EventHandlers
@@ -181,10 +175,8 @@ namespace Scraper
 			ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
 			Active = false;
 			Status = "Finished";
-			try {
+			if (TaskCompleted != null) {
 				TaskCompleted.Invoke (this, new EventArgs ());								
-			} catch (NullReferenceException) {
-				// no handler was added
 			} 
 		}
 		
@@ -199,19 +191,15 @@ namespace Scraper
 			if (NumberDownloaded % 10 == 0) {
 				ComicConvert.ImgsToCbz (repo.Location, OutputFileName);			
 			}
-			try {
-				FileDownloaded.Invoke (sender, e);									
-			} catch (NullReferenceException) {
-				// no handler was added
+			if (FileDownloaded != null) {
+				FileDownloaded.Invoke (sender, e);										
 			}
 		}
 		
 		public void OnDownloadProgressChanged (object sender, System.Net.DownloadProgressChangedEventArgs e)
 		{
-			try {
-				FileProgress.Invoke (sender, e);					
-			} catch (NullReferenceException) {
-				// no handler was added	
+			if (FileProgress != null) {
+				FileProgress.Invoke (sender, e);							
 			}
 		}
 		#endregion

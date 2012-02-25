@@ -87,8 +87,8 @@ namespace TestScraperLibLib
 			
 			// check it worked
 			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));			
-			Assert.IsTrue (File.Exists (myCbz + ".cbz"));			
-			File.Delete (myCbz + ".cbz");	
+			Assert.IsTrue (File.Exists (myCbz + ".zip"));			
+			File.Delete (myCbz + ".zip");	
 			
 			myCbz = "MyTestFile_2.zip";
 			Assert.IsTrue (ComicConvert.ImgsToCbz (dir, myCbz));

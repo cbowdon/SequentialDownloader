@@ -29,13 +29,20 @@ namespace TestScraperLibLib
 		}
 		
 		[Test()]
-		public void Days ()
+		public void FindDays ()
 		{
 			var comic = new ComicUri ("http://www.smbc-comics.com/comics/20061011.gif");
 			var dateCount = new DateGenerator (comic);
-			// by chance, two consecutive Thursdays were missed here
-			Assert.AreEqual (6, dateCount.Days.Count);
-			Assert.IsFalse (dateCount.Days.Contains ("Thursday"));
+						
+//			// by chance, two consecutive Thursdays were missed here
+//			Assert.AreEqual (6, dateCount.Days.Count);
+//			Assert.IsFalse (dateCount.Days.Contains ("Thursday"));
+			
+			// Behaviour changed: 
+			// FindDays is no longer called to calculate what days the comic runs
+			// Every day is assumed
+			// This is quicker and simpler: if URL not found, download quietly fails
+			Assert.AreEqual (7, dateCount.Days.Count);
 		}
 		
 		[Test()]		
